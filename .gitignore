@@ -6,7 +6,5 @@ bin
 obj
 config
 .vs
-/AresSecurity/packages
 debug
 release
-!/AresSecurity/Dependencies/**
