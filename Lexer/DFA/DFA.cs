@@ -53,7 +53,7 @@ namespace Lexer.DFA
             _states = dfa.StateList.States.ToDictionary(x => x.ID, x => x);
             _startStateID = dfa.StateList.StartStateID;
 
-            
+            CreateTable(dfa);
         }
 
         private void CreateTable(DFAXML dfa)
@@ -61,7 +61,7 @@ namespace Lexer.DFA
             // Init rows
             foreach (var stateID in _states.Keys)
             {
-                _transitionTable.Add(stateID, new StateTransitionRow(_alphabet));
+                _transitionTable.Add(stateID, new StateTransitionRow(_alphabet, _states[stateID].Type, _states[stateID].IsBacktrackState));
             }
 
             // Fill rows
@@ -84,6 +84,8 @@ namespace Lexer.DFA
                         transitionLetters.Remove(excludedletter);
                     }
                 }
+
+                _transitionTable[src].SetTransitions(dst, transitionLetters);
             }
         }
     }

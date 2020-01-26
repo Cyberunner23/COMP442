@@ -259,7 +259,7 @@
   <Transitions>
 
     <!-- Whitespace -->
-    <Transition SourceID="1" DestinationID="2">
+    <Transition SourceID="1" DestinationID="1">
       <Symbols>
         <Symbol>NEWLINE</Symbol>
         <Symbol>TAB</Symbol>
@@ -366,7 +366,7 @@
         <Symbol>EVERYTHING</Symbol>
       </Symbols>
       <Except>
-        <Letter Char=">" />
+        <Letter Char="=" />
       </Except>
     </Transition>
 
@@ -733,14 +733,16 @@
     <Transition SourceID="45" DestinationID="46">
       <Symbols>
         <Symbol>LETTER</Symbol>
-        <Symbol>DIGIT</Symbol>
+        <Symbol>ZERO</Symbol>
+        <Symbol>NONZERO</Symbol>
         <Symbol>UNDERSCORE</Symbol>
       </Symbols>
     </Transition>
     <Transition SourceID="46" DestinationID="46">
       <Symbols>
         <Symbol>LETTER</Symbol>
-        <Symbol>DIGIT</Symbol>
+        <Symbol>ZERO</Symbol>
+        <Symbol>NONZERO</Symbol>
         <Symbol>UNDERSCORE</Symbol>
       </Symbols>
     </Transition>

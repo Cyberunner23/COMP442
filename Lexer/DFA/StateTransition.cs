@@ -6,13 +6,19 @@ namespace Lexer.DFA
     public class StateTransitionRow
     {
         private Dictionary<char, int> _transitionTableRow;
+        private TokenType _stateType;
+        private bool _isBacktrackingState;
 
-        public StateTransitionRow(List<char> alphabet)
+        public StateTransitionRow(List<char> alphabet, TokenType stateType, bool isBacktrackingState)
         {
+            _transitionTableRow = new Dictionary<char, int>();
             foreach (var letter in alphabet)
             {
                 _transitionTableRow.Add(letter, 0);
             }
+
+            _stateType = stateType;
+            _isBacktrackingState = isBacktrackingState;
         }
 
         // src -> dst by transitionSymbols 
