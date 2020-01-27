@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
+using Lexer.DFA.XML;
+
 namespace Lexer.DFA
 {
     public class DFA
@@ -14,6 +16,7 @@ namespace Lexer.DFA
         // State ID <-> State
         private Dictionary<int, State> _states;
         private int _startStateID;
+        private int _currentStateID;
 
         private Dictionary<int, StateTransitionRow> _transitionTable;
 
@@ -25,6 +28,29 @@ namespace Lexer.DFA
             _states = new Dictionary<int, State>();
 
             _transitionTable = new Dictionary<int, StateTransitionRow>();
+        }
+
+        public void Begin()
+        {
+            _currentStateID = _startStateID;
+        }
+
+        public int GetNextStateID(char transition)
+        {
+            var transitionRow = _transitionTable[_currentStateID].GetTransitionTableRow();
+            int nextStateID = transitionRow[transition];
+            _currentStateID = nextStateID;
+            return nextStateID;
+        }
+
+        public TokenType GetStateType(int id)
+        {
+            return _states[id].Type;
+        }
+
+        public bool IsBacktrackingState(int id)
+        {
+            return _states[id].IsBacktrackState;
         }
 
         public void LoafFromFile(string filePath)

@@ -198,7 +198,7 @@
   <StateList StartStateID="1">
     <States>
       <State ID="0"  Type="Error" />
-      <State ID="1"  Type="Error" /> 
+      <State ID="1"  Type="Intermediate" /> 
       <State ID="2"  Type="OpenBrace"/>
       <State ID="3"  Type="CloseBrace"/>
       <State ID="4"  Type="OpenCurlyBrace"/>
@@ -212,46 +212,46 @@
       <State ID="12" Type="Minus"/>
       <State ID="13" Type="Period"/>
 
-      <State ID="14" Type="Error"/>
+      <State ID="14" Type="Intermediate"/>
       <State ID="15" Type="EqualEqual"/>
       <State ID="16" Type="Equal" IsBacktrackState="true"/>
 
-      <State ID="17" Type="Error"/>
+      <State ID="17" Type="Intermediate"/>
       <State ID="18" Type="GreaterEqual"/>
       <State ID="19" Type="Greater" IsBacktrackState="true"/>
 
-      <State ID="20" Type="Error"/>
+      <State ID="20" Type="Intermediate"/>
       <State ID="21" Type="LesserEqual"/>
       <State ID="22" Type="LesserGreater"/>
       <State ID="23" Type="Lesser" IsBacktrackState="true"/>
 
-      <State ID="24" Type="Error"/>
+      <State ID="24" Type="Intermediate"/>
       <State ID="25" Type="ColonColon"/>
       <State ID="26" Type="Colon" IsBacktrackState="true"/>
 
-      <State ID="27" Type="Error"/>
+      <State ID="27" Type="Intermediate"/>
       <State ID="28" Type="FwdSlash"/>
-      <State ID="29" Type="Error"/>
+      <State ID="29" Type="Intermediate"/>
       <State ID="30" Type="Comment"/>
-      <State ID="31" Type="Error"/>
-      <State ID="32" Type="Error"/>
+      <State ID="31" Type="Intermediate"/>
+      <State ID="32" Type="Intermediate"/>
       <State ID="33" Type="BlockComment"/>
 
-      <State ID="34" Type="Error"/>
-      <State ID="35" Type="Error"/>
+      <State ID="34" Type="Intermediate"/>
+      <State ID="35" Type="Intermediate"/>
       <State ID="36" Type="Integer" IsBacktrackState="true"/>
 
-      <State ID="37" Type="Error"/>
-      <State ID="38" Type="Error"/>
-      <State ID="39" Type="Error"/>
+      <State ID="37" Type="Intermediate"/>
+      <State ID="38" Type="Intermediate"/>
+      <State ID="39" Type="Intermediate"/>
       <State ID="40" Type="Float" IsBacktrackState="true"/>
-      <State ID="41" Type="Error"/>
-      <State ID="42" Type="Error"/>
-      <State ID="43" Type="Error"/>
-      <State ID="44" Type="Error"/>
+      <State ID="41" Type="Intermediate"/>
+      <State ID="42" Type="Intermediate"/>
+      <State ID="43" Type="Intermediate"/>
+      <State ID="44" Type="Intermediate"/>
 
-      <State ID="45" Type="Error"/>
-      <State ID="46" Type="Error"/>
+      <State ID="45" Type="Intermediate"/>
+      <State ID="46" Type="Intermediate"/>
       <State ID="47" Type="Identifier" IsBacktrackState="true"/>
     </States>
   </StateList>

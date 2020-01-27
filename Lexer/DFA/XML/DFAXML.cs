@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Lexer.DFA
+namespace Lexer.DFA.XML
 {
     [XmlRoot("DFA")]
     public class DFAXML

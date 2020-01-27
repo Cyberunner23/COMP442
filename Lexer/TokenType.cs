@@ -3,6 +3,8 @@
     public enum TokenType
     {
         Error,
+        Intermediate,
+        EOF,
 
         Comment,           ///  //
         BlockComment,      ///  /**/
@@ -58,5 +60,6 @@
         InvalidIdentifier,
         InvalidIntNum,
         InvalidFloatNum,
+        UnexpectedEOF
     }
 }

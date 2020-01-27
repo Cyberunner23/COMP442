@@ -1,8 +1,6 @@
-﻿using Lexer;
-using Lexer.DFA;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
+﻿using System;
+
+using Lexer;
 
 namespace LexerDriver
 {
@@ -10,37 +8,16 @@ namespace LexerDriver
     {
         static void Main(string[] args)
         {
-            /*DFAXML dfa = new DFAXML();
-            dfa.Transitions = new List<Transition>()
+
+            Lexer.Lexer lex = new Lexer.Lexer("(){}[];,*+-. sdfg");
+
+            Token t;
+            do
             {
-                new Transition()
-                {
-                    SourceID = 1,
-                    DestinationID = 2,
-                    Symbols = new List<string>()
-                    {
-                        "LETTER"
-                    },
-                    Except = new List<Letter>()
-                    {
-                        new Letter()
-                        {
-                            Char = 'A'
-                        },
-                        new Letter()
-                        {
-                            Char = '_'
-                        }
-                    }
-                }
-            };
-
-            XmlSerializer serializer = new XmlSerializer(typeof(DFAXML));
-            TextWriter writer = new StreamWriter("test.xml");
-            serializer.Serialize(writer, dfa);*/
-
-            DFA dfa = new DFA();
-            dfa.LoafFromFile("DFA.xml");
+                t = lex.GetNextToken();
+                Console.WriteLine(t.ToString());
+            }
+            while (t.TokenType != TokenType.EOF);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace Lexer.DFA
+namespace Lexer.DFA.XML
 {
     public class Letter
     {
