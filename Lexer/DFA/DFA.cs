@@ -12,6 +12,7 @@ namespace Lexer.DFA
         private List<char> _alphabet; 
         private Dictionary<string, List<char>> _letterMap;
         private Dictionary<char, string> _inverseLetterMap;
+        private Dictionary<string, TokenType> _keywordMap;
 
         // State ID <-> State
         private Dictionary<int, State> _states;
@@ -25,6 +26,7 @@ namespace Lexer.DFA
             _alphabet = new List<char>();
             _letterMap = new Dictionary<string, List<char>>();
             _inverseLetterMap = new Dictionary<char, string>();
+            _keywordMap = new Dictionary<string, TokenType>();
             _states = new Dictionary<int, State>();
 
             _transitionTable = new Dictionary<int, StateTransitionRow>();
@@ -38,8 +40,10 @@ namespace Lexer.DFA
         public int GetNextStateID(char transition)
         {
             var transitionRow = _transitionTable[_currentStateID].GetTransitionTableRow();
-            int nextStateID = transitionRow[transition];
-            _currentStateID = nextStateID;
+
+            int nextStateID;
+            bool isInAphabet = transitionRow.TryGetValue(transition, out nextStateID);
+            _currentStateID = isInAphabet ? nextStateID : 0;
             return nextStateID;
         }
 
@@ -48,12 +52,22 @@ namespace Lexer.DFA
             return _states[id].Type;
         }
 
+        public TokenType GetErrorType(int id)
+        {
+            return _states[id].ErrorType;
+        }
+
         public bool IsBacktrackingState(int id)
         {
             return _states[id].IsBacktrackState;
         }
 
-        public void LoafFromFile(string filePath)
+        public Dictionary<string, TokenType> GetKeywordMapping()
+        {
+            return _keywordMap;
+        }
+
+        public void LoadFromFile(string filePath)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(DFAXML));
             StreamReader reader = new StreamReader(filePath);
@@ -74,6 +88,8 @@ namespace Lexer.DFA
 
                 _letterMap.Add(symbol, letterList);
             }
+
+            _keywordMap = dfa.Keywords.ToDictionary(x => x.Identifier, x => x.Token);
 
             _letterMap.Add("EVERYTHING", _alphabet);
             _states = dfa.StateList.States.ToDictionary(x => x.ID, x => x);

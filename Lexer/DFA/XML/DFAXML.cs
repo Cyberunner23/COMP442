@@ -16,5 +16,9 @@ namespace Lexer.DFA.XML
         [XmlArray("Transitions")]
         [XmlArrayItem("Transition", typeof(Transition))]
         public List<Transition> Transitions { get; set; }
+
+        [XmlArray("Keywords")]
+        [XmlArrayItem("Keyword", typeof(Keyword))]
+        public List<Keyword> Keywords { get; set; }
     }
 }

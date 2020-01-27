@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Lexer
 {
@@ -19,12 +20,22 @@ namespace Lexer
 
             // Load config, generate table
             _dfa = new DFA.DFA();
-            _dfa.LoafFromFile(DFA_FILE_PATH);
+            _dfa.LoadFromFile(DFA_FILE_PATH);
+        }
+
+        public bool IsErrorToken(TokenType tokenType)
+        {
+            return tokenType == TokenType.InvalidComment
+                || tokenType == TokenType.InvalidFloatNum
+                || tokenType == TokenType.InvalidIdentifier
+                || tokenType == TokenType.InvalidIntNum
+                || tokenType == TokenType.Error;
         }
 
         public Token GetNextToken()
         {
             var token = new Token() { StartColumn = _currentColumn, StartLine = _currentLine };
+            TokenType lastErrorToken = TokenType.Error;
 
             if (_currentInputIndex >= _inputCode.Length)
             {
@@ -33,11 +44,15 @@ namespace Lexer
             }
 
             TokenType type = TokenType.Intermediate;
-            int stateID;
+            int stateID = 0;
+            int previousCol = 0;
+            int previousRow = 0;
             _dfa.Begin();
             do
             {
                 char currentChar =  _currentInputIndex < _inputCode.Length ? _inputCode.ElementAt(_currentInputIndex) : '~'; // Insert EOF tag if past end of input
+                previousCol = _currentColumn;
+                previousRow = _currentLine;
                 if (currentChar == '\n')
                 {
                     _currentColumn = 0;
@@ -48,6 +63,7 @@ namespace Lexer
                     _currentColumn++;
                 }
 
+                lastErrorToken = _dfa.GetErrorType(stateID);
                 stateID = _dfa.GetNextStateID(currentChar);
                 type = _dfa.GetStateType(stateID);
 
@@ -59,11 +75,32 @@ namespace Lexer
             if (_dfa.IsBacktrackingState(stateID))
             {
                 _currentInputIndex--;
+                _currentColumn = previousCol;
+                _currentLine = previousRow;
                 token.Lexeme = token.Lexeme.Remove(token.Lexeme.Length - 1, 1);
                 // undo col row position change
             }
 
+            token.Lexeme = token.Lexeme.Trim().Replace("~", "");
+            token.StartLine = _currentLine;
+            token.StartColumn = _currentColumn;
             token.TokenType = type;
+
+            if (token.TokenType == TokenType.Identifier)
+            {
+                var keywordMapping = _dfa.GetKeywordMapping();
+                TokenType keywordToken = TokenType.Intermediate;
+                if (keywordMapping.TryGetValue(token.Lexeme, out keywordToken))
+                {
+                    token.TokenType = keywordToken;
+                }
+            }
+
+            if (token.TokenType == TokenType.Error)
+            {
+                token.TokenType = lastErrorToken;
+            }
+
             return token;
         }
     }

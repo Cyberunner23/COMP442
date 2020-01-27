@@ -9,7 +9,7 @@
 
         public override string ToString()
         {
-            return $"[{TokenType} : ({StartLine}:{StartColumn}) : \"{Lexeme}\"]";
+            return $"[{TokenType} : ({StartLine},{StartColumn}) : \"{Lexeme}\"]";
         }
     }
 }

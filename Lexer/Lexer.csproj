@@ -44,6 +44,7 @@
     <Compile Include="DFA\XML\AlphabetItem.cs" />
     <Compile Include="DFA\DFA.cs" />
     <Compile Include="DFA\XML\DFAXML.cs" />
+    <Compile Include="DFA\XML\Keyword.cs" />
     <Compile Include="DFA\XML\Letter.cs" />
     <Compile Include="DFA\XML\State.cs" />
     <Compile Include="DFA\XML\StateList.cs" />

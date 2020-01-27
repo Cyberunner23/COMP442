@@ -195,6 +195,29 @@
     </AlphabetItem>
   </Alphabet>
 
+  <Keywords>
+    <Keyword Identifier="if"       Token="If"/>
+    <Keyword Identifier="then"     Token="Then"/>
+    <Keyword Identifier="else"     Token="Else"/>
+    <Keyword Identifier="while"    Token="While"/>
+    <Keyword Identifier="class"    Token="Class"/>
+    <Keyword Identifier="integer"  Token="Integer"/>
+    <Keyword Identifier="float"    Token="Float"/>
+    <Keyword Identifier="do"       Token="Do"/>
+    <Keyword Identifier="end"      Token="End"/>
+    <Keyword Identifier="public"   Token="Public"/>
+    <Keyword Identifier="private"  Token="Private"/>
+    <Keyword Identifier="or"       Token="Or"/>
+    <Keyword Identifier="and"      Token="And"/>
+    <Keyword Identifier="not"      Token="Not"/>
+    <Keyword Identifier="read"     Token="Read"/>
+    <Keyword Identifier="write"    Token="Write"/>
+    <Keyword Identifier="return"  Token="Return"/>
+    <Keyword Identifier="main"     Token="Main"/>
+    <Keyword Identifier="inherits" Token="Inherits"/>
+    <Keyword Identifier="local"    Token="Local"/>
+  </Keywords>
+  
   <StateList StartStateID="1">
     <States>
       <State ID="0"  Type="Error" />
@@ -229,29 +252,29 @@
       <State ID="25" Type="ColonColon"/>
       <State ID="26" Type="Colon" IsBacktrackState="true"/>
 
-      <State ID="27" Type="Intermediate"/>
+      <State ID="27" Type="Intermediate" ErrorType="InvalidComment"/>
       <State ID="28" Type="FwdSlash"/>
-      <State ID="29" Type="Intermediate"/>
+      <State ID="29" Type="Intermediate" ErrorType="InvalidComment"/>
       <State ID="30" Type="Comment"/>
-      <State ID="31" Type="Intermediate"/>
-      <State ID="32" Type="Intermediate"/>
+      <State ID="31" Type="Intermediate" ErrorType="InvalidComment"/>
+      <State ID="32" Type="Intermediate" ErrorType="InvalidComment"/>
       <State ID="33" Type="BlockComment"/>
 
-      <State ID="34" Type="Intermediate"/>
-      <State ID="35" Type="Intermediate"/>
+      <State ID="34" Type="Intermediate" ErrorType="InvalidIntNum"/>
+      <State ID="35" Type="Intermediate" ErrorType="InvalidIntNum"/>
       <State ID="36" Type="Integer" IsBacktrackState="true"/>
 
-      <State ID="37" Type="Intermediate"/>
-      <State ID="38" Type="Intermediate"/>
-      <State ID="39" Type="Intermediate"/>
+      <State ID="37" Type="Intermediate" ErrorType="InvalidFloatNum"/>
+      <State ID="38" Type="Intermediate" ErrorType="InvalidFloatNum"/>
+      <State ID="39" Type="Intermediate" ErrorType="InvalidFloatNum"/>
       <State ID="40" Type="Float" IsBacktrackState="true"/>
-      <State ID="41" Type="Intermediate"/>
-      <State ID="42" Type="Intermediate"/>
-      <State ID="43" Type="Intermediate"/>
-      <State ID="44" Type="Intermediate"/>
+      <State ID="41" Type="Intermediate" ErrorType="InvalidFloatNum"/>
+      <State ID="42" Type="Intermediate" ErrorType="InvalidFloatNum"/>
+      <State ID="43" Type="Intermediate" ErrorType="InvalidFloatNum"/>
+      <State ID="44" Type="Intermediate" ErrorType="InvalidFloatNum"/>
 
-      <State ID="45" Type="Intermediate"/>
-      <State ID="46" Type="Intermediate"/>
+      <State ID="45" Type="Intermediate" ErrorType="InvalidIdentifier"/>
+      <State ID="46" Type="Intermediate" ErrorType="InvalidIdentifier"/>
       <State ID="47" Type="Identifier" IsBacktrackState="true"/>
     </States>
   </StateList>
@@ -462,6 +485,7 @@
       </Symbols>
       <Except>
         <Letter Char="*" />
+        <Letter Char="~" />
       </Except>
     </Transition>
     <Transition SourceID="31" DestinationID="32">
@@ -475,6 +499,7 @@
       </Symbols>
       <Except>
         <Letter Char="/" />
+        <Letter Char="~" />
       </Except>
     </Transition>
     <Transition SourceID="32" DestinationID="33">

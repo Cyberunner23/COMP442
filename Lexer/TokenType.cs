@@ -57,6 +57,7 @@
         Inherits,          //  inherits
         Local,             //  local
 
+        InvalidComment,
         InvalidIdentifier,
         InvalidIntNum,
         InvalidFloatNum,

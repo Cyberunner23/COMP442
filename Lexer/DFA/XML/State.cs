@@ -19,6 +19,16 @@ namespace Lexer.DFA.XML
             set { Type = (TokenType)Enum.Parse(typeof(TokenType), value); } 
         }
 
+        [XmlIgnore]
+        public TokenType ErrorType { get; set; } = TokenType.Error;
+
+        [XmlAttribute(nameof(ErrorType))]
+        public string ErrorTypeString
+        {
+            get { return ErrorType.ToString(); }
+            set { ErrorType = (TokenType)Enum.Parse(typeof(TokenType), value); }
+        }
+
         [XmlAttribute]
         [DefaultValue(typeof(bool), "False")]
         public bool IsBacktrackState { get; set; }
