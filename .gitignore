@@ -8,3 +8,5 @@ config
 .vs
 debug
 release
+*.zip
+REPORT.pdf

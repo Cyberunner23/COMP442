@@ -56,11 +56,13 @@
         Main,              //  main
         Inherits,          //  inherits
         Local,             //  local
+        Void,              //  void
 
         InvalidComment,
         InvalidIdentifier,
         InvalidIntNum,
         InvalidFloatNum,
-        UnexpectedEOF
+        UnexpectedEOF,
+        InvalidCharacter
     }
 }

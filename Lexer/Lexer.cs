@@ -11,7 +11,7 @@ namespace Lexer
 
         private string _inputCode;
         private int _currentInputIndex = 0;
-        private int _currentLine = 0;
+        private int _currentLine = 1;
         private int _currentColumn = 0;
 
         public Lexer(string inputCode)
@@ -29,6 +29,7 @@ namespace Lexer
                 || tokenType == TokenType.InvalidFloatNum
                 || tokenType == TokenType.InvalidIdentifier
                 || tokenType == TokenType.InvalidIntNum
+                || tokenType == TokenType.InvalidCharacter
                 || tokenType == TokenType.Error;
         }
 
@@ -61,6 +62,12 @@ namespace Lexer
                 else
                 {
                     _currentColumn++;
+                }
+
+                if (stateID == 1 && currentChar == '~')
+                {
+                    type = TokenType.EOF;
+                    continue;
                 }
 
                 lastErrorToken = _dfa.GetErrorType(stateID);

@@ -59,6 +59,10 @@ In short I used draw.io to create the DFA diagram and C#'s XML serializarion to 
 5. Running the code
 All binaries are in the bin directory.
 
+LexerDriver.exe is the executable that runs the lexer on the file contents.
 
+LexerDriver.exe <filename>
+
+Test cases are in the bin folder as well, the one I created is called 
 
 

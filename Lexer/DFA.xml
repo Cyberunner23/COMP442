@@ -216,6 +216,7 @@
     <Keyword Identifier="main"     Token="Main"/>
     <Keyword Identifier="inherits" Token="Inherits"/>
     <Keyword Identifier="local"    Token="Local"/>
+    <Keyword Identifier="void"    Token="Void"/>
   </Keywords>
   
   <StateList StartStateID="1">
@@ -253,7 +254,7 @@
       <State ID="26" Type="Colon" IsBacktrackState="true"/>
 
       <State ID="27" Type="Intermediate" ErrorType="InvalidComment"/>
-      <State ID="28" Type="FwdSlash"/>
+      <State ID="28" Type="FwdSlash" IsBacktrackState="true"/>
       <State ID="29" Type="Intermediate" ErrorType="InvalidComment"/>
       <State ID="30" Type="Comment"/>
       <State ID="31" Type="Intermediate" ErrorType="InvalidComment"/>
@@ -536,6 +537,12 @@
         <Letter Char="8"/>
         <Letter Char="9"/>
       </Except>
+    </Transition>
+    <Transition SourceID="35" DestinationID="35">
+      <Symbols>
+        <Symbol>ZERO</Symbol>
+        <Symbol>NONZERO</Symbol>
+      </Symbols>
     </Transition>
     <Transition SourceID="35" DestinationID="36">
       <Symbols>

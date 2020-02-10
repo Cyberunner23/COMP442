@@ -43,23 +43,24 @@ namespace Lexer.DFA
 
             int nextStateID;
             bool isInAphabet = transitionRow.TryGetValue(transition, out nextStateID);
-            _currentStateID = isInAphabet ? nextStateID : 0;
-            return nextStateID;
+            _currentStateID = isInAphabet ? nextStateID : -1;
+            return _currentStateID;
         }
 
         public TokenType GetStateType(int id)
         {
-            return _states[id].Type;
+            return id == -1 ? TokenType.InvalidCharacter : _states[id].Type;
         }
 
         public TokenType GetErrorType(int id)
         {
-            return _states[id].ErrorType;
+            return id == -1 ? TokenType.InvalidCharacter : _states[id].ErrorType;
         }
 
         public bool IsBacktrackingState(int id)
         {
-            return _states[id].IsBacktrackState;
+
+            return id == -1 ? false : _states[id].IsBacktrackState;
         }
 
         public Dictionary<string, TokenType> GetKeywordMapping()
