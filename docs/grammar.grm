@@ -142,8 +142,8 @@ TypeOrVoid_ -> void .
 Type_ -> TypeNoID_ .
 Type_ -> identifier  . 
 
-TypeNoID_ -> intNum .
-TypeNoID_ -> floatNum .
+TypeNoID_ -> integer .
+TypeNoID_ -> float .
 
 OptionalInt_ -> intNum .
 OptionalInt_ -> .
