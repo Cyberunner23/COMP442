@@ -33,6 +33,12 @@ namespace Lexer
                 || tokenType == TokenType.Error;
         }
 
+        public bool IsCommentToken(TokenType tokenType)
+        {
+            return tokenType == TokenType.Comment
+                || tokenType == TokenType.BlockComment;
+        }
+
         public Token GetNextToken()
         {
             var token = new Token() { StartColumn = _currentColumn, StartLine = _currentLine };

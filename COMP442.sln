@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexerDriver", "LexerDriver\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexer", "Lexer\Lexer.csproj", "{D85D0632-52C3-4955-A8CE-E721F4BB251A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserDriver", "ParserDriver\ParserDriver.csproj", "{540D71EF-0B64-4641-A6A9-6E3547A31F4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{C60DC2EC-B6D5-4872-8D07-ABA712D89957}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{D85D0632-52C3-4955-A8CE-E721F4BB251A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D85D0632-52C3-4955-A8CE-E721F4BB251A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D85D0632-52C3-4955-A8CE-E721F4BB251A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{540D71EF-0B64-4641-A6A9-6E3547A31F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{540D71EF-0B64-4641-A6A9-6E3547A31F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{540D71EF-0B64-4641-A6A9-6E3547A31F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{540D71EF-0B64-4641-A6A9-6E3547A31F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C60DC2EC-B6D5-4872-8D07-ABA712D89957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C60DC2EC-B6D5-4872-8D07-ABA712D89957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C60DC2EC-B6D5-4872-8D07-ABA712D89957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C60DC2EC-B6D5-4872-8D07-ABA712D89957}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
