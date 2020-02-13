@@ -6,6 +6,7 @@ namespace Parser
     public class Parser
     {
 
+        #region Grammar Rules
         private bool Start()
         {
             List<TokenType> firstSet = new List<TokenType>() { TokenType.Main, TokenType.Class, TokenType.Identifier };
@@ -20,7 +21,6 @@ namespace Parser
         {
             List<TokenType> firstSet = new List<TokenType>() { TokenType.Main, TokenType.Class, TokenType.Identifier };
             List<TokenType> followSet = new List<TokenType>();
-
 
 
             return false;
@@ -731,5 +731,7 @@ namespace Parser
             List<TokenType> followSet = new List<TokenType>() { TokenType.CloseBrace };
             return false;
         }
+
+        #endregion
     }
 }
