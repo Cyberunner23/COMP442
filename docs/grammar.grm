@@ -1,25 +1,28 @@
 Start_ -> Program_  . 
 
-Program_ -> ClassDecls_ FuncDefs_ Main_ LocalScope_ Do_ Statements_ End_  . 
+Program_ -> ClassDecls_ FuncDefs_ Main_ FuncBody_  . 
 
-ClassDecls_ -> Class_ Identifier_ OptionalInherits_ OpenCurlyBrace_ MemberDecls_ CloseCurlyBrace_ SemiColon_ ClassDecls_  . 
+ClassDecls_ -> ClassDecl_ ClassDecls_  . 
 ClassDecls_ ->  . 
 
-FuncDefs_ -> Identifier_ FuncSigNamespace_ LocalScope_ Do_ Statements_ End_ FuncDefs_  . 
+ClassDecl_ -> Class_ Identifier_ OptionalInherits_ OpenCurlyBrace_ MemberDecls_ CloseCurlyBrace_ SemiColon_ .
+
+FuncDefs_ -> FuncDef_ FuncDefs_  . 
 FuncDefs_ ->  . 
+
+FuncDef_ -> FuncSig_ FuncBody_ SemiColon_ .
 
 MemberDecls_ -> Visibility_ MemberDecl_ MemberDecls_  . 
 MemberDecls_ ->  . 
 
 MemberDecl_ -> Identifier_ FuncOrVarDecl_ .
-MemberDecl_ -> TypeNoID_ Identifier_ ArrayDims_ SemiColon_  . 
+MemberDecl_ -> TypeNoID_ VarDecl_  . 
 
 FuncOrVarDecl_ -> FuncDecl_ .
-FuncOrVarDecl_ -> Identifier_ ArrayDims_ SemiColon_ .
+FuncOrVarDecl_ -> VarDecl_ .
 
 Visibility_ -> Public_  . 
 Visibility_ -> Private_  . 
-
 
 Statement_ -> If_ OpenBrace_ BoolExpr_ CloseBrace_ Then_ StatementBlock_ Else_ StatementBlock_ SemiColon_  . 
 Statement_ -> While_ OpenBrace_ BoolExpr_ CloseBrace_ StatementBlock_ SemiColon_  . 
@@ -28,18 +31,15 @@ Statement_ -> Write_ OpenBrace_ Expression_ CloseBrace_ SemiColon_  .
 Statement_ -> Return_ OpenBrace_ Expression_ CloseBrace_ SemiColon_  . 
 Statement_ -> AssignStatementOrFuncCall_ .
 
-StatementBlock_ -> Do_ Statements_ End_  . 
-StatementBlock_ -> Statement_  . 
-StatementBlock_ ->  . 
+StatementVar_ -> Identifier_ StatementVarOrFuncCall_ .
 
-StatementVar_ -> Identifier_ StatementVarOrFuncCall_ . 
+StatementVarOrFuncCall_ -> Indices_ StatementVarExt_ .
+StatementVarOrFuncCall_ -> OpenBrace_ FuncCallParams_ CloseBrace_ StatementFunctionCall_ .
 
-StatementVarOrFuncCall_ -> Indices_ StatementVar_ .
-StatementVarOrFuncCall_ -> OpenBrace_ FuncCallParams_ CloseBrace_ Period_ StatementVar_ .
+StatementVarExt_ -> Period_ StatementVar_ .
+StatementVarExt_ -> .
 
-StatementVar_ -> Period_ StatementVar_ .
-StatementVar_ -> .
-
+StatementFunctionCall_ -> Period_ StatementVar_ .
 
 AssignStatementOrFuncCall_ -> Identifier_ VarOrFuncCallExt_ .
 
@@ -52,50 +52,54 @@ VarExt_ -> Period_ AssignStatementOrFuncCall_ .
 FuncCallExt_ -> SemiColon_ .
 FuncCallExt_ -> Period_ AssignStatementOrFuncCall_ .
 
-FuncParams_ -> Type_ Identifier_ ArrayDims_ FuncParamsRest_  . 
-FuncParams_ ->  . 
+FuncParams_ -> Type_ Identifier_ ArrayDims_ FuncParamsRests_  . 
+FuncParams_ ->  .
 
 AddOp_ -> Plus_  . 
 AddOp_ -> Minus_  . 
-AddOp_ -> Or_  . 
+AddOp_ -> Or_  .
 
 OptionalInherits_ -> Inherits_ Identifier_ InheritedClasses_  . 
-OptionalInherits_ ->  . 
+OptionalInherits_ ->  .
 
-BoolExpr_ -> ArithExpr_ CompareOp_ ArithExpr_  . 
+BoolExpr_ -> ArithExpr_ CompareOp_ ArithExpr_  .
 
-FuncDecl_ -> OpenBrace_ FuncParams_ CloseBrace_ Colon_ TypeOrVoid_ SemiColon_  . 
+FuncDecl_ -> OpenBrace_ FuncParams_ CloseBrace_ Colon_ TypeOrVoid_ SemiColon_  .
 
-FuncParamRest_ -> Comma_ Expression_ FuncParamRest_  . 
-FuncParamRest_ ->  . 
+FuncCallParamsRests_ -> FuncCallParamsRest_ FuncCallParamsRests_ .
+FuncCallParamsRests_ -> .
 
 LocalScope_ -> Local_ VarDecls_  . 
-LocalScope_ ->  . 
+LocalScope_ ->  .
 
-ArrayDims_ -> OpenSquareBrace_ OptionalInt_ CloseSquareBrace_ ArrayDims_  . 
-ArrayDims_ ->  . 
+ArrayDims_ -> ArraySize_ ArrayDims_  . 
+ArrayDims_ ->  .
 
-Expression_ -> ArithExpr_  BoolExprOrNone_ . 
+Expression_ -> ArithExpr_  BoolExprOrNone_ .
 
 BoolExprOrNone_ -> CompareOp_ ArithExpr_ .
 BoolExprOrNone_ -> .
 
 Statements_ -> Statement_ Statements_  . 
-Statements_ ->  . 
+Statements_ ->  .
 
-ArithExpr_ -> Factor_ RightTerm_ RightArithExpr_  . 
+ArithExpr_ -> Term_ RightArithExpr_  .
 
 RightArithExpr_ ->  . 
-RightArithExpr_ -> AddOp_ Factor_ RightTerm_ RightArithExpr_  . 
+RightArithExpr_ -> AddOp_ Term_ RightArithExpr_ .
 
-FuncSigNamespace_ -> OpenBrace_ FuncParams_ CloseBrace_ Colon_ TypeOrVoid_ .
-FuncSigNamespace_ -> ColonColon_ Identifier_ OpenBrace_ FuncParams_ CloseBrace_ Colon_ TypeOrVoid_ .
+FuncSig_ -> Identifier_ FuncSigNamespace_ .
 
-FuncParamsRest_ -> Comma_ Type_ Identifier_ ArrayDims_ FuncParamsRest_  . 
-FuncParamsRest_ ->  . 
+FuncSigNamespace_ -> FuncSigExt_ .
+FuncSigNamespace_ -> ColonColon_ Identifier_ FuncSigExt_ .
+
+FuncSigExt_ -> OpenBrace_ FuncParams_ CloseBrace_ Colon_ TypeOrVoid_ .
+
+FuncParamsRests_ -> FuncParamsRest_ FuncParamsRests_  . 
+FuncParamsRests_ ->  .
 
 InheritedClasses_ -> Comma_ Identifier_ InheritedClasses_  . 
-InheritedClasses_ ->  . 
+InheritedClasses_ ->  .
 
 Sign_ -> Plus_  . 
 Sign_ -> Minus_  . 
@@ -107,49 +111,71 @@ CompareOp_ -> Greater_  .
 CompareOp_ -> LesserEqual_  . 
 CompareOp_ -> GreaterEqual_  . 
 
-VarDecls_ -> Identifier_ ArrayDims_ SemiColon_ VarDecls_  . 
-VarDecls_ ->  . 
+Index_ -> OpenSquareBrace_ ArithExpr_ CloseSquareBrace_ .
 
-Factor_ -> Identifier_ VarOrFuncCall_  . 
+VarDecls_ -> Type_ VarDecl_ VarDecls_  . 
+VarDecls_ ->  .
+
+Factor_ -> VarFuncCall_  . 
 Factor_ -> IntNum_  . 
 Factor_ -> FloatNum_  . 
 Factor_ -> OpenBrace_ ArithExpr_ CloseBrace_  . 
 Factor_ -> Not_ Factor_  . 
-Factor_ -> Sign_ Factor_  . 
+Factor_ -> Sign_ Factor_  .
+
+VarFuncCall_ -> Identifier_ VarOrFuncCall_ .
 
 VarOrFuncCall_ -> Indices_ FactorVar_ .
 VarOrFuncCall_ -> OpenBrace_ FuncCallParams_ CloseBrace_ FactorFuncCall_ .
 
-Indices_ -> OpenSquareBrace_ ArithExpr_ CloseSquareBrace_ Indices_  . 
-Indices_ ->  .
+FactorVar_ -> Period_ VarFuncCall_ .
+FactorVar_ -> .
 
-FactorVar_ -> Period_ Identifier_ VarOrFuncCall_ .
-FactorVar_ -> . 
-
-FactorFuncCall_ -> Period_ Identifier_ VarOrFuncCall_ .
+FactorFuncCall_ -> Period_ VarFuncCall_ .
 FactorFuncCall_ -> .
+
+Term_ -> Factor_ RightTerm_ .
 
 MultOp_ -> Asterix_  . 
 MultOp_ -> FwdSlash_  . 
-MultOp_ -> And_  . 
+MultOp_ -> And_  .
 
-RightTerm_ ->  . 
+RightTerm_ ->  .
 RightTerm_ -> MultOp_ Factor_ RightTerm_  . 
 
 TypeOrVoid_ -> Type_ .
 TypeOrVoid_ -> Void_ .
 
 Type_ -> TypeNoID_ .
-Type_ -> Identifier_  . 
+Type_ -> Identifier_  .
 
 TypeNoID_ -> Integer_ .
 TypeNoID_ -> Float_ .
 
+ArraySize_ -> OpenSquareBrace_ OptionalInt_ CloseSquareBrace_ .
+
 OptionalInt_ -> IntNum_ .
 OptionalInt_ -> .
 
-FuncCallParams_ -> Expression_ FuncParamRest_  . 
-FuncCallParams_ ->  . 
+FuncCallParamsRest_ -> Comma_ Expression_ .
+
+FuncCallParams_ -> Expression_ FuncCallParamsRests_  . 
+FuncCallParams_ ->  .
+
+VarDecl_ -> Identifier_ ArrayDims_ SemiColon_ .
+
+FuncBody_ -> LocalScope_ Do_ Statements_ end .
+
+StatementBlock_ -> Do_ Statements_ End_  . 
+StatementBlock_ -> Statement_  . 
+StatementBlock_ ->  . 
+
+
+FuncParamsRest_ -> Comma_ Type_ Identifier_ ArrayDims_ .
+
+Indices_ -> Index_ Indices_  . 
+Indices_ ->  .
+
 
 IntNum_ -> intNum .
 FloatNum_ -> floatNum .

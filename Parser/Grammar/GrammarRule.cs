@@ -6,18 +6,37 @@ namespace Parser.Grammar
 {
     class GrammarRule : RuleBase
     {
+        public GrammarRule(NonTerminal nonTerminal, bool isNullable = false, bool isTerminalRule = false)
+        {
+            Symbol = nonTerminal;
+            FirstSet = new List<TokenType>();
+            if (!isNullable)
+            {
+                FollowSet = new List<TokenType>();
+
+            }
+
+            Rules = new List<List<RuleBase>>();
+
+            IsNullable = isNullable;
+            IsTerminalRule = isTerminalRule;
+        }
+
         // X -> AB, Symbol = X
-        public string Symbol { get; set; }
+        public NonTerminal Symbol { get; set; }
+
+        public List<TokenType> FirstSet { get; set; }
+        public List<TokenType> FollowSet { get; set; }
 
         // X -> AB
         // X -> CD
-        // Terminals = { {A, B}, {C, D} }
-        public List<List<RuleBase>> Terminals { get; set; }
+        // Rules = { {A, B}, {C, D} } which maps to -> AB | CD
+        public List<List<RuleBase>> Rules { get; set; }
+
+        // Is epsilon in the first set
+        public bool IsNullable { get; set; }
 
         // Is a rule of form F -> TokenType.If
         public bool IsTerminalRule { get; set; }
-
-        // TokenType when IsTerminalRule == true
-        public TokenType TerminalType { get; set; }
     }
 }

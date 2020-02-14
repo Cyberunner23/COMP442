@@ -41,7 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grammar\NonTerminalType.cs" />
+    <Compile Include="Grammar\GrammarFactory.cs" />
+    <Compile Include="Grammar\NonTerminal.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\RuleBase.cs" />
     <Compile Include="Grammar\SemanticRule.cs" />

@@ -1,4 +1,5 @@
 ﻿using Lexer;
+using Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,6 +48,7 @@ namespace ParserDriver
             }
 
             // Do parsing
+            Parser.Parser parser = new Parser.Parser(tokensToParse);
         }
     }
 }
