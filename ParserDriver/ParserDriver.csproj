@@ -54,6 +54,10 @@
       <Project>{D85D0632-52C3-4955-A8CE-E721F4BB251A}</Project>
       <Name>Lexer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.csproj">
+      <Project>{C60DC2EC-B6D5-4872-8D07-ABA712D89957}</Project>
+      <Name>Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -108,6 +108,8 @@
         Class,
         OpenCurlyBrace,
         CloseCurlyBrace,
-        EqualEqual
+        EqualEqual,
+
+        Final // $
     }
 }

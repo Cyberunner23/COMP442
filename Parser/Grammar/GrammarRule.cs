@@ -16,7 +16,7 @@ namespace Parser.Grammar
 
             }
 
-            Rules = new List<List<RuleBase>>();
+            RHSSet = new List<List<RuleBase>>();
 
             IsNullable = isNullable;
             IsTerminalRule = isTerminalRule;
@@ -31,7 +31,7 @@ namespace Parser.Grammar
         // X -> AB
         // X -> CD
         // Rules = { {A, B}, {C, D} } which maps to -> AB | CD
-        public List<List<RuleBase>> Rules { get; set; }
+        public List<List<RuleBase>> RHSSet { get; set; }
 
         // Is epsilon in the first set
         public bool IsNullable { get; set; }

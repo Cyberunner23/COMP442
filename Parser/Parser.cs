@@ -29,10 +29,23 @@ namespace Parser
         {
             GrammarRule entry = _grammar[nonTerminal];
 
-            foreach(var rule in entry.Rules)
+            if (entry.IsTerminalRule)
             {
+                return Match(entry.FirstSet.First());
+            }
 
-                foreach(var production in rule) // Going through all the RHS
+            TokenType currentLookahead = GetCurrentLookaheadToken().TokenType;
+            if (entry.FirstSet.Contains(currentLookahead))
+            {
+                return entry.IsNullable && entry.FollowSet.Contains(currentLookahead);
+            }
+
+
+
+
+            foreach (var rhs in entry.RHSSet)
+            {
+                foreach(var production in rhs) // Going through all the RHS
                 {
                     var grammarRule = production as GrammarRule;
                     var semanticRule = production as SemanticRule;
