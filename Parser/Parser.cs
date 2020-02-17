@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+
 using Lexer;
 using Parser.Grammar;
 
@@ -11,16 +14,28 @@ namespace Parser
         private List<Token> _tokens;
         private int _currentLookaheadTokenIndex = 0;
         private Dictionary<NonTerminal, GrammarRule> _grammar;
+        bool _hasRHSErrors = false;
 
-        public Parser(List<Token> tokens)
+        StreamWriter _syntaxErrorStream;
+        StreamWriter _derivationsStream;
+        StreamWriter _astStream;
+
+
+        public Parser(List<Token> tokens, StreamWriter syntaxErrorStream, StreamWriter derivationsStream, StreamWriter astStream)
         {
             _tokens = tokens;
             _grammar = GrammarFactory.CreateGrammar();
+
+            _syntaxErrorStream = syntaxErrorStream;
+            _derivationsStream = derivationsStream;
+            _astStream = astStream;
         }
 
         public bool Parse()
         {
-            return Parse(NonTerminal.Start) && Match(TokenType.EOF);
+            var result = Parse(NonTerminal.Start);
+            var result2 = Match(TokenType.EOF);
+            return result && result2 && !_hasRHSErrors;
         }
 
 
@@ -29,66 +44,106 @@ namespace Parser
         {
             GrammarRule entry = _grammar[nonTerminal];
 
+            Token currentLookahead = GetCurrentLookaheadToken();
+            TokenType currentLookaheadType = GetCurrentLookaheadTokenType();
+
+            if (!SkipErrors(entry))
+            {
+                return false;
+            }
+
             if (entry.IsTerminalRule)
             {
-                return Match(entry.FirstSet.First());
+                PrintTerminalRule(entry);
+                var result = Match(entry.FirstSet.First());
+                return result;
             }
-
-            TokenType currentLookahead = GetCurrentLookaheadToken().TokenType;
-            if (entry.FirstSet.Contains(currentLookahead))
+            
+            if (!entry.FirstSet.Contains(currentLookaheadType))
             {
-                return entry.IsNullable && entry.FollowSet.Contains(currentLookahead);
+                var result = entry.IsNullable && entry.FollowSet.Contains(currentLookaheadType);
+                //ErrorExpectedTokens(entry.FirstSet, currentLookahead.StartLine, currentLookahead.StartColumn);
+                return result;
             }
 
-
-
-
+            List<RuleBase> satisfiableRHS = null;
             foreach (var rhs in entry.RHSSet)
             {
-                foreach(var production in rhs) // Going through all the RHS
+                var grammarRules = rhs.Where(x => x is GrammarRule); // Filter out semantic rules
+                var firstRule = grammarRules.First() as GrammarRule;
+                if (firstRule.FirstSet.Contains(currentLookaheadType) || (firstRule.IsNullable && firstRule.FollowSet.Contains(currentLookaheadType)))
                 {
-                    var grammarRule = production as GrammarRule;
-                    var semanticRule = production as SemanticRule;
-
-                    if (grammarRule != null) // Is a Grammar rule
-                    {
-                        if (grammarRule.IsTerminalRule)
-                        {
-                            return Match(grammarRule.FirstSet.First());
-                        }
-                        else
-                        {
-                            
-                        }
-                    }
-                    else if (semanticRule != null) // Is a Semantic Rule
-                    {
-                        // Do semantic rule stuff
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unhandled production type");
-                        Environment.Exit(-1);
-                    }
-                }
-
-                // Went through all the RSHs without returning... if LHS -> EPSILON exists, return true
-                if (entry.IsNullable)
-                {
-                    //TODO(AFL) Write ("LHS->ε")
-                    return true;
+                    satisfiableRHS = rhs;
+                    PrintSatisfiableRHS(entry, satisfiableRHS);
+                    break;
                 }
             }
 
-            return false;
+            if (satisfiableRHS == null)
+            {
+                // ERROR
+            }
+
+            // Going through the RHS
+            foreach (var symbol in satisfiableRHS)
+            {
+                var grammarRule = symbol as GrammarRule;
+                var semanticRule = symbol as SemanticRule;
+
+                if (grammarRule != null) // Is a Grammar rule
+                { 
+                    bool result = Parse(grammarRule.Symbol);
+                    if (!result)
+                    {
+                        // Report error
+                        _hasRHSErrors = true;
+                    }
+                }
+                else if (semanticRule != null) // Is a Semantic Rule
+                {
+                    // Do semantic rule stuff
+                }
+                else
+                {
+                    _syntaxErrorStream.WriteLine("Unhandled production type");
+                    Environment.Exit(-1);
+                }
+            }
+
+            return true;
+        }
+
+        private void PrintSatisfiableRHS(GrammarRule entry, List<RuleBase> satisfiableRHS)
+        {
+            var LHS = entry.Symbol;
+            var RHS = satisfiableRHS.OfType<GrammarRule>().Select(x => x.Symbol);
+            StringBuilder b = new StringBuilder();
+            b.Append($"{LHS} -> ");
+            foreach (var symbol in RHS)
+            {
+                b.Append($"{symbol} ");
+            }
+
+            _derivationsStream.WriteLine(b.ToString());
+        }
+
+        private void PrintTerminalRule(GrammarRule entry)
+        {
+            var rhs = char.ToLower(entry.Symbol.ToString()[0]) + entry.Symbol.ToString().Substring(1);
+            _derivationsStream.WriteLine($"{entry.Symbol} -> {rhs}");
         }
 
         private bool Match(TokenType tokenType)
         {
-            bool matches = GetCurrentLookaheadToken().TokenType == tokenType;
+            var lookahead = GetCurrentLookaheadToken();
+            bool matches = lookahead.TokenType == tokenType;
             if (matches)
             {
                 ShiftForwardLookaheadToken();
+            }
+            else
+            {
+                _syntaxErrorStream.WriteLine($"[{lookahead.StartLine}:{lookahead.StartColumn}] Expected token: {tokenType}, saw: {lookahead.TokenType}");
             }
 
             return matches;
@@ -99,11 +154,44 @@ namespace Parser
             return _tokens[_currentLookaheadTokenIndex];
         }
 
+        private TokenType GetCurrentLookaheadTokenType()
+        {
+            return GetCurrentLookaheadToken().TokenType;
+        }
+
         private void ShiftForwardLookaheadToken()
         {
             _currentLookaheadTokenIndex++;
         }
 
-      
+        private bool SkipErrors(GrammarRule entry)
+        {
+            Token lookahead = GetCurrentLookaheadToken();
+            if (entry.IsTerminalRule)
+            {
+                return true;
+            }
+
+            if (entry.FirstSet.Contains(lookahead.TokenType) || (entry.IsNullable && entry.FollowSet.Contains(lookahead.TokenType)))
+            {
+                return true;
+            }
+            else
+            {
+                // Write error
+                _syntaxErrorStream.WriteLine($"Syntax error: [{lookahead.StartLine}:{lookahead.StartColumn}]");
+                var firstAndFollow = entry.FirstSet.Concat(entry.FollowSet ?? new List<TokenType>()).ToList();
+                while (!firstAndFollow.Contains(lookahead.TokenType))
+                {
+                    ShiftForwardLookaheadToken();
+                    lookahead = GetCurrentLookaheadToken();
+                    if (entry.IsNullable && entry.FollowSet.Contains(lookahead.TokenType))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
     }
 }

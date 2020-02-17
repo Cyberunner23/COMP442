@@ -47,8 +47,14 @@ namespace ParserDriver
                 tokensToParse.RemoveAll(x => lex.IsCommentToken(x.TokenType));
             }
 
-            // Do parsing
-            Parser.Parser parser = new Parser.Parser(tokensToParse);
+            using (StreamWriter astStream = new StreamWriter($"{fileName}.outast"))
+            using (StreamWriter derivationsStream = new StreamWriter($"{fileName}.outderivation"))
+            using (StreamWriter syntaxErrorStream = new StreamWriter($"{fileName}.outsyntaxerrors"))
+            {
+                // Do parsing
+                Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
+                Console.WriteLine(parser.Parse());
+            }
         }
     }
 }

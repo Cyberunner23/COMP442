@@ -1,0 +1,27 @@
+Lexical error: Invalid character: "@": line 1.
+Lexical error: Invalid character: "#": line 1.
+Lexical error: Invalid character: "$": line 1.
+Lexical error: Invalid character: "!": line 1.
+Lexical error: Invalid character: """: line 1.
+Lexical error: Invalid character: "'": line 1.
+Lexical error: Invalid character: "?": line 1.
+Lexical error: Invalid character: "\": line 1.
+Lexical error: Invalid character: "|": line 1.
+Lexical error: Invalid character: "&": line 1.
+Lexical error: Invalid character: "~": line 1.
+Lexical error: Invalid number: "00": line 3.
+Lexical error: Invalid number: "01": line 4.
+Lexical error: Invalid number: "010": line 5.
+Lexical error: Invalid number: "0120": line 6.
+Lexical error: Invalid number: "01230": line 7.
+Lexical error: Invalid number: "0123450": line 8.
+Lexical error: Invalid number: "01.23": line 10.
+Lexical error: Invalid number: "012.34": line 11.
+Lexical error: Invalid number: "12.340": line 12.
+Lexical error: Invalid number: "012.340": line 13.
+Lexical error: Invalid number: "012.34e10": line 15.
+Lexical error: Invalid number: "12.34e010": line 16.
+Lexical error: Invalid identifier: "_abc": line 18. 
+Lexical error: Invalid identifier: "1abc": line 19.
+Lexical error: Invalid identifier: "_abc": line 20. 
+

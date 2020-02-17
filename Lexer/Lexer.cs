@@ -58,6 +58,12 @@ namespace Lexer
             do
             {
                 char currentChar =  _currentInputIndex < _inputCode.Length ? _inputCode.ElementAt(_currentInputIndex) : '~'; // Insert EOF tag if past end of input
+                if (!_dfa.IsCharacterInAlphabet(currentChar))
+                {
+                    _currentInputIndex++;
+                    continue;
+                }
+
                 previousCol = _currentColumn;
                 previousRow = _currentLine;
                 if (currentChar == '\n')

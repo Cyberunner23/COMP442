@@ -10,14 +10,8 @@ namespace Parser.Grammar
         {
             Symbol = nonTerminal;
             FirstSet = new List<TokenType>();
-            if (!isNullable)
-            {
-                FollowSet = new List<TokenType>();
-
-            }
-
+            FollowSet = new List<TokenType>();
             RHSSet = new List<List<RuleBase>>();
-
             IsNullable = isNullable;
             IsTerminalRule = isTerminalRule;
         }

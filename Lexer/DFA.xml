@@ -263,12 +263,12 @@
 
       <State ID="34" Type="Intermediate" ErrorType="InvalidIntNum"/>
       <State ID="35" Type="Intermediate" ErrorType="InvalidIntNum"/>
-      <State ID="36" Type="Integer" IsBacktrackState="true"/>
+      <State ID="36" Type="IntNum" IsBacktrackState="true"/>
 
       <State ID="37" Type="Intermediate" ErrorType="InvalidFloatNum"/>
       <State ID="38" Type="Intermediate" ErrorType="InvalidFloatNum"/>
       <State ID="39" Type="Intermediate" ErrorType="InvalidFloatNum"/>
-      <State ID="40" Type="Float" IsBacktrackState="true"/>
+      <State ID="40" Type="FloatNum" IsBacktrackState="true"/>
       <State ID="41" Type="Intermediate" ErrorType="InvalidFloatNum"/>
       <State ID="42" Type="Intermediate" ErrorType="InvalidFloatNum"/>
       <State ID="43" Type="Intermediate" ErrorType="InvalidFloatNum"/>

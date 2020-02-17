@@ -63,6 +63,11 @@ namespace Lexer.DFA
             return id == -1 ? false : _states[id].IsBacktrackState;
         }
 
+        public bool IsCharacterInAlphabet(char c)
+        {
+            return _inverseLetterMap.Keys.Contains(c);
+        }
+
         public Dictionary<string, TokenType> GetKeywordMapping()
         {
             return _keywordMap;
