@@ -44,14 +44,16 @@
     <Compile Include="ASTBuilder\ASTBuilder.cs" />
     <Compile Include="ASTBuilder\SemanticRules\DownScopeLevelRule.cs" />
     <Compile Include="ASTBuilder\SemanticRules\MakeFamilyRule.cs" />
-    <Compile Include="ASTBuilder\SemanticRules\MakeNodeRules\MakeClassDeclsNodeRule.cs" />
-    <Compile Include="ASTBuilder\SemanticRules\MakeNodeRules\MakeNodeRule.cs" />
-    <Compile Include="ASTBuilder\SemanticRules\MakeNodeRules\MakeNullNodeRule.cs" />
-    <Compile Include="ASTBuilder\SemanticRules\MakeNodeRules\MakeProgramNodeRule.cs" />
+    <Compile Include="ASTBuilder\SemanticRules\MakeNodeRule.cs" />
     <Compile Include="ASTBuilder\SemanticRules\UpScopeLevelRule.cs" />
+    <Compile Include="ASTVisitor\IVisitableNode.cs" />
+    <Compile Include="ASTVisitor\IVisitor.cs" />
+    <Compile Include="ASTVisitor\Visitors\DOTPrinterVisitor.cs" />
     <Compile Include="AST\ASTNodeBase.cs" />
     <Compile Include="AST\ASTNodeFactory.cs" />
     <Compile Include="AST\Nodes\ClassDeclsNode.cs" />
+    <Compile Include="AST\Nodes\ClassDeclNode.cs" />
+    <Compile Include="AST\Nodes\FuncDefsNode.cs" />
     <Compile Include="AST\Nodes\NullNode.cs" />
     <Compile Include="AST\Nodes\ProgramNode.cs" />
     <Compile Include="Grammar\GrammarFactory.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="ASTBuilder\SemanticRules\ISemanticRule.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\TypePrintUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lexer\Lexer.csproj">

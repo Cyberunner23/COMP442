@@ -1,5 +1,6 @@
 ﻿using Lexer;
 using Parser;
+using Parser.ASTVisitor.Visitors;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,6 +56,9 @@ namespace ParserDriver
                 Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
                 Console.WriteLine(parser.Parse());
                 var tree = parser.GetASTTree();
+
+                var printVisitor = new DOTPrinterVisitor(astStream);
+                tree.Accept(printVisitor);
             }
         }
     }

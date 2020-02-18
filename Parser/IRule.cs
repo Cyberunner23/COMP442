@@ -1,6 +1,6 @@
 ﻿namespace Parser
 {
-    interface IRule
+    public interface IRule
     {
     }
 }

@@ -1,4 +1,17 @@
-﻿namespace Parser.AST.Nodes
+﻿using Parser.ASTVisitor;
+
+namespace Parser.AST.Nodes
 {
-    class ClassDeclsNode : ASTNodeBase {}
+    public class ClassDeclsNode : ASTNodeBase
+    {
+        public override void Accept(IVisitor v)
+        {
+            v.Visit(this);
+        }
+
+        protected override ASTNodeBase CreateNode()
+        {
+            return new ClassDeclsNode();
+        }
+    }
 }

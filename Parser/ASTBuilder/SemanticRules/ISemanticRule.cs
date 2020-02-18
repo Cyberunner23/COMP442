@@ -2,7 +2,7 @@
 
 namespace Parser.ASTBuilder.SemanticRules
 {
-    interface ISemanticRule : IRule
+    public interface ISemanticRule : IRule
     {
         void ExecuteRule(ASTBuilder builder);
     }

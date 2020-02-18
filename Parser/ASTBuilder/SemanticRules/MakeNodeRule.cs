@@ -1,9 +1,9 @@
 ﻿using Lexer;
 using Parser.AST;
 
-namespace Parser.ASTBuilder.SemanticRules.MakeNodeRules
+namespace Parser.ASTBuilder.SemanticRules
 {
-    abstract class MakeNodeRule : ISemanticRule
+    public abstract class MakeNodeRule : ISemanticRule
     {
         protected Token Lookahead { get; private set; }
 

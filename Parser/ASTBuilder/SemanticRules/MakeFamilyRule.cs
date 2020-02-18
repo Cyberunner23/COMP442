@@ -14,7 +14,7 @@ namespace Parser.ASTBuilder.SemanticRules
             }
 
             var parentNode = bottomScope.Pop();
-            var childNodes = bottomScope.ToList();
+            var childNodes = bottomScope.Reverse().ToList();
             bottomScope.Clear();
             parentNode.MakeFamily(childNodes);
             bottomScope.Push(parentNode);

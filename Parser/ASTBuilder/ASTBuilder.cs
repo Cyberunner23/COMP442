@@ -7,7 +7,7 @@ using Parser.ASTBuilder.SemanticRules;
 
 namespace Parser.ASTBuilder
 {
-    class ASTBuilder
+    public class ASTBuilder
     {
         public Stack<ASTNodeBase> BottomScope { get { return _semanticScopeStack.Peek(); } }
         public Token Lookahead { get; private set; }

@@ -2,7 +2,7 @@
 
 namespace Parser.AST.Nodes
 {
-    public class NullNode : ASTNodeBase
+    public class FuncDefsNode : ASTNodeBase
     {
         public override void Accept(IVisitor v)
         {
@@ -11,7 +11,7 @@ namespace Parser.AST.Nodes
 
         protected override ASTNodeBase CreateNode()
         {
-            return new NullNode();
+            return new FuncDefsNode();
         }
     }
 }

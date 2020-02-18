@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using Parser.ASTBuilder.SemanticRules;
+using Parser.ASTVisitor;
+
 namespace Parser.AST
 {
-    public class ASTNodeBase
+    public abstract class ASTNodeBase : MakeNodeRule, IVisitableNode
     {
         public int ID { get; private set; }
         public ASTNodeBase ParentNode { get; private set; }
@@ -27,10 +30,10 @@ namespace Parser.AST
                 xsibs = xsibs.RightSiblingNode;
             }
 
-            var ysibs = node.LeftmostSiblingNode;
+            var ysibs = node.LeftmostSiblingNode ?? node;
             xsibs.RightSiblingNode = ysibs;
 
-            ysibs.LeftmostSiblingNode = xsibs.LeftmostSiblingNode;
+            ysibs.LeftmostSiblingNode = LeftmostSiblingNode ?? this;
             ysibs.ParentNode = xsibs.ParentNode;
 
             while (ysibs.RightSiblingNode != null)
@@ -76,5 +79,20 @@ namespace Parser.AST
 
             AdoptChildren(firstChild);
         }
+
+        public List<ASTNodeBase> GetChildren()
+        {
+            var children = new List<ASTNodeBase>();
+            var node = LeftmostChildNode;
+            while (node != null)
+            {
+                children.Add(node);
+                node = node.RightSiblingNode;
+            }
+
+            return children;
+        }
+
+        public abstract void Accept(IVisitor v);
     }
 }

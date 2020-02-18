@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
 using Lexer;
+using Parser.AST.Nodes;
 using Parser.ASTBuilder.SemanticRules;
-using Parser.ASTBuilder.SemanticRules.MakeNodeRules;
 
 namespace Parser.Grammar
 {
@@ -17,8 +17,10 @@ namespace Parser.Grammar
             var _UpScopeLevelRule_ = new UpScopeLevelRule();
             var _MakeFamilyRule_ = new MakeFamilyRule();
 
-            var _CreateProgramNodeRule_ = new MakeProgramNodeRule();
-            var _CreateClassDeclsNodeRule_ = new MakeClassDeclsNodeRule();
+            var _CreateProgramNodeRule_ = new ProgramNode();
+            var _CreateClassDeclsNodeRule_ = new ClassDeclsNode();
+            var _CreateClassDeclNodeRule_ = new ClassDeclNode();
+            var _CreateFuncDefsNodeRule_ = new FuncDefsNode();
             #endregion
 
             #region Terminal Rules
@@ -1200,15 +1202,34 @@ namespace Parser.Grammar
                     _CreateClassDeclsNodeRule_,
                     _MakeFamilyRule_,
                     _UpScopeLevelRule_,
-                    FuncDefs, 
-                    Main, 
-                    FuncBody,  
+                    
+                    _DownScopeLevelRule_,
+                        FuncDefs,
+                    _CreateFuncDefsNodeRule_,
+                    _MakeFamilyRule_,
+                    _UpScopeLevelRule_,
+
+                    Main, // TODO
+                    FuncBody, // TODO
                 _CreateProgramNodeRule_, 
                 _MakeFamilyRule_, 
                 _UpScopeLevelRule_ 
             });
             ClassDecls.RHSSet.Add(new List<IRule>() { ClassDecl, ClassDecls });
-            ClassDecl.RHSSet.Add(new List<IRule>() { Class, Identifier, OptionalInherits, OpenCurlyBrace, MemberDecls, CloseCurlyBrace, SemiColon });
+            ClassDecl.RHSSet.Add(new List<IRule>() 
+            {
+                _DownScopeLevelRule_,
+                    Class, 
+                    Identifier, 
+                    OptionalInherits, 
+                    OpenCurlyBrace, 
+                    MemberDecls, 
+                    CloseCurlyBrace, 
+                    SemiColon ,
+                _CreateClassDeclNodeRule_,
+                _MakeFamilyRule_,
+                _UpScopeLevelRule_,
+            });
             FuncDefs.RHSSet.Add(new List<IRule>() { FuncDef, FuncDefs });
             FuncDef.RHSSet.Add(new List<IRule>() { FuncSig, FuncBody, SemiColon });
             MemberDecls.RHSSet.Add(new List<IRule>() { Visibility, MemberDecl, MemberDecls });
