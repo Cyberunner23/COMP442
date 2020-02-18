@@ -1,5 +1,8 @@
-﻿using Lexer;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Lexer;
+using Parser.ASTBuilder.SemanticRules;
+using Parser.ASTBuilder.SemanticRules.MakeNodeRules;
 
 namespace Parser.Grammar
 {
@@ -8,6 +11,15 @@ namespace Parser.Grammar
         public static Dictionary<NonTerminal, GrammarRule> CreateGrammar()
         {
             var grammar = new Dictionary<NonTerminal, GrammarRule>();
+
+            #region SemanticRules
+            var _DownScopeLevelRule_ = new DownScopeLevelRule();
+            var _UpScopeLevelRule_ = new UpScopeLevelRule();
+            var _MakeFamilyRule_ = new MakeFamilyRule();
+
+            var _CreateProgramNodeRule_ = new MakeProgramNodeRule();
+            var _CreateClassDeclsNodeRule_ = new MakeClassDeclsNodeRule();
+            #endregion
 
             #region Terminal Rules
 
@@ -1179,100 +1191,114 @@ namespace Parser.Grammar
             #endregion NonTerminals
 
             #region Rules
-            Start.RHSSet.Add(new List<RuleBase>() { Program });
-            Program.RHSSet.Add(new List<RuleBase>() { ClassDecls, FuncDefs, Main, FuncBody });
-            ClassDecls.RHSSet.Add(new List<RuleBase>() { ClassDecl, ClassDecls });
-            ClassDecl.RHSSet.Add(new List<RuleBase>() { Class, Identifier, OptionalInherits, OpenCurlyBrace, MemberDecls, CloseCurlyBrace, SemiColon });
-            FuncDefs.RHSSet.Add(new List<RuleBase>() { FuncDef, FuncDefs });
-            FuncDef.RHSSet.Add(new List<RuleBase>() { FuncSig, FuncBody, SemiColon });
-            MemberDecls.RHSSet.Add(new List<RuleBase>() { Visibility, MemberDecl, MemberDecls });
-            MemberDecl.RHSSet.Add(new List<RuleBase>() { Identifier, FuncOrVarDecl });
-            MemberDecl.RHSSet.Add(new List<RuleBase>() { TypeNoID, VarDecl });
-            FuncOrVarDecl.RHSSet.Add(new List<RuleBase>() { FuncDecl });
-            FuncOrVarDecl.RHSSet.Add(new List<RuleBase>() { VarDecl });
-            Visibility.RHSSet.Add(new List<RuleBase>() { Public });
-            Visibility.RHSSet.Add(new List<RuleBase>() { Private });
-            Statement.RHSSet.Add(new List<RuleBase>() { If, OpenBrace, BoolExpr, CloseBrace, Then, StatementBlock, Else, StatementBlock, SemiColon });
-            Statement.RHSSet.Add(new List<RuleBase>() { While, OpenBrace, BoolExpr, CloseBrace, StatementBlock, SemiColon });
-            Statement.RHSSet.Add(new List<RuleBase>() { Read, OpenBrace, StatementVar, CloseBrace, SemiColon });
-            Statement.RHSSet.Add(new List<RuleBase>() { Write, OpenBrace, Expression, CloseBrace, SemiColon });
-            Statement.RHSSet.Add(new List<RuleBase>() { Return, OpenBrace, Expression, CloseBrace, SemiColon });
-            Statement.RHSSet.Add(new List<RuleBase>() { AssignStatementOrFuncCall });
-            StatementVar.RHSSet.Add(new List<RuleBase>() { Identifier, StatementVarOrFuncCall });
-            StatementVarOrFuncCall.RHSSet.Add(new List<RuleBase>() { Indices, StatementVarExt });
-            StatementVarOrFuncCall.RHSSet.Add(new List<RuleBase>() { OpenBrace, FuncCallParams, CloseBrace, StatementFunctionCall });
-            StatementVarExt.RHSSet.Add(new List<RuleBase>() { Period, StatementVar });
-            StatementFunctionCall.RHSSet.Add(new List<RuleBase>() { Period, StatementVar });
-            AssignStatementOrFuncCall.RHSSet.Add(new List<RuleBase>() { Identifier, VarOrFuncCallExt });
-            VarOrFuncCallExt.RHSSet.Add(new List<RuleBase>() { Indices, VarExt });
-            VarOrFuncCallExt.RHSSet.Add(new List<RuleBase>() { OpenBrace, FuncCallParams, CloseBrace, FuncCallExt });
-            VarExt.RHSSet.Add(new List<RuleBase>() { Equal, Expression, SemiColon });
-            VarExt.RHSSet.Add(new List<RuleBase>() { Period, AssignStatementOrFuncCall });
-            FuncCallExt.RHSSet.Add(new List<RuleBase>() { SemiColon });
-            FuncCallExt.RHSSet.Add(new List<RuleBase>() { Period, AssignStatementOrFuncCall });
-            FuncParams.RHSSet.Add(new List<RuleBase>() { Type, Identifier, ArrayDims, FuncParamsRests });
-            AddOp.RHSSet.Add(new List<RuleBase>() { Plus });
-            AddOp.RHSSet.Add(new List<RuleBase>() { Minus });
-            AddOp.RHSSet.Add(new List<RuleBase>() { Or });
-            OptionalInherits.RHSSet.Add(new List<RuleBase>() { Inherits, Identifier, InheritedClasses });
-            BoolExpr.RHSSet.Add(new List<RuleBase>() { ArithExpr, CompareOp, ArithExpr });
-            FuncDecl.RHSSet.Add(new List<RuleBase>() { OpenBrace, FuncParams, CloseBrace, Colon, TypeOrVoid, SemiColon });
-            FuncCallParamsRests.RHSSet.Add(new List<RuleBase>() { FuncCallParamsRest, FuncCallParamsRests });
-            LocalScope.RHSSet.Add(new List<RuleBase>() { Local, VarDecls });
-            ArrayDims.RHSSet.Add(new List<RuleBase>() { ArraySize, ArrayDims });
-            Expression.RHSSet.Add(new List<RuleBase>() { ArithExpr, BoolExprOrNone });
-            BoolExprOrNone.RHSSet.Add(new List<RuleBase>() { CompareOp, ArithExpr });
-            Statements.RHSSet.Add(new List<RuleBase>() { Statement, Statements });
-            ArithExpr.RHSSet.Add(new List<RuleBase>() { Term, RightArithExpr });
-            RightArithExpr.RHSSet.Add(new List<RuleBase>() { AddOp, Term, RightArithExpr });
-            FuncSig.RHSSet.Add(new List<RuleBase>() { Identifier, FuncSigNamespace });
-            FuncSigNamespace.RHSSet.Add(new List<RuleBase>() { FuncSigExt });
-            FuncSigNamespace.RHSSet.Add(new List<RuleBase>() { ColonColon, Identifier, FuncSigExt });
-            FuncSigExt.RHSSet.Add(new List<RuleBase>() { OpenBrace, FuncParams, CloseBrace, Colon, TypeOrVoid });
-            FuncParamsRests.RHSSet.Add(new List<RuleBase>() { FuncParamsRest, FuncParamsRests });
-            InheritedClasses.RHSSet.Add(new List<RuleBase>() { Comma, Identifier, InheritedClasses });
-            Sign.RHSSet.Add(new List<RuleBase>() { Plus });
-            Sign.RHSSet.Add(new List<RuleBase>() { Minus });
-            CompareOp.RHSSet.Add(new List<RuleBase>() { EqualEqual });
-            CompareOp.RHSSet.Add(new List<RuleBase>() { LesserGreater });
-            CompareOp.RHSSet.Add(new List<RuleBase>() { Lesser });
-            CompareOp.RHSSet.Add(new List<RuleBase>() { Greater });
-            CompareOp.RHSSet.Add(new List<RuleBase>() { LesserEqual });
-            CompareOp.RHSSet.Add(new List<RuleBase>() { GreaterEqual });
-            Index.RHSSet.Add(new List<RuleBase>() { OpenSquareBrace, ArithExpr, CloseSquareBrace });
-            VarDecls.RHSSet.Add(new List<RuleBase>() { Type, VarDecl, VarDecls });
-            Factor.RHSSet.Add(new List<RuleBase>() { VarFuncCall });
-            Factor.RHSSet.Add(new List<RuleBase>() { IntNum });
-            Factor.RHSSet.Add(new List<RuleBase>() { FloatNum });
-            Factor.RHSSet.Add(new List<RuleBase>() { OpenBrace, ArithExpr, CloseBrace });
-            Factor.RHSSet.Add(new List<RuleBase>() { Not, Factor });
-            Factor.RHSSet.Add(new List<RuleBase>() { Sign, Factor });
-            VarFuncCall.RHSSet.Add(new List<RuleBase>() { Identifier, VarOrFuncCall });
-            VarOrFuncCall.RHSSet.Add(new List<RuleBase>() { Indices, FactorVar });
-            VarOrFuncCall.RHSSet.Add(new List<RuleBase>() { OpenBrace, FuncCallParams, CloseBrace, FactorFuncCall });
-            FactorVar.RHSSet.Add(new List<RuleBase>() { Period, VarFuncCall });
-            FactorFuncCall.RHSSet.Add(new List<RuleBase>() { Period, VarFuncCall });
-            Term.RHSSet.Add(new List<RuleBase>() { Factor, RightTerm });
-            MultOp.RHSSet.Add(new List<RuleBase>() { Asterix });
-            MultOp.RHSSet.Add(new List<RuleBase>() { FwdSlash });
-            MultOp.RHSSet.Add(new List<RuleBase>() { And });
-            RightTerm.RHSSet.Add(new List<RuleBase>() { MultOp, Factor, RightTerm });
-            TypeOrVoid.RHSSet.Add(new List<RuleBase>() { Type });
-            TypeOrVoid.RHSSet.Add(new List<RuleBase>() { Void });
-            Type.RHSSet.Add(new List<RuleBase>() { TypeNoID });
-            Type.RHSSet.Add(new List<RuleBase>() { Identifier });
-            TypeNoID.RHSSet.Add(new List<RuleBase>() { Integer });
-            TypeNoID.RHSSet.Add(new List<RuleBase>() { Float });
-            ArraySize.RHSSet.Add(new List<RuleBase>() { OpenSquareBrace, OptionalInt, CloseSquareBrace });
-            OptionalInt.RHSSet.Add(new List<RuleBase>() { IntNum });
-            FuncCallParamsRest.RHSSet.Add(new List<RuleBase>() { Comma, Expression });
-            FuncCallParams.RHSSet.Add(new List<RuleBase>() { Expression, FuncCallParamsRests });
-            VarDecl.RHSSet.Add(new List<RuleBase>() { Identifier, ArrayDims, SemiColon });
-            FuncBody.RHSSet.Add(new List<RuleBase>() { LocalScope, Do, Statements, End });
-            StatementBlock.RHSSet.Add(new List<RuleBase>() { Do, Statements, End });
-            StatementBlock.RHSSet.Add(new List<RuleBase>() { Statement });
-            Indices.RHSSet.Add(new List<RuleBase>() { Index, Indices });
-            FuncParamsRest.RHSSet.Add(new List<RuleBase>() { Comma, Type, Identifier, ArrayDims });
+            Start.RHSSet.Add(new List<IRule>() { Program });
+            Program.RHSSet.Add(new List<IRule>() 
+            { 
+                _DownScopeLevelRule_, 
+                    _DownScopeLevelRule_, 
+                        ClassDecls,
+                    _CreateClassDeclsNodeRule_,
+                    _MakeFamilyRule_,
+                    _UpScopeLevelRule_,
+                    FuncDefs, 
+                    Main, 
+                    FuncBody,  
+                _CreateProgramNodeRule_, 
+                _MakeFamilyRule_, 
+                _UpScopeLevelRule_ 
+            });
+            ClassDecls.RHSSet.Add(new List<IRule>() { ClassDecl, ClassDecls });
+            ClassDecl.RHSSet.Add(new List<IRule>() { Class, Identifier, OptionalInherits, OpenCurlyBrace, MemberDecls, CloseCurlyBrace, SemiColon });
+            FuncDefs.RHSSet.Add(new List<IRule>() { FuncDef, FuncDefs });
+            FuncDef.RHSSet.Add(new List<IRule>() { FuncSig, FuncBody, SemiColon });
+            MemberDecls.RHSSet.Add(new List<IRule>() { Visibility, MemberDecl, MemberDecls });
+            MemberDecl.RHSSet.Add(new List<IRule>() { Identifier, FuncOrVarDecl });
+            MemberDecl.RHSSet.Add(new List<IRule>() { TypeNoID, VarDecl });
+            FuncOrVarDecl.RHSSet.Add(new List<IRule>() { FuncDecl });
+            FuncOrVarDecl.RHSSet.Add(new List<IRule>() { VarDecl });
+            Visibility.RHSSet.Add(new List<IRule>() { Public });
+            Visibility.RHSSet.Add(new List<IRule>() { Private });
+            Statement.RHSSet.Add(new List<IRule>() { If, OpenBrace, BoolExpr, CloseBrace, Then, StatementBlock, Else, StatementBlock, SemiColon });
+            Statement.RHSSet.Add(new List<IRule>() { While, OpenBrace, BoolExpr, CloseBrace, StatementBlock, SemiColon });
+            Statement.RHSSet.Add(new List<IRule>() { Read, OpenBrace, StatementVar, CloseBrace, SemiColon });
+            Statement.RHSSet.Add(new List<IRule>() { Write, OpenBrace, Expression, CloseBrace, SemiColon });
+            Statement.RHSSet.Add(new List<IRule>() { Return, OpenBrace, Expression, CloseBrace, SemiColon });
+            Statement.RHSSet.Add(new List<IRule>() { AssignStatementOrFuncCall });
+            StatementVar.RHSSet.Add(new List<IRule>() { Identifier, StatementVarOrFuncCall });
+            StatementVarOrFuncCall.RHSSet.Add(new List<IRule>() { Indices, StatementVarExt });
+            StatementVarOrFuncCall.RHSSet.Add(new List<IRule>() { OpenBrace, FuncCallParams, CloseBrace, StatementFunctionCall });
+            StatementVarExt.RHSSet.Add(new List<IRule>() { Period, StatementVar });
+            StatementFunctionCall.RHSSet.Add(new List<IRule>() { Period, StatementVar });
+            AssignStatementOrFuncCall.RHSSet.Add(new List<IRule>() { Identifier, VarOrFuncCallExt });
+            VarOrFuncCallExt.RHSSet.Add(new List<IRule>() { Indices, VarExt });
+            VarOrFuncCallExt.RHSSet.Add(new List<IRule>() { OpenBrace, FuncCallParams, CloseBrace, FuncCallExt });
+            VarExt.RHSSet.Add(new List<IRule>() { Equal, Expression, SemiColon });
+            VarExt.RHSSet.Add(new List<IRule>() { Period, AssignStatementOrFuncCall });
+            FuncCallExt.RHSSet.Add(new List<IRule>() { SemiColon });
+            FuncCallExt.RHSSet.Add(new List<IRule>() { Period, AssignStatementOrFuncCall });
+            FuncParams.RHSSet.Add(new List<IRule>() { Type, Identifier, ArrayDims, FuncParamsRests });
+            AddOp.RHSSet.Add(new List<IRule>() { Plus });
+            AddOp.RHSSet.Add(new List<IRule>() { Minus });
+            AddOp.RHSSet.Add(new List<IRule>() { Or });
+            OptionalInherits.RHSSet.Add(new List<IRule>() { Inherits, Identifier, InheritedClasses });
+            BoolExpr.RHSSet.Add(new List<IRule>() { ArithExpr, CompareOp, ArithExpr });
+            FuncDecl.RHSSet.Add(new List<IRule>() { OpenBrace, FuncParams, CloseBrace, Colon, TypeOrVoid, SemiColon });
+            FuncCallParamsRests.RHSSet.Add(new List<IRule>() { FuncCallParamsRest, FuncCallParamsRests });
+            LocalScope.RHSSet.Add(new List<IRule>() { Local, VarDecls });
+            ArrayDims.RHSSet.Add(new List<IRule>() { ArraySize, ArrayDims });
+            Expression.RHSSet.Add(new List<IRule>() { ArithExpr, BoolExprOrNone });
+            BoolExprOrNone.RHSSet.Add(new List<IRule>() { CompareOp, ArithExpr });
+            Statements.RHSSet.Add(new List<IRule>() { Statement, Statements });
+            ArithExpr.RHSSet.Add(new List<IRule>() { Term, RightArithExpr });
+            RightArithExpr.RHSSet.Add(new List<IRule>() { AddOp, Term, RightArithExpr });
+            FuncSig.RHSSet.Add(new List<IRule>() { Identifier, FuncSigNamespace });
+            FuncSigNamespace.RHSSet.Add(new List<IRule>() { FuncSigExt });
+            FuncSigNamespace.RHSSet.Add(new List<IRule>() { ColonColon, Identifier, FuncSigExt });
+            FuncSigExt.RHSSet.Add(new List<IRule>() { OpenBrace, FuncParams, CloseBrace, Colon, TypeOrVoid });
+            FuncParamsRests.RHSSet.Add(new List<IRule>() { FuncParamsRest, FuncParamsRests });
+            InheritedClasses.RHSSet.Add(new List<IRule>() { Comma, Identifier, InheritedClasses });
+            Sign.RHSSet.Add(new List<IRule>() { Plus });
+            Sign.RHSSet.Add(new List<IRule>() { Minus });
+            CompareOp.RHSSet.Add(new List<IRule>() { EqualEqual });
+            CompareOp.RHSSet.Add(new List<IRule>() { LesserGreater });
+            CompareOp.RHSSet.Add(new List<IRule>() { Lesser });
+            CompareOp.RHSSet.Add(new List<IRule>() { Greater });
+            CompareOp.RHSSet.Add(new List<IRule>() { LesserEqual });
+            CompareOp.RHSSet.Add(new List<IRule>() { GreaterEqual });
+            Index.RHSSet.Add(new List<IRule>() { OpenSquareBrace, ArithExpr, CloseSquareBrace });
+            VarDecls.RHSSet.Add(new List<IRule>() { Type, VarDecl, VarDecls });
+            Factor.RHSSet.Add(new List<IRule>() { VarFuncCall });
+            Factor.RHSSet.Add(new List<IRule>() { IntNum });
+            Factor.RHSSet.Add(new List<IRule>() { FloatNum });
+            Factor.RHSSet.Add(new List<IRule>() { OpenBrace, ArithExpr, CloseBrace });
+            Factor.RHSSet.Add(new List<IRule>() { Not, Factor });
+            Factor.RHSSet.Add(new List<IRule>() { Sign, Factor });
+            VarFuncCall.RHSSet.Add(new List<IRule>() { Identifier, VarOrFuncCall });
+            VarOrFuncCall.RHSSet.Add(new List<IRule>() { Indices, FactorVar });
+            VarOrFuncCall.RHSSet.Add(new List<IRule>() { OpenBrace, FuncCallParams, CloseBrace, FactorFuncCall });
+            FactorVar.RHSSet.Add(new List<IRule>() { Period, VarFuncCall });
+            FactorFuncCall.RHSSet.Add(new List<IRule>() { Period, VarFuncCall });
+            Term.RHSSet.Add(new List<IRule>() { Factor, RightTerm });
+            MultOp.RHSSet.Add(new List<IRule>() { Asterix });
+            MultOp.RHSSet.Add(new List<IRule>() { FwdSlash });
+            MultOp.RHSSet.Add(new List<IRule>() { And });
+            RightTerm.RHSSet.Add(new List<IRule>() { MultOp, Factor, RightTerm });
+            TypeOrVoid.RHSSet.Add(new List<IRule>() { Type });
+            TypeOrVoid.RHSSet.Add(new List<IRule>() { Void });
+            Type.RHSSet.Add(new List<IRule>() { TypeNoID });
+            Type.RHSSet.Add(new List<IRule>() { Identifier });
+            TypeNoID.RHSSet.Add(new List<IRule>() { Integer });
+            TypeNoID.RHSSet.Add(new List<IRule>() { Float });
+            ArraySize.RHSSet.Add(new List<IRule>() { OpenSquareBrace, OptionalInt, CloseSquareBrace });
+            OptionalInt.RHSSet.Add(new List<IRule>() { IntNum });
+            FuncCallParamsRest.RHSSet.Add(new List<IRule>() { Comma, Expression });
+            FuncCallParams.RHSSet.Add(new List<IRule>() { Expression, FuncCallParamsRests });
+            VarDecl.RHSSet.Add(new List<IRule>() { Identifier, ArrayDims, SemiColon });
+            FuncBody.RHSSet.Add(new List<IRule>() { LocalScope, Do, Statements, End });
+            StatementBlock.RHSSet.Add(new List<IRule>() { Do, Statements, End });
+            StatementBlock.RHSSet.Add(new List<IRule>() { Statement });
+            Indices.RHSSet.Add(new List<IRule>() { Index, Indices });
+            FuncParamsRest.RHSSet.Add(new List<IRule>() { Comma, Type, Identifier, ArrayDims });
 
             #endregion
 

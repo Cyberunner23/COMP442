@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 
 using Lexer;
+using Parser.AST;
+using Parser.ASTBuilder.SemanticRules;
 using Parser.Grammar;
 
 namespace Parser
@@ -12,7 +14,8 @@ namespace Parser
     public class Parser
     {
         private List<Token> _tokens;
-        private int _currentLookaheadTokenIndex = 0;
+        private int _currentLookaheadIndex = 0;
+        private Token _lookahead;
         private Dictionary<NonTerminal, GrammarRule> _grammar;
         bool _hasRHSErrors = false;
 
@@ -20,17 +23,23 @@ namespace Parser
         StreamWriter _derivationsStream;
         StreamWriter _astStream;
 
+        ASTBuilder.ASTBuilder _astBuilder;
 
         public Parser(List<Token> tokens, StreamWriter syntaxErrorStream, StreamWriter derivationsStream, StreamWriter astStream)
         {
             _tokens = tokens;
             _grammar = GrammarFactory.CreateGrammar();
 
+            _lookahead = _tokens[_currentLookaheadIndex];
+
             _syntaxErrorStream = syntaxErrorStream;
             _derivationsStream = derivationsStream;
             _astStream = astStream;
+
+            _astBuilder = new ASTBuilder.ASTBuilder();
         }
 
+        #region Parsing
         public bool Parse()
         {
             var result = Parse(NonTerminal.Start);
@@ -49,9 +58,6 @@ namespace Parser
                 return false;
             }
 
-            Token currentLookahead = GetCurrentLookaheadToken();
-            TokenType currentLookaheadType = GetCurrentLookaheadTokenType();
-
             if (entry.IsTerminalRule)
             {
                 PrintTerminalRule(entry);
@@ -59,19 +65,19 @@ namespace Parser
                 return result;
             }
             
-            if (!entry.FirstSet.Contains(currentLookaheadType))
+            if (!entry.FirstSet.Contains(_lookahead.TokenType))
             {
-                var result = entry.IsNullable && entry.FollowSet.Contains(currentLookaheadType);
+                var result = entry.IsNullable && entry.FollowSet.Contains(_lookahead.TokenType);
                 //ErrorExpectedTokens(entry.FirstSet, currentLookahead.StartLine, currentLookahead.StartColumn);
                 return result;
             }
 
-            List<RuleBase> satisfiableRHS = null;
+            List<IRule> satisfiableRHS = null;
             foreach (var rhs in entry.RHSSet)
             {
                 var grammarRules = rhs.Where(x => x is GrammarRule); // Filter out semantic rules
                 var firstRule = grammarRules.First() as GrammarRule;
-                if (firstRule.FirstSet.Contains(currentLookaheadType) || (firstRule.IsNullable && firstRule.FollowSet.Contains(currentLookaheadType)))
+                if (firstRule.FirstSet.Contains(_lookahead.TokenType) || (firstRule.IsNullable && firstRule.FollowSet.Contains(_lookahead.TokenType)))
                 {
                     satisfiableRHS = rhs;
                     PrintSatisfiableRHS(entry, satisfiableRHS);
@@ -90,7 +96,7 @@ namespace Parser
             foreach (var symbol in satisfiableRHS)
             {
                 var grammarRule = symbol as GrammarRule;
-                var semanticRule = symbol as SemanticRule;
+                var semanticRule = symbol as ISemanticRule;
 
                 if (grammarRule != null) // Is a Grammar rule
                 { 
@@ -104,6 +110,7 @@ namespace Parser
                 else if (semanticRule != null) // Is a Semantic Rule
                 {
                     // Do semantic rule stuff
+                    _astBuilder.HandleSemanticRule(semanticRule, _lookahead);
                 }
                 else
                 {
@@ -115,7 +122,7 @@ namespace Parser
             return true;
         }
 
-        private void PrintSatisfiableRHS(GrammarRule entry, List<RuleBase> satisfiableRHS)
+        private void PrintSatisfiableRHS(GrammarRule entry, List<IRule> satisfiableRHS)
         {
             var LHS = entry.Symbol;
             var RHS = satisfiableRHS.OfType<GrammarRule>().Select(x => x.Symbol);
@@ -137,57 +144,51 @@ namespace Parser
 
         private bool Match(TokenType tokenType)
         {
-            var lookahead = GetCurrentLookaheadToken();
-            bool matches = lookahead.TokenType == tokenType;
+            bool matches = _lookahead.TokenType == tokenType;
             if (matches)
             {
                 ShiftForwardLookaheadToken();
             }
             else
             {
-                _syntaxErrorStream.WriteLine($"[{lookahead.StartLine}:{lookahead.StartColumn}] Expected token: {tokenType}, saw: {lookahead.TokenType}");
+                _syntaxErrorStream.WriteLine($"[{_lookahead.StartLine}:{_lookahead.StartColumn}] Expected token: {tokenType}, saw: {_lookahead.TokenType}");
             }
 
             return matches;
         }
 
-        private Token GetCurrentLookaheadToken()
+        private bool ShiftForwardLookaheadToken()
         {
-            return _tokens[_currentLookaheadTokenIndex];
-        }
+            ++_currentLookaheadIndex;
+            if (_currentLookaheadIndex >= _tokens.Count)
+            {
+                return false;
+            }
 
-        private TokenType GetCurrentLookaheadTokenType()
-        {
-            return GetCurrentLookaheadToken().TokenType;
-        }
-
-        private void ShiftForwardLookaheadToken()
-        {
-            _currentLookaheadTokenIndex++;
+            _lookahead = _tokens[_currentLookaheadIndex];
+            return true;
         }
 
         private bool SkipErrors(GrammarRule entry)
         {
-            Token lookahead = GetCurrentLookaheadToken();
             if (entry.IsTerminalRule)
             {
                 return true;
             }
 
-            if (entry.FirstSet.Contains(lookahead.TokenType) || (entry.IsNullable && entry.FollowSet.Contains(lookahead.TokenType)))
+            if (entry.FirstSet.Contains(_lookahead.TokenType) || (entry.IsNullable && entry.FollowSet.Contains(_lookahead.TokenType)))
             {
                 return true;
             }
             else
             {
                 // Write error
-                _syntaxErrorStream.WriteLine($"Syntax error: [{lookahead.StartLine}:{lookahead.StartColumn}]");
+                _syntaxErrorStream.WriteLine($"Syntax error: [{_lookahead.StartLine}:{_lookahead.StartColumn}]");
                 var firstAndFollow = entry.FirstSet.Concat(entry.FollowSet ?? new List<TokenType>()).ToList();
-                while (!firstAndFollow.Contains(lookahead.TokenType))
+                while (!firstAndFollow.Contains(_lookahead.TokenType))
                 {
-                    ShiftForwardLookaheadToken();
-                    lookahead = GetCurrentLookaheadToken();
-                    if (entry.IsNullable && entry.FollowSet.Contains(lookahead.TokenType))
+                    if (!ShiftForwardLookaheadToken()) return false;
+                    if (entry.IsNullable && entry.FollowSet.Contains(_lookahead.TokenType))
                     {
                         return false;
                     }
@@ -195,5 +196,14 @@ namespace Parser
                 return true;
             }
         }
+
+        #endregion Parsing
+
+        #region AST Building
+        public ASTNodeBase GetASTTree()
+        {
+            return _astBuilder.GetASTTree();
+        }
+        #endregion
     }
 }

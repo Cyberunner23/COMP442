@@ -4,14 +4,14 @@ using Lexer;
 
 namespace Parser.Grammar
 {
-    class GrammarRule : RuleBase
+    class GrammarRule : IRule
     {
         public GrammarRule(NonTerminal nonTerminal, bool isNullable = false, bool isTerminalRule = false)
         {
             Symbol = nonTerminal;
             FirstSet = new List<TokenType>();
             FollowSet = new List<TokenType>();
-            RHSSet = new List<List<RuleBase>>();
+            RHSSet = new List<List<IRule>>();
             IsNullable = isNullable;
             IsTerminalRule = isTerminalRule;
         }
@@ -25,7 +25,7 @@ namespace Parser.Grammar
         // X -> AB
         // X -> CD
         // Rules = { {A, B}, {C, D} } which maps to -> AB | CD
-        public List<List<RuleBase>> RHSSet { get; set; }
+        public List<List<IRule>> RHSSet { get; set; }
 
         // Is epsilon in the first set
         public bool IsNullable { get; set; }

@@ -1,0 +1,6 @@
+﻿namespace Parser
+{
+    interface IRule
+    {
+    }
+}

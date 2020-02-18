@@ -54,6 +54,7 @@ namespace ParserDriver
                 // Do parsing
                 Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
                 Console.WriteLine(parser.Parse());
+                var tree = parser.GetASTTree();
             }
         }
     }
