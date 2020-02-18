@@ -44,13 +44,13 @@ namespace Parser
         {
             GrammarRule entry = _grammar[nonTerminal];
 
-            Token currentLookahead = GetCurrentLookaheadToken();
-            TokenType currentLookaheadType = GetCurrentLookaheadTokenType();
-
             if (!SkipErrors(entry))
             {
                 return false;
             }
+
+            Token currentLookahead = GetCurrentLookaheadToken();
+            TokenType currentLookaheadType = GetCurrentLookaheadTokenType();
 
             if (entry.IsTerminalRule)
             {
@@ -82,6 +82,8 @@ namespace Parser
             if (satisfiableRHS == null)
             {
                 // ERROR
+                Console.WriteLine("ASSERT: no satisfiable RHS");
+                Environment.Exit(-2);
             }
 
             // Going through the RHS

@@ -41,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AST\ASTNodeBase.cs" />
+    <Compile Include="AST\ASTNodeFactory.cs" />
+    <Compile Include="AST\IntermediateASTNode.cs" />
+    <Compile Include="AST\IntermediateNodeType.cs" />
+    <Compile Include="AST\NullNode.cs" />
+    <Compile Include="AST\TokenNode.cs" />
     <Compile Include="Grammar\GrammarFactory.cs" />
     <Compile Include="Grammar\NonTerminal.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
@@ -55,5 +61,6 @@
       <Name>Lexer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

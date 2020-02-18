@@ -1,0 +1,5 @@
+[29:6] Expected token: SemiColon, saw: Identifier
+[38:9] Expected token: SemiColon, saw: Identifier
+[48:6] Expected token: SemiColon, saw: Identifier
+[57:9] Expected token: SemiColon, saw: Identifier
+[69:4] Expected token: SemiColon, saw: Main
