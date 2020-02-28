@@ -15,6 +15,7 @@ namespace Parser
     {
         private List<Token> _tokens;
         private int _currentLookaheadIndex = 0;
+        private Token _previousLookahead;
         private Token _lookahead;
         private Dictionary<NonTerminal, GrammarRule> _grammar;
         bool _hasRHSErrors = false;
@@ -110,7 +111,7 @@ namespace Parser
                 else if (semanticRule != null) // Is a Semantic Rule
                 {
                     // Do semantic rule stuff
-                    _astBuilder.HandleSemanticRule(semanticRule, _lookahead);
+                    _astBuilder.HandleSemanticRule(semanticRule, _lookahead, _previousLookahead);
                 }
                 else
                 {
@@ -165,6 +166,7 @@ namespace Parser
                 return false;
             }
 
+            _previousLookahead = _lookahead;
             _lookahead = _tokens[_currentLookaheadIndex];
             return true;
         }

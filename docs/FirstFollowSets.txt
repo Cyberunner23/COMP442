@@ -1,0 +1,109 @@
+NonTerminal                 | First Set                                                          | Follow Set
+
+Start_                      |  main class identifier                                             |  ∅
+Program_                    |  main class identifier                                             |  ∅
+ClassDecls_                 |  class                                                             |  identifier main
+ClassDecl_                  |  class                                                             |  class identifier main
+FuncDefs_                   |  identifier                                                        |  main
+FuncDef_                    |  identifier                                                        |  identifier main
+MemberDecls_                |  public private                                                    |  closeCurlyBrace
+MemberDecl_                 |  identifier integer  float                                         |  public private closeCurlyBrace
+FuncOrVarDecl_              |  openBrace identifier                                              |  public private closeCurlyBrace
+Visibility_                 |  public private                                                    |  identifier integer float
+StatementVarOrFuncCall_     |  openBrace period  openSquareBrace                                 |  closeBrace
+StatementVarExt_            |  period                                                            |  closeBrace
+StatementFunctionCall_      |  period                                                            |  closeBrace
+StatementVar_               |  identifier                                                        |  closeBrace
+VarOrFuncCallExt_           |  openBrace equal period openSquareBrace                            |  end if while read write return identifier else semiColon
+VarExt_                     |  equal  period                                                     |  end if while read write return identifier else semiColon
+FuncCallExt_                |  semiColon  period                                                 |  end if while read write return identifier else semiColon
+AssignStatementOrFuncCall_  |  identifier                                                        |  end if while read write return identifier else semiColon
+OptionalInherits_           |  inherits                                                          |  openCurlyBrace
+BoolExpr_                   |  intNum floatNum openBrace not identifier plus minus               |  closeBrace
+FuncDecl_                   |  openBrace                                                         |  public private closeCurlyBrace
+BoolExprOrNone_             |  equalEqual lesserGreater lesser greater lesserEqual greaterEqual  |  closeBrace semiColon comma
+AddOp_                      |  plus minus or                                                     |  intNum floatNum openBrace not identifier plus minus
+RightArithExpr_             |  plus minus or                                                     |  equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+FuncSig_                    |  identifier                                                        |  do local
+FuncSigNamespace_           |  colonColon openBrace                                              |  do local
+FuncSigExt_                 |  openBrace                                                         |  do local
+FuncParams_                 |  identifier integer float                                          |  closeBrace
+FuncParamsRests_            |  comma                                                             |  closeBrace
+InheritedClasses_           |  comma                                                             |  openCurlyBrace
+CompareOp_                  |  equalEqual lesserGreater lesser greater lesserEqual greaterEqual  |  intNum floatNum openBrace not identifier plus minus
+VarDecls_                   |  identifier integer float                                          |  do
+ArithExpr_                  |  intNum floatNum openBrace not identifier plus minus               |  equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+Sign_                       |  plus minus                                                        |  intNum floatNum openBrace not identifier plus minus
+VarOrFuncCall_              |  openBrace period openSquareBrace                                  |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+FactorVar_                  |  period                                                            |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+FactorFuncCall_             |  period                                                            |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+VarFuncCall_                |  identifier                                                        |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+Term_                       |  intNum floatNum openBrace not identifier plus minus               |  plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+MultOp_                     |  asterix fwdSlash and                                              |  intNum floatNum openBrace not identifier plus minus
+Factor_                     |  intNum floatNum openBrace not identifier plus minus               |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+RightTerm_                  |  asterix fwdSlash and                                              |  plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+TypeOrVoid_                 |  void identifier integer float                                     |  semiColon do local
+TypeNoID_                   |  integer float                                                     |  semiColon identifier do local
+ArraySize_                  |  openSquareBrace                                                   |  openSquareBrace closeBrace comma semiColon
+OptionalInt_                |  intNum                                                            |  closeSquareBrace
+FuncCallParamsRest_         |  comma                                                             |  comma closeBrace
+FuncCallParams_             |  intNum floatNum openBrace not identifier plus minus               |  closeBrace
+Expression_                 |  intNum floatNum openBrace not identifier plus minus               |  closeBrace semiColon comma
+FuncCallParamsRests_        |  comma                                                             |  closeBrace
+VarDecl_                    |  identifier                                                        |  do identifier integer float public private closeCurlyBrace
+FuncBody_                   |  do local                                                          |  semiColon
+LocalScope_                 |  local                                                             |  do
+StatementBlock_             |  do if while read write return identifier                          |  else semiColon
+Statements_                 |  if while read write return identifier                             |  end
+Statement_                  |  if while read write return identifier                             |  end if while read write return identifier else semiColon
+FuncParamsRest_             |  comma                                                             |  comma closeBrace
+Type_                       |  identifier integer float                                          |  semiColon identifier do local
+ArrayDims_                  |  openSquareBrace                                                   |  closeBrace comma semiColon
+Index_                      |  openSquareBrace                                                   |  openSquareBrace asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace equal period semiColon comma closeBrace
+Indices_                    |  openSquareBrace                                                   |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace equal period semiColon comma closeBrace
+IntNum_                     |  intNum                                                            |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+FloatNum_                   |  floatNum                                                          |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace semiColon comma closeBrace
+Integer_                    |  integer                                                           |  semiColon identifier do local
+Float_                      |  float                                                             |  semiColon identifier do local
+Identifier_                 |  identifier                                                        |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace closeBrace do local inherits openCurlyBrace identifier equal colonColon comma openBrace period semiColon openSquareBrace
+Void_                       |  void                                                              |  semiColon do local
+And_                        |  and                                                               |  intNum floatNum openBrace not identifier plus minus
+FwdSlash_                   |  fwdSlash                                                          |  intNum floatNum openBrace not identifier plus minus
+Asterix_                    |  asterix                                                           |  intNum floatNum openBrace not identifier plus minus
+Period_                     |  period                                                            |  identifier
+OpenSquareBrace_            |  openSquareBrace                                                   |  floatNum openBrace not identifier plus minus intNum closeSquareBrace
+CloseSquareBrace_           |  closeSquareBrace                                                  |  asterix fwdSlash and plus minus or openSquareBrace equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace equal period semiColon comma closeBrace
+OpenBrace_                  |  openBrace                                                         |  integer float intNum floatNum openBrace not identifier plus minus closeBrace
+CloseBrace_                 |  closeBrace                                                        |  asterix fwdSlash and plus minus or equalEqual lesserGreater lesser greater lesserEqual greaterEqual closeSquareBrace comma then do if while read write return identifier semiColon colon period closeBrace
+Not_                        |  not                                                               |  intNum floatNum openBrace not identifier plus minus
+Plus_                       |  plus                                                              |  intNum floatNum openBrace not identifier plus minus
+Minus_                      |  minus                                                             |  intNum floatNum openBrace not identifier plus minus
+SemiColon_                  |  semiColon                                                         |  end do integer float if while read write return else semiColon public private closeCurlyBrace class identifier main
+Equal_                      |  equal                                                             |  intNum floatNum openBrace not identifier plus minus
+LesserGreater_              |  lesserGreater                                                     |  intNum floatNum openBrace not identifier plus minus
+Lesser_                     |  lesser                                                            |  intNum floatNum openBrace not identifier plus minus
+Greater_                    |  greater                                                           |  intNum floatNum openBrace not identifier plus minus
+LesserEqual_                |  lesserEqual                                                       |  intNum floatNum openBrace not identifier plus minus
+GreaterEqual_               |  greaterEqual                                                      |  intNum floatNum openBrace not identifier plus minus
+Comma_                      |  comma                                                             |  intNum floatNum openBrace not plus minus identifier integer float
+ColonColon_                 |  colonColon                                                        |  identifier
+Colon_                      |  colon                                                             |  void identifier integer float
+Local_                      |  local                                                             |  do identifier integer float
+Inherits_                   |  inherits                                                          |  identifier
+Or_                         |  or                                                                |  intNum floatNum openBrace not identifier plus minus
+Do_                         |  do                                                                |  if while read write return identifier end
+End_                        |  end                                                               |  else semiColon
+Public_                     |  public                                                            |  identifier integer float
+Private_                    |  private                                                           |  identifier integer float
+Main_                       |  main                                                              |  do local
+If_                         |  if                                                                |  openBrace
+Then_                       |  then                                                              |  do if while read write return identifier else
+Else_                       |  else                                                              |  do if while read write return identifier semiColon
+While_                      |  while                                                             |  openBrace
+Read_                       |  read                                                              |  openBrace
+Write_                      |  write                                                             |  openBrace
+Return_                     |  return                                                            |  openBrace
+Class_                      |  class                                                             |  identifier
+OpenCurlyBrace_             |  openCurlyBrace                                                    |  public private closeCurlyBrace
+CloseCurlyBrace_            |  closeCurlyBrace                                                   |  semiColon
+EqualEqual_                 |  equalEqual                                                        |  intNum floatNum openBrace not identifier plus minus

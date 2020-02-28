@@ -11,7 +11,7 @@ class LINEAR inherits POLYNOMIAL {
 	public evaluate(float x) : float;
 };
 
-class QUADRATIC inherits POLYNOMIAL {
+class QUADRATIC inherits POLYNOMIAL, LINEAR {
 	private float a;
 	private float b;
 	private float c;

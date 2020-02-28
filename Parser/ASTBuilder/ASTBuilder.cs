@@ -10,6 +10,7 @@ namespace Parser.ASTBuilder
     public class ASTBuilder
     {
         public Stack<ASTNodeBase> BottomScope { get { return _semanticScopeStack.Peek(); } }
+        public Token PreviousLookahead { get; private set; }
         public Token Lookahead { get; private set; }
 
         private Stack<Stack<ASTNodeBase>> _semanticScopeStack;
@@ -63,8 +64,9 @@ namespace Parser.ASTBuilder
             return newScope;
         }
 
-        public void HandleSemanticRule(ISemanticRule semanticRule, Token lookahead)
+        public void HandleSemanticRule(ISemanticRule semanticRule, Token lookahead, Token previousLookahead)
         {
+            PreviousLookahead = previousLookahead;
             Lookahead = lookahead;
             semanticRule.ExecuteRule(this);
         }

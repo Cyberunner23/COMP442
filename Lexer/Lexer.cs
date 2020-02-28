@@ -41,7 +41,7 @@ namespace Lexer
 
         public Token GetNextToken()
         {
-            var token = new Token() { StartColumn = _currentColumn, StartLine = _currentLine };
+            var token = new Token() { StartColumn = _currentColumn + 1, StartLine = _currentLine };
             TokenType lastErrorToken = TokenType.Error;
 
             if (_currentInputIndex >= _inputCode.Length)
@@ -54,14 +54,22 @@ namespace Lexer
             int stateID = 0;
             int previousCol = 0;
             int previousRow = 0;
+            bool startPosSet = false;
             _dfa.Begin();
             do
             {
-                char currentChar =  _currentInputIndex < _inputCode.Length ? _inputCode.ElementAt(_currentInputIndex) : '~'; // Insert EOF tag if past end of input
+                char currentChar = _currentInputIndex < _inputCode.Length ? _inputCode.ElementAt(_currentInputIndex) : '~'; // Insert EOF tag if past end of input
                 if (!_dfa.IsCharacterInAlphabet(currentChar))
                 {
                     _currentInputIndex++;
                     continue;
+                }
+
+                if (!startPosSet && !char.IsWhiteSpace(currentChar))
+                {
+                    token.StartColumn = _currentColumn + 1;
+                    token.StartLine = _currentLine;
+                    startPosSet = true;
                 }
 
                 previousCol = _currentColumn;
@@ -101,8 +109,8 @@ namespace Lexer
             }
 
             token.Lexeme = token.Lexeme.Trim().Replace("~", "");
-            token.StartLine = _currentLine;
-            token.StartColumn = _currentColumn;
+            //token.StartLine = _currentLine;
+            //token.StartColumn = _currentColumn;
             token.TokenType = type;
 
             if (token.TokenType == TokenType.Identifier)

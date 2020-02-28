@@ -26,7 +26,7 @@ Visibility_ -> Private_  .
 
 Statement_ -> If_ OpenBrace_ BoolExpr_ CloseBrace_ Then_ StatementBlock_ Else_ StatementBlock_ SemiColon_  . 
 Statement_ -> While_ OpenBrace_ BoolExpr_ CloseBrace_ StatementBlock_ SemiColon_  . 
-Statement_ -> Read_ OpenBrace_ StatementVar_ CloseBrace_ SemiColon_  . 
+Statement_ -> Read_ OpenBrace_ Expression_ CloseBrace_ SemiColon_  . 
 Statement_ -> Write_ OpenBrace_ Expression_ CloseBrace_ SemiColon_  . 
 Statement_ -> Return_ OpenBrace_ Expression_ CloseBrace_ SemiColon_  . 
 Statement_ -> AssignStatementOrFuncCall_ .
