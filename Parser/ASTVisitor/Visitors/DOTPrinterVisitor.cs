@@ -257,5 +257,155 @@ namespace Parser.ASTVisitor.Visitors
                 child.Accept(this);
             }
         }
+
+        public void Visit(ReadNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(WriteNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(ReturnNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(FuncCallNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(AssignmentNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(SubFuncCallNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(SubVarCallNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(IndicesNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(FuncCallParamsNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(ExpressionNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(FloatNumNode n)
+        {
+            PrintDOTIDLabel(n, n.Value.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(NotNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(SignNode n)
+        {
+            PrintDOTIDLabel(n, n.Sign.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(AddOpNode n)
+        {
+            PrintDOTIDLabel(n, n.Op.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(MultOpNode n)
+        {
+            PrintDOTIDLabel(n, n.Op.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Parser.AST.Nodes
 {
-    public class WhileNode : ASTNodeBase
+    public class ReturnNode : ASTNodeBase
     {
         public override void Accept(IVisitor v)
         {
@@ -11,7 +11,7 @@ namespace Parser.AST.Nodes
 
         protected override ASTNodeBase CreateNode()
         {
-            return new WhileNode();
+            return new ReturnNode();
         }
     }
 }

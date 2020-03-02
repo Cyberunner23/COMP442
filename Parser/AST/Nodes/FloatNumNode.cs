@@ -2,8 +2,10 @@
 
 namespace Parser.AST.Nodes
 {
-    public class WhileNode : ASTNodeBase
+    public class FloatNumNode : ASTNodeBase
     {
+        public float Value { get; set; }
+
         public override void Accept(IVisitor v)
         {
             v.Visit(this);
@@ -11,7 +13,9 @@ namespace Parser.AST.Nodes
 
         protected override ASTNodeBase CreateNode()
         {
-            return new WhileNode();
+            string value = PreviousLookahead.Lexeme;
+            float floatVal = float.Parse(value);
+            return new FloatNumNode() { Value = floatVal };
         }
     }
 }

@@ -25,6 +25,24 @@ namespace Parser.ASTVisitor
         void Visit(IfNode n);
         void Visit(BoolExpressionNode n);
         void Visit(CompareOpNode n);
+        void Visit(WhileNode n);
+        void Visit(ReadNode n);
+        void Visit(WriteNode n);
+        void Visit(ReturnNode n);
+
+        void Visit(FuncCallNode n);
+        void Visit(AssignmentNode n);
+        void Visit(SubFuncCallNode n);
+        void Visit(SubVarCallNode n);
+        void Visit(IndicesNode n);
+        void Visit(FuncCallParamsNode n);
+        void Visit(ExpressionNode n);
+
+        void Visit(FloatNumNode n);
+        void Visit(NotNode n);
+        void Visit(SignNode n);
+        void Visit(AddOpNode n);
+        void Visit(MultOpNode n);
 
     }
 }

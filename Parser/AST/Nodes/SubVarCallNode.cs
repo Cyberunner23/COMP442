@@ -1,8 +1,9 @@
-﻿using Parser.ASTVisitor;
+﻿using System;
+using Parser.ASTVisitor;
 
 namespace Parser.AST.Nodes
 {
-    public class WhileNode : ASTNodeBase
+    public class SubVarCallNode : ASTNodeBase
     {
         public override void Accept(IVisitor v)
         {
@@ -11,7 +12,7 @@ namespace Parser.AST.Nodes
 
         protected override ASTNodeBase CreateNode()
         {
-            return new WhileNode();
+            return new SubVarCallNode();
         }
     }
 }
