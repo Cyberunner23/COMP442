@@ -51,6 +51,7 @@
     <Compile Include="ASTVisitor\Visitors\DOTPrinterVisitor.cs" />
     <Compile Include="AST\ASTNodeBase.cs" />
     <Compile Include="AST\Nodes\AddOpNode.cs" />
+    <Compile Include="AST\Nodes\ArithExprNode.cs" />
     <Compile Include="AST\Nodes\ArrayDimListNode.cs" />
     <Compile Include="AST\Nodes\ArrayDimNode.cs" />
     <Compile Include="AST\Nodes\AssignmentNode.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="AST\Nodes\InheritListNode.cs" />
     <Compile Include="AST\Nodes\IntNumNode.cs" />
     <Compile Include="AST\Nodes\LocalScopeNode.cs" />
+    <Compile Include="AST\Nodes\MemberDeclNode.cs" />
     <Compile Include="AST\Nodes\MemberDeclsNode.cs" />
     <Compile Include="AST\Nodes\MultOpNode.cs" />
     <Compile Include="AST\Nodes\NotNode.cs" />
@@ -85,6 +87,8 @@
     <Compile Include="AST\Nodes\SubVarCallNode.cs" />
     <Compile Include="AST\Nodes\TypeNode.cs" />
     <Compile Include="AST\Nodes\VarDeclNode.cs" />
+    <Compile Include="AST\Nodes\VarFuncCallNode.cs" />
+    <Compile Include="AST\Nodes\VisibilityNode.cs" />
     <Compile Include="AST\Nodes\WhileNode.cs" />
     <Compile Include="AST\Nodes\WriteNode.cs" />
     <Compile Include="Grammar\GrammarFactory.cs" />

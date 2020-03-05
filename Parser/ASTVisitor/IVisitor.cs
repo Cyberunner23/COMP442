@@ -43,6 +43,10 @@ namespace Parser.ASTVisitor
         void Visit(SignNode n);
         void Visit(AddOpNode n);
         void Visit(MultOpNode n);
+        void Visit(ArithExprNode n);
+        void Visit(VarFuncCallNode n);
+        void Visit(VisibilityNode n);
+        void Visit(MemberDeclNode n);
 
     }
 }

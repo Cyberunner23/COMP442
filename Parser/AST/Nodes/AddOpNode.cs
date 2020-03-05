@@ -8,7 +8,8 @@ namespace Parser.AST.Nodes
     {
         Add,
         Subtract,
-        Or
+        Or,
+        Heh
     }
 
     public class AddOpNode : ASTNodeBase

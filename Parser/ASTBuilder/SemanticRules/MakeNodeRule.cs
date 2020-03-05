@@ -9,8 +9,11 @@ namespace Parser.ASTBuilder.SemanticRules
         protected Token PreviousLookahead { get; private set; }
         protected Token Lookahead { get; private set; }
 
+        protected ASTBuilder Builder { get; private set; }
+
         public void ExecuteRule(ASTBuilder builder)
         {
+            Builder = builder;
             PreviousPreviousLookahead = builder.PreviousPreviousLookahead;
             PreviousLookahead = builder.PreviousLookahead;
             Lookahead = builder.Lookahead;

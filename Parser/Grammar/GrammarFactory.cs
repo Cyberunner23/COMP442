@@ -55,6 +55,10 @@ namespace Parser.Grammar
             var _CreateSignNodeRule_ = new SignNode();
             var _CreateAddOpNodeRule_ = new AddOpNode();
             var _CreateMultOpNdeRule_ = new MultOpNode();
+            var _CreateArithExprNodeRule_ = new ArithExprNode();
+            var _CreateVarFuncCallNodeRule_ = new VarFuncCallNode();
+            var _CreateVisibilityNodeRule_ = new VisibilityNode();
+            var _CreateMemberDeclNodeRule_ = new MemberDeclNode();
             #endregion
 
             #region Terminal Rules
@@ -1469,14 +1473,14 @@ namespace Parser.Grammar
                 SemiColon
             });
 
-            Statement.RHSSet.Add(new List<IRule>() // TODO
+            Statement.RHSSet.Add(new List<IRule>() // DONE
             { 
                 _DownScopeLevelRule_,
                     If, 
                     OpenBrace, 
 
                     _DownScopeLevelRule_,
-                        BoolExpr, // TODO
+                        BoolExpr,
                     _CreateBoolExpressionNodeRule_,
                     _MakeFamilyRule_,
                     _UpScopeLevelRule_,
@@ -1491,14 +1495,14 @@ namespace Parser.Grammar
                 _MakeFamilyRule_,
                 _UpScopeLevelRule_
             });
-            Statement.RHSSet.Add(new List<IRule>() // TODO
+            Statement.RHSSet.Add(new List<IRule>() // DONE
             {
                 _DownScopeLevelRule_,
                     While, 
                     OpenBrace,
 
                     _DownScopeLevelRule_,
-                        BoolExpr, // TODO
+                        BoolExpr,
                     _CreateBoolExpressionNodeRule_,
                     _MakeFamilyRule_,
                     _UpScopeLevelRule_, 
@@ -1661,24 +1665,17 @@ namespace Parser.Grammar
 
             #endregion
 
-
-
-
-
-
-            Factor.RHSSet.Add(new List<IRule>() // TODO
+            Factor.RHSSet.Add(new List<IRule>() // DONE
             { 
                 IntNum,
                 _CreateIntNumNodeNodeRule_,
-                // UpScope????
             });
-            Factor.RHSSet.Add(new List<IRule>() // TODO
+            Factor.RHSSet.Add(new List<IRule>() // DONE
             { 
                 FloatNum,
                 _CreateFloatNumNodeRule_,
-                // UpScope????
             });
-            Factor.RHSSet.Add(new List<IRule>() // DONE - NEEDS TESTING
+            Factor.RHSSet.Add(new List<IRule>() // DONE
             {
                 _DownScopeLevelRule_,
                     Not, 
@@ -1696,14 +1693,80 @@ namespace Parser.Grammar
                 _MakeFamilyRule_,
                 _UpScopeLevelRule_
             });
+            Factor.RHSSet.Add(new List<IRule>() { OpenBrace, ArithExpr, CloseBrace }); // DONE
+            Factor.RHSSet.Add(new List<IRule>() // DONE
+            {
+                _DownScopeLevelRule_,
+                    VarFuncCall,
+                _CreateVarFuncCallNodeRule_,
+                _MakeFamilyRule_,
+                _UpScopeLevelRule_,
+            });
+            Term.RHSSet.Add(new List<IRule>() { Factor, RightTerm }); // DONE
 
-            Factor.RHSSet.Add(new List<IRule>() { VarFuncCall });
-            Factor.RHSSet.Add(new List<IRule>() { OpenBrace, ArithExpr, CloseBrace });
+            VarFuncCall.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                Identifier,
+                _CreateIdentifierNodeRule_,
+                VarOrFuncCall 
+            });
+            VarOrFuncCall.RHSSet.Add(new List<IRule>() // DONE
+            {
+                _DownScopeLevelRule_,
+                    Indices,
+                _CreateIndicesNodeRule_,
+                _MakeFamilyRule_,
+                _UpScopeLevelRule_,
 
+                _CreateSubVarCallNodeRule_,
+                new MakeFamilyRule(2),
 
+                FactorVar
+            }) ;
+            VarOrFuncCall.RHSSet.Add(new List<IRule>() // DONE
+            {
+                OpenBrace,
+                    _DownScopeLevelRule_,
+                        FuncCallParams,
+                    _CreateFuncCallParamsNodeRule_,
+                    _MakeFamilyRule_,
+                    _UpScopeLevelRule_,
+                CloseBrace,
 
+                _CreateSubFuncCallNodeRule_,
+                new MakeFamilyRule(2),
 
+                FactorFuncCall
+            });
+            FactorVar.RHSSet.Add(new List<IRule>() { Period, VarFuncCall });
+            FactorFuncCall.RHSSet.Add(new List<IRule>() { Period, VarFuncCall });
+            RightTerm.RHSSet.Add(new List<IRule>() // DONE
+            {
+                MultOp, 
+                Factor, 
 
+                new MakeFamilyRule(2, 1),
+
+                RightTerm 
+            });
+            RightArithExpr.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                AddOp,
+                Term,
+
+                new MakeFamilyRule(2, 1),
+
+                RightArithExpr 
+            });
+            ArithExpr.RHSSet.Add(new List<IRule>() // DONE
+            {
+                _DownScopeLevelRule_,
+                    Term,
+                    RightArithExpr,
+                _CreateArithExprNodeRule_,
+                _MakeFamilyRule_,
+                _UpScopeLevelRule_
+            });
 
             StatementBlock.RHSSet.Add(new List<IRule>() // DONE
             {
@@ -1719,8 +1782,8 @@ namespace Parser.Grammar
             });
             StatementBlock.RHSSet.Add(new List<IRule>() { Statement }); // DONE
 
-            BoolExpr.RHSSet.Add(new List<IRule>() 
-            { // TODO
+            BoolExpr.RHSSet.Add(new List<IRule>() // DONE
+            { 
                 ArithExpr, 
                 
                 CompareOp,
@@ -1728,8 +1791,6 @@ namespace Parser.Grammar
 
                 ArithExpr 
             });
-
-            ArithExpr.RHSSet.Add(new List<IRule>() { Term, RightArithExpr });
 
             CompareOp.RHSSet.Add(new List<IRule>() { EqualEqual }); // DONE
             CompareOp.RHSSet.Add(new List<IRule>() { LesserGreater }); // DONE
@@ -1739,70 +1800,113 @@ namespace Parser.Grammar
             CompareOp.RHSSet.Add(new List<IRule>() { GreaterEqual }); // DONE
 
             Expression.RHSSet.Add(new List<IRule>() { ArithExpr, BoolExprOrNone }); // TODO
-            BoolExprOrNone.RHSSet.Add(new List<IRule>() { CompareOp, ArithExpr }); // TODO
+            BoolExprOrNone.RHSSet.Add(new List<IRule>() // DONE
+            {
+                CompareOp,
+                _CreateCompareOpNodeRule_,
+                ArithExpr
+            });
+
+            AddOp.RHSSet.Add(new List<IRule>() // DONE
+            {
+                Plus,
+                _CreateAddOpNodeRule_
+            });
+            AddOp.RHSSet.Add(new List<IRule>() // DONE
+            {
+                Minus,
+                _CreateAddOpNodeRule_
+            });
+            AddOp.RHSSet.Add(new List<IRule>() // DONE
+            {
+                Or,
+                _CreateAddOpNodeRule_
+            });
+            MultOp.RHSSet.Add(new List<IRule>() // DONE
+            {
+                Asterix,
+                _CreateMultOpNdeRule_
+            });
+            MultOp.RHSSet.Add(new List<IRule>() // DONE
+            {
+                FwdSlash,
+                _CreateMultOpNdeRule_
+            });
+            MultOp.RHSSet.Add(new List<IRule>() // DONE
+            {
+                And,
+                _CreateMultOpNdeRule_
+            });
+
+            Sign.RHSSet.Add(new List<IRule>() { Plus }); // DONE
+            Sign.RHSSet.Add(new List<IRule>() { Minus }); // DONE
+
+            Visibility.RHSSet.Add(new List<IRule>() { Public }); // DONE
+            Visibility.RHSSet.Add(new List<IRule>() { Private }); // DONE
 
 
 
 
-            MemberDecls.RHSSet.Add(new List<IRule>() { Visibility, MemberDecl, MemberDecls });
-            MemberDecl.RHSSet.Add(new List<IRule>() { Identifier, FuncOrVarDecl });
-            MemberDecl.RHSSet.Add(new List<IRule>() { TypeNoID, VarDecl });
-            FuncOrVarDecl.RHSSet.Add(new List<IRule>() { FuncDecl });
-            FuncOrVarDecl.RHSSet.Add(new List<IRule>() { VarDecl });
-            Visibility.RHSSet.Add(new List<IRule>() { Public });
-            Visibility.RHSSet.Add(new List<IRule>() { Private });
-            
-            StatementVar.RHSSet.Add(new List<IRule>() { Identifier, StatementVarOrFuncCall });
+
+            MemberDecls.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                _DownScopeLevelRule_,
+                    Visibility,
+                    _CreateVisibilityNodeRule_,
+
+                    MemberDecl, 
+                _MakeFamilyRule_,
+                _UpScopeLevelRule_,
+
+                MemberDecls 
+            });
+            MemberDecl.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                Identifier,
+                _CreateIdentifierNodeRule_,
+                FuncOrVarDecl 
+            });
+            MemberDecl.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                TypeNoID, 
+                VarDecl,
+                new MemberDeclNode() { DeclType = DeclType.Variable }
+            });
+            FuncOrVarDecl.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                FuncDecl,
+                new MemberDeclNode() { DeclType = DeclType.Function }
+            });
+            FuncOrVarDecl.RHSSet.Add(new List<IRule>() // DONE
+            { 
+                VarDecl,
+                new MemberDeclNode() { DeclType = DeclType.Variable }
+            });
+
+            FuncDecl.RHSSet.Add(new List<IRule>() // DONE
+            {
+                OpenBrace,
+                    _DownScopeLevelRule_,
+                        FuncParams,
+                    _CreateFuncParamListNodeRule_,
+                    _MakeFamilyRule_,
+                    _UpScopeLevelRule_,
+                CloseBrace,
+                Colon,
+                TypeOrVoid,
+                SemiColon
+            });
+
+
+
+
+
+            /*StatementVar.RHSSet.Add(new List<IRule>() { Identifier, StatementVarOrFuncCall });
             StatementVarOrFuncCall.RHSSet.Add(new List<IRule>() { Indices, StatementVarExt });
             StatementVarOrFuncCall.RHSSet.Add(new List<IRule>() { OpenBrace, FuncCallParams, CloseBrace, StatementFunctionCall });
             StatementVarExt.RHSSet.Add(new List<IRule>() { Period, StatementVar });
-            StatementFunctionCall.RHSSet.Add(new List<IRule>() { Period, StatementVar });
+            StatementFunctionCall.RHSSet.Add(new List<IRule>() { Period, StatementVar });*/
             
-            
-
-            
-            AddOp.RHSSet.Add(new List<IRule>() { Plus });
-            AddOp.RHSSet.Add(new List<IRule>() { Minus });
-            AddOp.RHSSet.Add(new List<IRule>() { Or });
-            MultOp.RHSSet.Add(new List<IRule>() { Asterix });
-            MultOp.RHSSet.Add(new List<IRule>() { FwdSlash });
-            MultOp.RHSSet.Add(new List<IRule>() { And });
-
-            FuncDecl.RHSSet.Add(new List<IRule>() { OpenBrace, FuncParams, CloseBrace, Colon, TypeOrVoid, SemiColon });
-            
-            
-            
-            
-            
-            
-            RightArithExpr.RHSSet.Add(new List<IRule>() { AddOp, Term, RightArithExpr });
-            
-            
-            
-            Sign.RHSSet.Add(new List<IRule>() { Plus });
-            Sign.RHSSet.Add(new List<IRule>() { Minus });
-            
-            
-            
-            VarFuncCall.RHSSet.Add(new List<IRule>() { Identifier, VarOrFuncCall });
-            VarOrFuncCall.RHSSet.Add(new List<IRule>() { Indices, FactorVar });
-            VarOrFuncCall.RHSSet.Add(new List<IRule>() { OpenBrace, FuncCallParams, CloseBrace, FactorFuncCall });
-            FactorVar.RHSSet.Add(new List<IRule>() { Period, VarFuncCall });
-            FactorFuncCall.RHSSet.Add(new List<IRule>() { Period, VarFuncCall });
-            Term.RHSSet.Add(new List<IRule>() { Factor, RightTerm });
-
-            
-
-            RightTerm.RHSSet.Add(new List<IRule>() { MultOp, Factor, RightTerm });
-
-            
-            
-            
-            
-
-            
-            FuncParamsRest.RHSSet.Add(new List<IRule>() { Comma, Type, Identifier, ArrayDims });
-
             #endregion
 
             return grammar;

@@ -407,5 +407,45 @@ namespace Parser.ASTVisitor.Visitors
                 child.Accept(this);
             }
         }
+
+        public void Visit(ArithExprNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(VarFuncCallNode n)
+        {
+            PrintDOTIDLabel(n, n.CallType.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(VisibilityNode n)
+        {
+            PrintDOTIDLabel(n, n.Visibility.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(MemberDeclNode n)
+        {
+            PrintDOTIDLabel(n, n.DeclType.ToString());
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
     }
 }
