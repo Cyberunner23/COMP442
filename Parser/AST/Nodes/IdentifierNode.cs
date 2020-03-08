@@ -5,8 +5,6 @@ namespace Parser.AST.Nodes
 {
     public class IdentifierNode : ASTNodeBase
     {
-        public Token Token { get; private set; }
-
         public IdentifierNode()
         {
 

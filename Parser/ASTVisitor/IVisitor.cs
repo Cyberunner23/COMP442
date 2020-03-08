@@ -47,6 +47,7 @@ namespace Parser.ASTVisitor
         void Visit(VarFuncCallNode n);
         void Visit(VisibilityNode n);
         void Visit(MemberDeclNode n);
+        void Visit(MainFuncNode n);
 
     }
 }

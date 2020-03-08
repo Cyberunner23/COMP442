@@ -1,5 +1,4 @@
 ﻿using Lexer;
-using Parser;
 using Parser.ASTVisitor.Visitors;
 using System;
 using System.Collections.Generic;
@@ -59,6 +58,9 @@ namespace ParserDriver
 
                 var printVisitor = new DOTPrinterVisitor(astStream);
                 tree.Accept(printVisitor);
+
+                var symbolTableVisitor = new SymbolTableVisitor();
+                tree.Accept(symbolTableVisitor);
             }
         }
     }

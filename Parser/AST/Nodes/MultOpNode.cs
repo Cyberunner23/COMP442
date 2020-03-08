@@ -38,7 +38,7 @@ namespace Parser.AST.Nodes
                     throw new InvalidOperationException("Invalid use of the _CreateMultOpNodeRule_");
             }
 
-            return new MultOpNode() { Op = op };
+            return new MultOpNode() { Token = PreviousLookahead, Op = op };
         }
     }
 }

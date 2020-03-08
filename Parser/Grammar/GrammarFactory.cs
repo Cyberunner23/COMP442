@@ -59,6 +59,7 @@ namespace Parser.Grammar
             var _CreateVarFuncCallNodeRule_ = new VarFuncCallNode();
             var _CreateVisibilityNodeRule_ = new VisibilityNode();
             var _CreateMemberDeclNodeRule_ = new MemberDeclNode();
+            var _CreateMainFuncNodeRule_ = new MainFuncNode();
             #endregion
 
             #region Terminal Rules
@@ -1248,9 +1249,14 @@ namespace Parser.Grammar
                     _CreateFuncDefsNodeRule_,
                     _MakeFamilyRule_,
                     _UpScopeLevelRule_,
+                    
+                    Main,
+                    _DownScopeLevelRule_,
+                        FuncBody,
+                    _CreateMainFuncNodeRule_,
+                    _MakeFamilyRule_,
+                    _UpScopeLevelRule_,
 
-                    Main, // TODO
-                    FuncBody, // TODO
                 _CreateProgramNodeRule_, 
                 _MakeFamilyRule_, 
                 _UpScopeLevelRule_ 
@@ -1613,7 +1619,7 @@ namespace Parser.Grammar
             }); 
             VarExt.RHSSet.Add(new List<IRule>() { Period, AssignStatementOrFuncCall }); // DONE
             Indices.RHSSet.Add(new List<IRule>() { Index, Indices }); // DONE
-            Index.RHSSet.Add(new List<IRule>() { OpenSquareBrace, ArithExpr, CloseSquareBrace }); // TODO
+            Index.RHSSet.Add(new List<IRule>() { OpenSquareBrace, ArithExpr, CloseSquareBrace }); // DONE
             #endregion
 
             #region FuncCall
@@ -1799,7 +1805,7 @@ namespace Parser.Grammar
             CompareOp.RHSSet.Add(new List<IRule>() { LesserEqual }); // DONE
             CompareOp.RHSSet.Add(new List<IRule>() { GreaterEqual }); // DONE
 
-            Expression.RHSSet.Add(new List<IRule>() { ArithExpr, BoolExprOrNone }); // TODO
+            Expression.RHSSet.Add(new List<IRule>() { ArithExpr, BoolExprOrNone }); // DONE
             BoolExprOrNone.RHSSet.Add(new List<IRule>() // DONE
             {
                 CompareOp,
@@ -1843,10 +1849,6 @@ namespace Parser.Grammar
 
             Visibility.RHSSet.Add(new List<IRule>() { Public }); // DONE
             Visibility.RHSSet.Add(new List<IRule>() { Private }); // DONE
-
-
-
-
 
             MemberDecls.RHSSet.Add(new List<IRule>() // DONE
             { 
@@ -1896,17 +1898,6 @@ namespace Parser.Grammar
                 TypeOrVoid,
                 SemiColon
             });
-
-
-
-
-
-            /*StatementVar.RHSSet.Add(new List<IRule>() { Identifier, StatementVarOrFuncCall });
-            StatementVarOrFuncCall.RHSSet.Add(new List<IRule>() { Indices, StatementVarExt });
-            StatementVarOrFuncCall.RHSSet.Add(new List<IRule>() { OpenBrace, FuncCallParams, CloseBrace, StatementFunctionCall });
-            StatementVarExt.RHSSet.Add(new List<IRule>() { Period, StatementVar });
-            StatementFunctionCall.RHSSet.Add(new List<IRule>() { Period, StatementVar });*/
-            
             #endregion
 
             return grammar;

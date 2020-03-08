@@ -2,7 +2,7 @@
 
 namespace Parser.AST.Nodes
 {
-    public class NotNode : ASTNodeBase
+    public class MainFuncNode : ASTNodeBase
     {
         public override void Accept(IVisitor v)
         {
@@ -11,7 +11,7 @@ namespace Parser.AST.Nodes
 
         protected override ASTNodeBase CreateNode()
         {
-            return new NotNode() { Token = PreviousPreviousLookahead };
+            return new MainFuncNode();
         }
     }
 }

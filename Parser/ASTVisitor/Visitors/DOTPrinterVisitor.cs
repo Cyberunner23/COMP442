@@ -447,5 +447,15 @@ namespace Parser.ASTVisitor.Visitors
                 child.Accept(this);
             }
         }
+
+        public void Visit(MainFuncNode n)
+        {
+            PrintDOTIDLabel(n);
+            PrintDOTParentChild(n);
+            foreach (var child in n.GetChildren())
+            {
+                child.Accept(this);
+            }
+        }
     }
 }

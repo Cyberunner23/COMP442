@@ -34,7 +34,7 @@ namespace Parser.AST.Nodes
                     throw new InvalidOperationException("Invalid use of the _CreateSignNodeRule_");
             }
 
-            return new SignNode() { Sign = sign };
+            return new SignNode() { Token = PreviousPreviousLookahead, Sign = sign };
         }
     }
 }

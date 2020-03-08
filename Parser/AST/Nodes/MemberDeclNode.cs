@@ -1,4 +1,6 @@
 ﻿using Parser.ASTVisitor;
+using Parser.SymbolTable;
+using Parser.SymbolTable.Class;
 
 namespace Parser.AST.Nodes
 {
@@ -10,6 +12,8 @@ namespace Parser.AST.Nodes
 
     public class MemberDeclNode : ASTNodeBase
     {
+        public ClassSymbolTable Table { get; set; }
+
         public DeclType DeclType { get; set; }
 
         public override void Accept(IVisitor v)

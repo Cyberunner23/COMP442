@@ -39,7 +39,7 @@ namespace Parser.AST.Nodes
                     throw new InvalidOperationException("Invalid use of the _CreateAddOpNodeRule_");
             }
 
-            return new AddOpNode() { Op = op };
+            return new AddOpNode() { Token = PreviousLookahead, Op = op };
         }
     }
 }

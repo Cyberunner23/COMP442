@@ -16,7 +16,7 @@ namespace Parser.AST.Nodes
         {
             string value = PreviousLookahead.Lexeme;
             int intVal = int.Parse(value);
-            return new IntNumNode() { Value = intVal };
+            return new IntNumNode() { Token = PreviousLookahead, Value = intVal };
         }
     }
 }

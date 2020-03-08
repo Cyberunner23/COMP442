@@ -5,8 +5,6 @@ namespace Parser.AST.Nodes
 {
     public class TypeNode : ASTNodeBase
     {
-        public Token Token { get; set; }
-
         public override void Accept(IVisitor v)
         {
             v.Visit(this);

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
+using Lexer;
 using Parser.ASTBuilder.SemanticRules;
 using Parser.ASTVisitor;
 
@@ -9,6 +9,8 @@ namespace Parser.AST
     public abstract class ASTNodeBase : MakeNodeRule, IVisitableNode
     {
         public int ID { get; private set; }
+        public Token Token { get; set; }
+
         public ASTNodeBase ParentNode { get; private set; }
         public ASTNodeBase LeftmostSiblingNode { get; private set; }
         public ASTNodeBase LeftmostChildNode { get; private set; }

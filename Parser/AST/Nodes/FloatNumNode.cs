@@ -15,7 +15,7 @@ namespace Parser.AST.Nodes
         {
             string value = PreviousLookahead.Lexeme;
             float floatVal = float.Parse(value);
-            return new FloatNumNode() { Value = floatVal };
+            return new FloatNumNode() { Token = PreviousLookahead, Value = floatVal };
         }
     }
 }

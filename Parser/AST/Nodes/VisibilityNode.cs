@@ -35,7 +35,7 @@ namespace Parser.AST.Nodes
                 throw new InvalidOperationException("Invalid use of the _CreateVisibilityNodeRule_");
             }
 
-            return new VisibilityNode() { Visibility = visibility };
+            return new VisibilityNode() { Token = PreviousLookahead, Visibility = visibility };
         }
     }
 }
