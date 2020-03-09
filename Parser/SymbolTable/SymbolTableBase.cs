@@ -7,9 +7,8 @@ namespace Parser.SymbolTable
         public GlobalSymbolTable Parent { get; set; }
         public List<SymbolTableEntryBase> Entries { get; private set; }
 
-        public SymbolTableBase(GlobalSymbolTable parent)
+        public SymbolTableBase()
         {
-            Parent = parent;
             Entries = new List<SymbolTableEntryBase>();
         }
 

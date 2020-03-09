@@ -104,7 +104,10 @@
     <Compile Include="SymbolTable\Class\ClassSymbolTableEntryBase.cs" />
     <Compile Include="SymbolTable\Class\ClassSymbolTableEntryFunction.cs" />
     <Compile Include="SymbolTable\Class\ClassSymbolTableEntryFunctionParam.cs" />
-    <Compile Include="SymbolTable\FunctionSymbolTable.cs" />
+    <Compile Include="SymbolTable\Function\FunctionSymbolTableEntry.cs" />
+    <Compile Include="SymbolTable\Function\FunctionSymbolTableEntryLocalScope.cs" />
+    <Compile Include="SymbolTable\Function\FunctionSymbolTableEntryParam.cs" />
+    <Compile Include="SymbolTable\Function\FunctionSymbolTable.cs" />
     <Compile Include="SymbolTable\Class\ClassSymbolTableEntryVariable.cs" />
     <Compile Include="SymbolTable\GlobalSymbolTable.cs" />
     <Compile Include="SymbolTable\SymbolTableBase.cs" />

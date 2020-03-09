@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Parser.AST;
 using Parser.AST.Nodes;
 using Parser.SymbolTable;
 using Parser.SymbolTable.Class;
+using Parser.SymbolTable.Function;
 using Parser.Utils;
 
 namespace Parser.ASTVisitor.Visitors
@@ -13,9 +15,13 @@ namespace Parser.ASTVisitor.Visitors
     {
         public GlobalSymbolTable GlobalSymbolTable { get; private set; }
 
-        public SymbolTableVisitor()
+        private StreamWriter _errorStream;
+
+        public SymbolTableVisitor(StreamWriter errorStream)
         {
-            GlobalSymbolTable = new GlobalSymbolTable();
+            _errorStream = errorStream;
+
+            GlobalSymbolTable = new GlobalSymbolTable(errorStream);
         }
 
         public void Visit(ProgramNode n)
@@ -25,6 +31,8 @@ namespace Parser.ASTVisitor.Visitors
             {
                 child.Accept(this);
             }
+
+            GlobalSymbolTable.Validate();
         }
 
         #region Class Tables
@@ -33,7 +41,7 @@ namespace Parser.ASTVisitor.Visitors
             var children = n.GetChildren().Cast<ClassDeclNode>();
             foreach (var child in children)
             {
-                child.Table = new ClassSymbolTable(GlobalSymbolTable);
+                child.Table = new ClassSymbolTable();
                 child.Accept(this);
 
                 GlobalSymbolTable.AddClassSymbolTable(child.Table);
@@ -134,20 +142,106 @@ namespace Parser.ASTVisitor.Visitors
         }
         #endregion
 
-
-
-
-
+        #region Function Tables
         public void Visit(FuncDefsNode n)
         {
-            //throw new NotImplementedException();
+            var children = n.GetChildren().Cast<FuncDefNode>();
+            foreach (var child in children)
+            {
+                child.Table = GlobalSymbolTable.FunctionSymbolTable;
+                child.Accept(this);
+            }
+        }
+
+        public void Visit(FuncDefNode n)
+        {
+            var children = n.GetChildren();
+
+            var tableEntry = new FunctionSymbolTableEntry();
+            List<ASTNodeBase> funcParamList;
+            List<ASTNodeBase> localScope;
+
+            bool hasScopeSpec = children[1] is IdentifierNode;
+            if (hasScopeSpec)
+            {
+                tableEntry.ScopeSpec = children[0].Token.Lexeme;
+                tableEntry.Name = children[1].Token.Lexeme;
+                funcParamList = children[2].GetChildren();
+                tableEntry.ReturnType = children[3].Token;
+                localScope = children.GetCast<FuncBodyNode>(4).GetChildren().First().GetChildren().SelectMany(x => x.GetChildren()).ToList();
+            }
+            else
+            {
+                tableEntry.Name = children[0].Token.Lexeme;
+                funcParamList = children[1].GetChildren();
+                tableEntry.ReturnType = children[2].Token;
+                localScope = children.GetCast<FuncBodyNode>(3).GetChildren().First().GetChildren().SelectMany(x => x.GetChildren()).ToList();
+            }
+
+            for (int i = 0; i < funcParamList.Count; i += 3)
+            {
+                var paramType = funcParamList[i + 0].Token;
+                var paramName = funcParamList[i + 1].Token.Lexeme;
+                var arrayDims = NodeUtils.ExtractArrayDimListNode(funcParamList.GetCast<ArrayDimListNode>(i + 2));
+
+                var entry = new FunctionSymbolTableEntryParam()
+                {
+                    Type = paramType,
+                    Name = paramName,
+                    ArrayDims = arrayDims,
+                };
+
+                tableEntry.AddParamEntry(entry);
+            }
+
+            for (int i = 0; i < localScope.Count; i += 3)
+            {
+                var paramType = localScope[i + 0].Token;
+                var paramName = localScope[i + 1].Token.Lexeme;
+                var arrayDims = NodeUtils.ExtractArrayDimListNode(localScope.GetCast<ArrayDimListNode>(i + 2));
+
+                var entry = new FunctionSymbolTableEntryLocalScope()
+                {
+                    Type = paramType,
+                    Name = paramName,
+                    ArrayDims = arrayDims,
+                };
+
+                tableEntry.AddLocalScopeEntry(entry);
+            }
+
+            n.Table.AddEntry(tableEntry);
         }
 
         public void Visit(MainFuncNode n)
         {
-            //throw new NotImplementedException();
-        }
+            n.Table = GlobalSymbolTable.FunctionSymbolTable;
 
+            var tableEntry = new FunctionSymbolTableEntry();
+            tableEntry.Name = "main";
+
+            var localScope = n.GetChildren().GetCast<LocalScopeNode>(0).GetChildren().FirstOrDefault()?.GetChildren() ?? new List<ASTNodeBase>();
+            for (int i = 0; i < localScope.Count; i += 3)
+            {
+                var paramType = localScope[i + 0].Token;
+                var paramName = localScope[i + 1].Token.Lexeme;
+                var arrayDims = NodeUtils.ExtractArrayDimListNode(localScope.GetCast<ArrayDimListNode>(i + 2));
+
+                var entry = new FunctionSymbolTableEntryLocalScope()
+                {
+                    Type = paramType,
+                    Name = paramName,
+                    ArrayDims = arrayDims,
+                };
+
+                tableEntry.AddLocalScopeEntry(entry);
+            }
+
+            n.Table.AddEntry(tableEntry);
+        }
+        #endregion
+
+        #region Unused
         public void Visit(NullNode n)
         {
             throw new NotImplementedException();
@@ -159,11 +253,6 @@ namespace Parser.ASTVisitor.Visitors
         }
 
         public void Visit(InheritListNode n)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(FuncDefNode n)
         {
             throw new NotImplementedException();
         }
@@ -322,5 +411,6 @@ namespace Parser.ASTVisitor.Visitors
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 }

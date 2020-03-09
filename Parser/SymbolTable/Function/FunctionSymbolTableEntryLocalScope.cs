@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Parser.SymbolTable.Class
+namespace Parser.SymbolTable.Function
 {
-    public class ClassSymbolTableEntryFunctionParam
+    public class FunctionSymbolTableEntryLocalScope
     {
-        public ClassSymbolTableEntryFunction Parent { get; set; }
+        public FunctionSymbolTableEntry Parent { get; set; }
 
         public Token Type { get; set; }
         public string Name { get; set; }

@@ -50,6 +50,8 @@ namespace ParserDriver
             using (StreamWriter astStream = new StreamWriter($"{fileName}.outast"))
             using (StreamWriter derivationsStream = new StreamWriter($"{fileName}.outderivation"))
             using (StreamWriter syntaxErrorStream = new StreamWriter($"{fileName}.outsyntaxerrors"))
+            using (StreamWriter symbolTablesStream = new StreamWriter($"{fileName}.outsymboltables"))
+            using (StreamWriter semanticErrorStream = new StreamWriter($"{fileName}.outsemanticerrors"))
             {
                 // Do parsing
                 Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
@@ -59,8 +61,11 @@ namespace ParserDriver
                 var printVisitor = new DOTPrinterVisitor(astStream);
                 tree.Accept(printVisitor);
 
-                var symbolTableVisitor = new SymbolTableVisitor();
+                var symbolTableVisitor = new SymbolTableVisitor(semanticErrorStream);
                 tree.Accept(symbolTableVisitor);
+
+                symbolTablesStream.WriteLine(symbolTableVisitor.GlobalSymbolTable);
+                Console.WriteLine(symbolTableVisitor.GlobalSymbolTable);
             }
         }
     }

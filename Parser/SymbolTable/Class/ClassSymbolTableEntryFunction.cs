@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Parser.SymbolTable.Class
 {
@@ -15,6 +17,32 @@ namespace Parser.SymbolTable.Class
         {
             entry.Parent = this;
             ParamsTable.Add(entry);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append($"Function: {Visibility} {Name}({ToStringParams()}) -> {Type.Lexeme}");
+
+            return builder.ToString();
+        }
+
+        public string ToStringParams()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            if (ParamsTable.Count != 0)
+            {
+                for (int i = 0; i < ParamsTable.Count - 1; ++i)
+                {
+                    builder.Append($"{ParamsTable[i]}, ");
+                }
+
+                builder.Append(ParamsTable.Last().ToString());
+            }
+
+            return builder.ToString();
         }
     }
 }
