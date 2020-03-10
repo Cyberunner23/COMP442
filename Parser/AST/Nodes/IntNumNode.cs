@@ -7,6 +7,12 @@ namespace Parser.AST.Nodes
     {
         public int Value { get; set; }
 
+        public const string TYPE = "int";
+        public IntNumNode()
+        {
+            ExprType = TYPE;
+        }
+
         public override void Accept(IVisitor v)
         {
             v.Visit(this);

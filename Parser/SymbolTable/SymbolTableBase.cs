@@ -2,7 +2,7 @@
 
 namespace Parser.SymbolTable
 {
-    public class SymbolTableBase
+    public class SymbolTableBase : ITable
     {
         public GlobalSymbolTable Parent { get; set; }
         public List<SymbolTableEntryBase> Entries { get; private set; }

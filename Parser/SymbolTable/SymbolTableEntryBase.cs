@@ -1,6 +1,6 @@
 ﻿namespace Parser.SymbolTable
 {
-    public class SymbolTableEntryBase
+    public class SymbolTableEntryBase : ITable
     {
         public SymbolTableBase Parent { get; set; }
 

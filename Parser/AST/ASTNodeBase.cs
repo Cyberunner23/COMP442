@@ -3,6 +3,7 @@ using System.Linq;
 using Lexer;
 using Parser.ASTBuilder.SemanticRules;
 using Parser.ASTVisitor;
+using Parser.SymbolTable;
 
 namespace Parser.AST
 {
@@ -17,6 +18,9 @@ namespace Parser.AST
         public ASTNodeBase RightSiblingNode { get; private set; }
 
         private static int _idCtr = 0;
+
+        public ITable SymTable { get; set; }
+        public string ExprType { get; set; }
 
         public ASTNodeBase()
         {

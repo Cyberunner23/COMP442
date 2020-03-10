@@ -49,6 +49,7 @@
     <Compile Include="ASTVisitor\IVisitableNode.cs" />
     <Compile Include="ASTVisitor\IVisitor.cs" />
     <Compile Include="ASTVisitor\Visitors\DOTPrinterVisitor.cs" />
+    <Compile Include="ASTVisitor\Visitors\SemanticCheckerVisitor.cs" />
     <Compile Include="ASTVisitor\Visitors\SymbolTableVisitor.cs" />
     <Compile Include="AST\ASTNodeBase.cs" />
     <Compile Include="AST\Nodes\AddOpNode.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="SymbolTable\GlobalSymbolTable.cs" />
     <Compile Include="SymbolTable\SymbolTableBase.cs" />
     <Compile Include="SymbolTable\SymbolTableEntryBase.cs" />
+    <Compile Include="SymbolTable\TableBase.cs" />
     <Compile Include="Utils\NodeUtils.cs" />
     <Compile Include="Utils\TypePrintUtils.cs" />
   </ItemGroup>

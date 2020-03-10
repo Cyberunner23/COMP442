@@ -6,6 +6,13 @@ namespace Parser.AST.Nodes
     {
         public float Value { get; set; }
 
+        public const string TYPE = "float";
+
+        public FloatNumNode()
+        {
+            ExprType = TYPE;
+        }
+
         public override void Accept(IVisitor v)
         {
             v.Visit(this);
