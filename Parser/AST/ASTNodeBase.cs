@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Lexer;
 using Parser.ASTBuilder.SemanticRules;
 using Parser.ASTVisitor;
 using Parser.SymbolTable;
+using Parser.Utils;
 
 namespace Parser.AST
 {
@@ -20,7 +22,8 @@ namespace Parser.AST
         private static int _idCtr = 0;
 
         public ITable SymTable { get; set; }
-        public string ExprType { get; set; }
+        public string ScopeSpec { get; set; }
+        public (string Type, List<int> Dims) ExprType { get; set; }
 
         public ASTNodeBase()
         {

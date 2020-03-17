@@ -66,6 +66,9 @@ namespace ParserDriver
 
                 symbolTablesStream.WriteLine(symbolTableVisitor.GlobalSymbolTable);
                 Console.WriteLine(symbolTableVisitor.GlobalSymbolTable);
+
+                var semanticCheckerVisitor = new SemanticCheckerVisitor(semanticErrorStream, symbolTableVisitor.GlobalSymbolTable);
+                tree.Accept(semanticCheckerVisitor);
             }
         }
     }

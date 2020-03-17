@@ -4,6 +4,8 @@ namespace Parser.AST.Nodes
 {
     public class ArrayDimListNode : ASTNodeBase
     {
+        public int NumDims { get { return GetChildren().Count; } }
+
         public override void Accept(IVisitor v)
         {
             v.Visit(this);

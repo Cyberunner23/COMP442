@@ -1,4 +1,5 @@
 ﻿using Lexer;
+using Parser.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,39 @@ namespace Parser.SymbolTable.Function
         {
             param.Parent = this;
             LocalScope.Add(param);
+        }
+
+        // Type <-> dim
+        public Dictionary<string, int> GetParamTypes()
+        {
+            var paramTypes = new Dictionary<string, int>();
+
+            foreach (var param in Params)
+            {
+                paramTypes.Add(param.Name, param.ArrayDims.Count());
+            }
+
+            return paramTypes;
+        }
+
+        // name <-> (type <-> dims)
+        public Dictionary<string, (string, List<int>)> GetVariablesInScope()
+        {
+            var variables = new Dictionary<string, (string, List<int>)>();
+
+            foreach (var localVar in LocalScope.DedupeBy(x => x.Name))
+            {
+                variables.Add(localVar.Name, (localVar.Type.Lexeme, localVar.ArrayDims));
+            }
+
+            if (!string.IsNullOrEmpty(ScopeSpec))
+            {
+                var classTable = ((FunctionSymbolTable)Parent).Parent.GetClassSymbolTableByName(ScopeSpec);
+                classTable.GetVariablesInScope();
+            }
+            
+
+            return variables;
         }
 
         public override string ToString()

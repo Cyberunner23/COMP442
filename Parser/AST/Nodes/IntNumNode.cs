@@ -1,5 +1,7 @@
 ﻿
 using Parser.ASTVisitor;
+using Parser.Utils;
+using System.Collections.Generic;
 
 namespace Parser.AST.Nodes
 {
@@ -7,10 +9,9 @@ namespace Parser.AST.Nodes
     {
         public int Value { get; set; }
 
-        public const string TYPE = "int";
         public IntNumNode()
         {
-            ExprType = TYPE;
+            ExprType = (TypeConstants.IntType, new List<int>() { 0 });
         }
 
         public override void Accept(IVisitor v)

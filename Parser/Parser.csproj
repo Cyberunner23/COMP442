@@ -33,6 +33,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -114,7 +117,9 @@
     <Compile Include="SymbolTable\SymbolTableBase.cs" />
     <Compile Include="SymbolTable\SymbolTableEntryBase.cs" />
     <Compile Include="SymbolTable\TableBase.cs" />
+    <Compile Include="Utils\DependencyUtil.cs" />
     <Compile Include="Utils\NodeUtils.cs" />
+    <Compile Include="Utils\TypeConstants.cs" />
     <Compile Include="Utils\TypePrintUtils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +128,8 @@
       <Name>Lexer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

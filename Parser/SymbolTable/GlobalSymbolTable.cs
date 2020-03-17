@@ -1,5 +1,6 @@
 ﻿using Parser.SymbolTable.Class;
 using Parser.SymbolTable.Function;
+using Parser.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ namespace Parser.SymbolTable
             _errorStream = errorStream;
 
             ClassSymbolTables = new List<ClassSymbolTable>();
-            FunctionSymbolTable = new FunctionSymbolTable();
+            FunctionSymbolTable = new FunctionSymbolTable() { Parent = this };
         }
 
         public void AddClassSymbolTable(ClassSymbolTable table)
@@ -65,11 +66,17 @@ namespace Parser.SymbolTable
             return builder.ToString();
         }
 
+        public ClassSymbolTable GetClassSymbolTableByName(string name)
+        {
+            return ClassSymbolTables.FirstOrDefault(x => string.Equals(x.ClassName, name));
+        }
+
         public void Validate()
         {
             CheckDeclAndDefn();
             CheckDuplicateDecls();
             CheckFunctionOverloads();
+            CheckCircularDependencies();
         }
 
 
@@ -79,7 +86,7 @@ namespace Parser.SymbolTable
         // #5 in assignment
         public void CheckShadowedMembers()
         {
-
+            // todo
         }
 
         // #6 in the assignment
@@ -125,38 +132,29 @@ namespace Parser.SymbolTable
         public void CheckDuplicateDecls()
         {
             // Classes
-            ClassSymbolTables.GroupBy(x => x.ClassName)
-                             .Where(x => x.Count() > 1)
-                             .Select(x => x.Key)
-                             .ToList()
+            ClassSymbolTables.GetDupedValuesBy(x => x.ClassName)
                              .ForEach(x => 
                              {
-                                 _errorStream.WriteLine($"Multiple declaration of class: \"{x}\"");
+                                 _errorStream.WriteLine($"Multiple declaration of class: \"{x.ClassName}\"");
                              });
 
             // Data Member
             foreach (var classTable in ClassSymbolTables)
             {
                 var varDecls = classTable.Entries.Where(x => x is ClassSymbolTableEntryVariable).Cast<ClassSymbolTableEntryVariable>();
-                varDecls.GroupBy(x => x.Name)
-                        .Where(x => x.Count() > 1)
-                        .Select(x => x.Key)
-                        .ToList()
+                varDecls.GetDupedValuesBy(x => x.Name)
                         .ForEach(x =>
                         {
-                            _errorStream.WriteLine($"Multiple declaration of variable: \"{x}\" in class \"{classTable.ClassName}\"");
+                            _errorStream.WriteLine($"Multiple declaration of variable: \"{x.Name}\" in class \"{classTable.ClassName}\"");
                         });
             }
 
             // Functions
             var funcDefns = FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>();
-            funcDefns.GroupBy(x => x.ToStringSignatureNoReturn())
-                     .Where(x => x.Count() > 1)
-                     .Select(x => x.Key)
-                     .ToList()
+            funcDefns.GetDupedValuesBy(x => x.ToStringSignatureNoReturn()) 
                      .ForEach(x =>
                      {
-                         _errorStream.WriteLine($"Multiple function definitions for function {x}");
+                         _errorStream.WriteLine($"Multiple function definitions for function {x.ToStringSignatureNoReturn()}");
                      });
 
 
@@ -164,10 +162,7 @@ namespace Parser.SymbolTable
             foreach (var funcDefn in funcDefns)
             {
                 var locals = funcDefn.LocalScope;
-                locals.GroupBy(x => x.ToString(), StringComparer.Ordinal)
-                      .Where(x => x.Count() > 1)
-                      .Select(x => x.Key)
-                      .ToList()
+                locals.GetDupedValuesBy(x => x.ToString(), StringComparer.Ordinal)
                       .ForEach(x =>
                       {
                           _errorStream.WriteLine($"Multiple declaration of local variable: \"{x}\" in function definition \"{funcDefn.ToStringSignature()}\"");
@@ -201,6 +196,22 @@ namespace Parser.SymbolTable
                 }
             }
         }
+
+        // #14 in the assignment
+        public void CheckCircularDependencies()
+        {
+            var dedupedClasses = ClassSymbolTables.DedupeBy(x => x.ClassName);
+            var inheritMap = dedupedClasses.ToDictionary(x => x.ClassName, x => x.Inherits.Concat(x.GetDataMemberTypes()).DedupeBy(y => y));
+            var cycles = inheritMap.FindCycles();
+            foreach (var cycle in cycles)
+            {
+                _errorStream.WriteLine("Dependency loop detected:");
+                foreach (var className in cycle)
+                {
+                    _errorStream.WriteLine($"    {className}");
+                }
+            }
+        }
         
 
         #region Helpers        
@@ -218,7 +229,7 @@ namespace Parser.SymbolTable
                     return false;
                 }
 
-                if (declParams[i].Type.TokenType != defnParams[i].Type.TokenType)
+                if (declParams[i].Type.TokenType != defnParams[i].TypeToken.TokenType)
                 {
                     return false;
                 }

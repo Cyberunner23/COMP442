@@ -148,7 +148,6 @@ namespace Parser.ASTVisitor.Visitors
             var children = n.GetChildren().Cast<FuncDefNode>();
             foreach (var child in children)
             {
-                child.Table = GlobalSymbolTable.FunctionSymbolTable;
                 child.Accept(this);
             }
         }
@@ -186,7 +185,7 @@ namespace Parser.ASTVisitor.Visitors
 
                 var entry = new FunctionSymbolTableEntryParam()
                 {
-                    Type = paramType,
+                    TypeToken = paramType,
                     Name = paramName,
                     ArrayDims = arrayDims,
                 };
@@ -210,7 +209,8 @@ namespace Parser.ASTVisitor.Visitors
                 tableEntry.AddLocalScopeEntry(entry);
             }
 
-            n.Table.AddEntry(tableEntry);
+            n.Table = tableEntry;
+            GlobalSymbolTable.FunctionSymbolTable.AddEntry(tableEntry);
         }
 
         public void Visit(MainFuncNode n)

@@ -1,4 +1,6 @@
 ﻿using Parser.ASTVisitor;
+using Parser.Utils;
+using System.Collections.Generic;
 
 namespace Parser.AST.Nodes
 {
@@ -6,11 +8,9 @@ namespace Parser.AST.Nodes
     {
         public float Value { get; set; }
 
-        public const string TYPE = "float";
-
         public FloatNumNode()
         {
-            ExprType = TYPE;
+            ExprType = (TypeConstants.FloatType, new List<int>() { 0 });
         }
 
         public override void Accept(IVisitor v)

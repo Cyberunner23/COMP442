@@ -5,7 +5,7 @@ namespace Parser.AST.Nodes
 {
     public class FuncDefNode : ASTNodeBase
     {
-        public FunctionSymbolTable Table { get; set; }
+        public FunctionSymbolTableEntry Table { get; set; }
 
         public override void Accept(IVisitor v)
         {

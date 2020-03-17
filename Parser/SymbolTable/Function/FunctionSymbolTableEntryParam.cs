@@ -8,15 +8,17 @@ namespace Parser.SymbolTable.Function
     {
         public FunctionSymbolTableEntry Parent { get; set; }
 
-        public Token Type { get; set; }
+        public Token TypeToken { get; set; }
         public string Name { get; set; }
         public List<int> ArrayDims {get; set;}
+
+        public (string type, List<int> dims) Type { get { return (type: Name, dims: ArrayDims); } }
 
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append($"{Type.Lexeme} {Name}");
+            builder.Append($"{TypeToken.Lexeme} {Name}");
 
             foreach (var dim in ArrayDims)
             {
