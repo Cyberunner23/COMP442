@@ -348,10 +348,31 @@ namespace Parser.ASTVisitor.Visitors
 
         public void Visit(FuncCallNode n)
         {
-            foreach (var node in n.GetChildren())
+            var children = n.GetChildren();
+
+            var first = children.First();
+            first.SymTable = n.SymTable;
+            first.Accept(this);
+
+            var currentScopeSpec = first.ScopeSpec;
+            foreach (var node in children.Skip(1))
             {
-                node.SymTable = n.SymTable;
+                if (string.IsNullOrEmpty(currentScopeSpec))
+                {
+                    _errorStream.WriteLine($"Use of variable with no scopespec.");
+                    break;
+                }
+
+                var classTable = _globalTable.GetClassSymbolTableByName(currentScopeSpec);
+                if (classTable == null)
+                {
+                    _errorStream.WriteLine($"ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
+                    break;
+                }
+
+                node.SymTable = classTable;
                 node.Accept(this);
+                currentScopeSpec = node.ScopeSpec;
             }
         }
 
