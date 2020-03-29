@@ -1,0 +1,25 @@
+
+class FOO {
+	public float hello[5][5];
+	
+	public world(float a[5][5]) : float;
+};
+  
+FOO::world(float a[5][5]) : float
+  local
+  do
+  end;
+
+main
+  local
+    float var1[1][2];
+	float var2[3];
+	float var3;
+    FOO foo;
+  do
+    var3 = var2[1.1];
+    var2 = var1; // ERROR
+	var3 = var1[0][0]; // OK
+	foo.world(foo.hello[0]); // ERROR
+	foo.world(foo.hello); // OK
+  end

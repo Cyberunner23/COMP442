@@ -14,7 +14,7 @@ namespace Parser.AST.Nodes
 
         protected override ASTNodeBase CreateNode()
         {
-            return new ReturnNode();
+            return new ReturnNode() { Token = PreviousPreviousLookahead };
         }
     }
 }

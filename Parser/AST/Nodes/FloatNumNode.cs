@@ -10,7 +10,7 @@ namespace Parser.AST.Nodes
 
         public FloatNumNode()
         {
-            ExprType = (TypeConstants.FloatType, new List<int>() { 0 });
+            ExprType = (TypeConstants.FloatType, new List<int>());
         }
 
         public override void Accept(IVisitor v)

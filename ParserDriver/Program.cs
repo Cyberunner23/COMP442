@@ -16,15 +16,17 @@ namespace ParserDriver
                 Environment.Exit(-1);
             }
 
-            string inputText = File.ReadAllText(args[0]);
-            string fileName = Path.GetFileNameWithoutExtension(args[0]);
+            string filePath = $@"{Environment.CurrentDirectory}\{args[0]}";
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            string fileDirectory = Path.GetDirectoryName(filePath);
+            string inputText = File.ReadAllText(filePath);
 
             Lexer.Lexer lex = new Lexer.Lexer(inputText);
 
             List<Token> tokensToParse = new List<Token>();
 
-            using (StreamWriter tokenFile = new StreamWriter($"{fileName}.outlextokens"))
-            using (StreamWriter tokenErrorFile = new StreamWriter($"{fileName}.outlexerrors"))
+            using (StreamWriter tokenFile = new StreamWriter($@"{fileDirectory}\{fileName}.outlextokens"))
+            using (StreamWriter tokenErrorFile = new StreamWriter($@"{fileDirectory}\{fileName}.outlexerrors"))
             {
                 Token t;
                 do
@@ -47,11 +49,11 @@ namespace ParserDriver
                 tokensToParse.RemoveAll(x => lex.IsCommentToken(x.TokenType));
             }
 
-            using (StreamWriter astStream = new StreamWriter($"{fileName}.outast"))
-            using (StreamWriter derivationsStream = new StreamWriter($"{fileName}.outderivation"))
-            using (StreamWriter syntaxErrorStream = new StreamWriter($"{fileName}.outsyntaxerrors"))
-            using (StreamWriter symbolTablesStream = new StreamWriter($"{fileName}.outsymboltables"))
-            using (StreamWriter semanticErrorStream = new StreamWriter($"{fileName}.outsemanticerrors"))
+            using (StreamWriter astStream = new StreamWriter($@"{fileDirectory}\{fileName}.outast"))
+            using (StreamWriter derivationsStream = new StreamWriter($@"{fileDirectory}\{fileName}.outderivation"))
+            using (StreamWriter syntaxErrorStream = new StreamWriter($@"{fileDirectory}\{fileName}.outsyntaxerrors"))
+            using (StreamWriter symbolTablesStream = new StreamWriter($@"{fileDirectory}\{fileName}.outsymboltables"))
+            using (StreamWriter semanticErrorStream = new StreamWriter($@"{fileDirectory}\{fileName}.outsemanticerrors"))
             {
                 // Do parsing
                 Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
@@ -60,6 +62,7 @@ namespace ParserDriver
 
                 var printVisitor = new DOTPrinterVisitor(astStream);
                 tree.Accept(printVisitor);
+                astStream.Flush();
 
                 var symbolTableVisitor = new SymbolTableVisitor(semanticErrorStream);
                 tree.Accept(symbolTableVisitor);

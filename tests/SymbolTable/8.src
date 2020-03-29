@@ -1,0 +1,22 @@
+class FOO {
+	private float fooo;
+	private float fooo;
+	
+	public callfoo() : float;
+};
+
+
+FOO::callfoo() : floar
+  local
+  float bar;
+  float bar;
+  do
+  end;
+
+// ====== main ====== //
+main
+  local
+  float bar;
+  float bar;
+  do
+  end

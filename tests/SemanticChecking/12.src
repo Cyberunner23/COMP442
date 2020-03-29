@@ -1,0 +1,30 @@
+
+class FOO {
+	public hello(int a) : float;
+	public world(float a) : float;
+};
+
+FOO::hello(int a) : float
+  local
+  do
+    world(3); // ERROR
+  end
+  
+FOO::world(float a) : float
+  local
+  do
+    hello(5.5); // ERROR
+    hello(1, 1); // ERROR
+  end
+  
+foo(int a, float b) : int
+  local
+  do
+  end
+
+main
+  local
+  do
+    foo(1, 1.5); // OK
+    foo(1.5); // Error
+  end

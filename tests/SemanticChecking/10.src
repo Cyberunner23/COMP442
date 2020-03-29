@@ -1,0 +1,54 @@
+
+class FOO {
+	public float hello[5][5];
+	
+	public bar() : FOO;
+	public bar2() : FOO;
+	public world(float a[5][5]) : float;
+};
+
+FOO::bar() : FOO
+  local
+    FOO foo;
+  do
+    return (foo); // OK
+  end;
+  
+FOO::bar2() : FOO
+  local
+  do
+    return (1); // ERROR
+  end;
+
+FOO::world(float a[5][5]) : float
+  local
+  do
+  end;
+
+thing() : FOO
+  local
+  do
+  end;
+
+main
+  local
+    float a;
+	int b;
+	int c[1];
+    FOO foo;
+	FOO foo2;
+  do
+    foo2 = thing();
+    foo2 = foo.bar(); // OK
+    foo2 = 1.1; // ERROR
+	
+	b = foo; // ERROR
+	b = 5; // OK
+	a = 1.1 + 3.2 / 5.6; // OK
+	a = 1.1 + 3.2 / b; // ERROR
+	a = 1.1 + foo; // ERROR
+	b = c[0] + 1; // OK
+	b = c + 1; // ERROR
+	
+	
+  end

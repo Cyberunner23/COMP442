@@ -1,0 +1,30 @@
+class FOO {
+	private float fooo[1][3];
+	public foo_func(float x) : float;
+};
+
+class BAR {
+	private float baar;
+	
+	public bar_func(float x) : float;
+};
+
+class FOOBAR inherits FOO, BAR {
+};
+
+FOO::foo_func(float x) : float
+  local
+    float tmp;
+  do
+  end;
+  
+BAR::bar_func(float x) : float
+  local
+  do
+  end;
+
+// ====== main ====== //
+main
+  local
+  do
+  end

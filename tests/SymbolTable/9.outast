@@ -1,0 +1,119 @@
+digraph G {
+103[label="103:ProgramNode"]
+62[label="62:ClassDeclsNode"]
+103 -> 62
+61[label="61:ClassDeclNode"]
+62 -> 61
+45[label="45:IdentifierNode\nFOO"]
+61 -> 45
+46[label="46:InheritListNode"]
+61 -> 46
+60[label="60:MemberDeclsNode"]
+61 -> 60
+51[label="51:MemberDeclNode\nFunction"]
+60 -> 51
+47[label="47:VisibilityNode\nPublic"]
+51 -> 47
+48[label="48:IdentifierNode\ncallfoo"]
+51 -> 48
+49[label="49:FuncParamListNode"]
+51 -> 49
+50[label="50:TypeNode\nFloat"]
+51 -> 50
+59[label="59:MemberDeclNode\nFunction"]
+60 -> 59
+52[label="52:VisibilityNode\nPublic"]
+59 -> 52
+53[label="53:IdentifierNode\ncallfoo"]
+59 -> 53
+57[label="57:FuncParamListNode"]
+59 -> 57
+54[label="54:TypeNode\nFloat"]
+57 -> 54
+55[label="55:IdentifierNode\na"]
+57 -> 55
+56[label="56:ArrayDimListNode"]
+57 -> 56
+58[label="58:TypeNode\nFloat"]
+59 -> 58
+99[label="99:FuncDefsNode"]
+103 -> 99
+70[label="70:FuncDefNode"]
+99 -> 70
+63[label="63:IdentifierNode\nFOO"]
+70 -> 63
+64[label="64:IdentifierNode\ncallfoo"]
+70 -> 64
+65[label="65:FuncParamListNode"]
+70 -> 65
+66[label="66:TypeNode\nFloat"]
+70 -> 66
+69[label="69:FuncBodyNode"]
+70 -> 69
+67[label="67:LocalScopeNode"]
+69 -> 67
+68[label="68:StatementsNode"]
+69 -> 68
+81[label="81:FuncDefNode"]
+99 -> 81
+71[label="71:IdentifierNode\nFOO"]
+81 -> 71
+72[label="72:IdentifierNode\ncallfoo"]
+81 -> 72
+76[label="76:FuncParamListNode"]
+81 -> 76
+73[label="73:TypeNode\nFloat"]
+76 -> 73
+74[label="74:IdentifierNode\na"]
+76 -> 74
+75[label="75:ArrayDimListNode"]
+76 -> 75
+77[label="77:TypeNode\nFloat"]
+81 -> 77
+80[label="80:FuncBodyNode"]
+81 -> 80
+78[label="78:LocalScopeNode"]
+80 -> 78
+79[label="79:StatementsNode"]
+80 -> 79
+88[label="88:FuncDefNode"]
+99 -> 88
+82[label="82:IdentifierNode\ncallbar"]
+88 -> 82
+83[label="83:FuncParamListNode"]
+88 -> 83
+84[label="84:TypeNode\nFloat"]
+88 -> 84
+87[label="87:FuncBodyNode"]
+88 -> 87
+85[label="85:LocalScopeNode"]
+87 -> 85
+86[label="86:StatementsNode"]
+87 -> 86
+98[label="98:FuncDefNode"]
+99 -> 98
+89[label="89:IdentifierNode\ncallbar"]
+98 -> 89
+93[label="93:FuncParamListNode"]
+98 -> 93
+90[label="90:TypeNode\nFloat"]
+93 -> 90
+91[label="91:IdentifierNode\na"]
+93 -> 91
+92[label="92:ArrayDimListNode"]
+93 -> 92
+94[label="94:TypeNode\nFloat"]
+98 -> 94
+97[label="97:FuncBodyNode"]
+98 -> 97
+95[label="95:LocalScopeNode"]
+97 -> 95
+96[label="96:StatementsNode"]
+97 -> 96
+102[label="102:MainFuncNode"]
+103 -> 102
+100[label="100:LocalScopeNode"]
+102 -> 100
+101[label="101:StatementsNode"]
+102 -> 101
+}

@@ -1,0 +1,4 @@
+WARNING: Function: "FOO::callfoo() -> float" has an overload.
+WARNING: Function: "FOO::callfoo(float a) -> float" has an overload.
+WARNING: Function: "callbar() -> float" has an overload.
+WARNING: Function: "callbar(float a) -> float" has an overload.

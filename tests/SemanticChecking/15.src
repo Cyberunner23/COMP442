@@ -1,0 +1,52 @@
+
+class C1 {
+	public float a;
+};
+
+class C2 {
+    public getc1() : C1;
+}
+
+class C3 {
+	public getc2() : C2;
+}
+
+class C4 {
+	public C3 c3;
+	
+	public callgood() : float;
+	public callbad() : float;
+}
+  
+C4::callgood() : float 
+  local
+    float val;
+  do
+    val = c3.getc2().getc1().a;
+  end
+  
+C4::callbad() : float 
+  local
+    float val;
+  do
+    val = c3.getc2().a;
+  end
+  
+C3::getc2() : C2
+  local
+  do
+  end
+  
+C2::getc1() : C1
+  local
+  do
+  end
+
+main
+  local
+    C3 c3;
+	float val;
+  do
+    val = c3.getc2().getc1().a;
+	val = c3.getc2().a;
+  end

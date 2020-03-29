@@ -11,7 +11,7 @@ namespace Parser.AST.Nodes
 
         public IntNumNode()
         {
-            ExprType = (TypeConstants.IntType, new List<int>() { 0 });
+            ExprType = (TypeConstants.IntType, new List<int>());
         }
 
         public override void Accept(IVisitor v)

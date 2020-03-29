@@ -1,0 +1,31 @@
+class FOO {
+	public callfoo() : float;
+	public callfoo(float a) : float;
+};
+
+
+FOO::callfoo() : float
+  local
+  do
+  end;
+  
+FOO::callfoo(float a) : float
+  local
+  do
+  end;
+  
+callbar() : float
+  local
+  do
+  end;
+  
+callbar(float a) : float
+  local
+  do
+  end;
+
+// ====== main ====== //
+main
+  local
+  do
+  end

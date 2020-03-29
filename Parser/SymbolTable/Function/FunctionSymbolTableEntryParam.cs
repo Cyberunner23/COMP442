@@ -12,7 +12,7 @@ namespace Parser.SymbolTable.Function
         public string Name { get; set; }
         public List<int> ArrayDims {get; set;}
 
-        public (string type, List<int> dims) Type { get { return (type: Name, dims: ArrayDims); } }
+        public (string type, List<int> dims) Type { get { return (type: TypeToken.Lexeme, dims: ArrayDims); } }
 
         public override string ToString()
         {

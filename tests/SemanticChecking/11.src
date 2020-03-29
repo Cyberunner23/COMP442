@@ -1,0 +1,21 @@
+
+class FOO {
+	public world() : float;
+};
+
+FOO::world() : float
+  local
+  FOO2 var1;
+  do
+	hello();
+	var2 = 5;
+  end
+  
+
+main
+  local
+  FOO2 var1;
+  do
+	hello();
+	var2 = 5;
+  end

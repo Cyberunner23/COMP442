@@ -1,0 +1,16 @@
+// dependency loops
+class L1 inherits L2 {};
+class L2 inherits L1 {};
+
+class L3 {
+	private L4 a;
+};
+
+class L4 {
+    private L3 a;
+};
+
+main
+  local
+  do
+  end

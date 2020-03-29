@@ -199,6 +199,11 @@ namespace Parser.ASTVisitor.Visitors
                 var paramName = localScope[i + 1].Token.Lexeme;
                 var arrayDims = NodeUtils.ExtractArrayDimListNode(localScope.GetCast<ArrayDimListNode>(i + 2));
 
+                if (!CheckTypeExists(paramType.Lexeme))
+                {
+                    _errorStream.WriteLine($"Use of undeclared class, \"{paramType.Lexeme}\"({paramType.StartLine}:{paramType.StartColumn})");
+                }
+
                 var entry = new FunctionSymbolTableEntryLocalScope()
                 {
                     Type = paramType,
@@ -220,12 +225,18 @@ namespace Parser.ASTVisitor.Visitors
             var tableEntry = new FunctionSymbolTableEntry();
             tableEntry.Name = "main";
 
-            var localScope = n.GetChildren().GetCast<LocalScopeNode>(0).GetChildren().FirstOrDefault()?.GetChildren() ?? new List<ASTNodeBase>();
+            
+            var localScope = n.GetChildren().First().GetChildren().SelectMany(x => x.GetChildren()).ToList();
             for (int i = 0; i < localScope.Count; i += 3)
             {
                 var paramType = localScope[i + 0].Token;
                 var paramName = localScope[i + 1].Token.Lexeme;
                 var arrayDims = NodeUtils.ExtractArrayDimListNode(localScope.GetCast<ArrayDimListNode>(i + 2));
+
+                if (!CheckTypeExists(paramType.Lexeme))
+                {
+                    _errorStream.WriteLine($"Use of undeclared class, \"{paramType.Lexeme}\"({paramType.StartLine}:{paramType.StartColumn})");
+                }
 
                 var entry = new FunctionSymbolTableEntryLocalScope()
                 {
@@ -238,6 +249,17 @@ namespace Parser.ASTVisitor.Visitors
             }
 
             n.Table.AddEntry(tableEntry);
+        }
+
+        private bool CheckTypeExists(string type)
+        {
+            if (string.Equals(type, TypeConstants.FloatType) || string.Equals(type, TypeConstants.IntType))
+            {
+                return true;
+            }
+
+            bool found = GlobalSymbolTable.ClassSymbolTables.Select(x => x.ClassName).Contains(type);
+            return found;
         }
         #endregion
 
