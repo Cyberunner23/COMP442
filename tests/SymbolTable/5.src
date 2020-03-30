@@ -1,0 +1,52 @@
+
+class FOO {
+	public float hello[5][5];
+
+	public foo() : FOO
+	public bar() : FOO;
+	public bar() : FOO;
+};
+
+class BAR inherits FOO {
+   
+    public foo() : FOO
+};
+
+
+FOO::foo() : FOO
+  local
+    FOO foo;
+	FOO foo;
+  do
+    return (foo); // OK
+  end;
+  
+FOO::bar() : FOO
+  local
+  do
+  do
+  end;
+
+BAR::foo() : FOO
+  local
+    FOO fooVar;
+  do
+	foo();
+    return (fooVar); // OK
+  end;
+
+main
+  local
+    float a;
+	int b;
+	int c[1];
+    FOO foo;
+	FOO foo2;
+	BAR bar;
+  do
+    foo2 = foo.bar(); // OK
+	foo2 = bar.foo();
+	
+	a = bar.hello[0][0];
+	
+  end

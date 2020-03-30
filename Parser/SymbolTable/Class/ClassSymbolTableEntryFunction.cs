@@ -44,5 +44,34 @@ namespace Parser.SymbolTable.Class
 
             return builder.ToString();
         }
+
+        public string ToStringSignatureNoReturn()
+        {
+            StringBuilder builder = new StringBuilder();
+            
+            var scopeSpec = ((ClassSymbolTable)Parent).ClassName;
+            if (!string.IsNullOrEmpty(scopeSpec))
+            {
+                builder.Append($"{scopeSpec}::{Name}(");
+            }
+            else
+            {
+                builder.Append($"{Name}(");
+            }
+
+            if (ParamsTable.Count != 0)
+            {
+                for (int i = 0; i < ParamsTable.Count - 1; ++i)
+                {
+                    builder.Append($"{ParamsTable[i]}, ");
+                }
+
+                builder.Append(ParamsTable.Last().ToString());
+            }
+
+            builder.Append($")");
+
+            return builder.ToString();
+        }
     }
 }

@@ -1,9 +1,0 @@
-Type if value for return is invalid (line: 20), expected: FOO, received: int
-Assignment type missmatch! FOO <-> float (line: 43)
-Assignment type missmatch! int <-> FOO (line: 45)
-Operand types don't match! float <-> int (48:16)
-Operand types don't match! float <-> int (48:10)
-Assignment type missmatch! float <-> int (line: 48)
-Operand types don't match! float <-> FOO (49:10)
-Assignment type missmatch! float <-> FOO (line: 49)
-Cannot multiply/divide arrays! (51:8)

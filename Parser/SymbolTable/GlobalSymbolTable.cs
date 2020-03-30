@@ -147,10 +147,17 @@ namespace Parser.SymbolTable
                         {
                             _errorStream.WriteLine($"Multiple declaration of variable: \"{x.Name}\" in class \"{classTable.ClassName}\"");
                         });
+
+                var funcDefs = classTable.Entries.Where(x => x is ClassSymbolTableEntryFunction).Cast<ClassSymbolTableEntryFunction>().ToList();
+                funcDefs.GetDupedValuesBy(x => x.ToStringSignatureNoReturn())
+                     .ForEach(x =>
+                     {
+                         _errorStream.WriteLine($"Multiple function declaration for function {x.ToStringSignatureNoReturn()}");
+                     });
             }
 
             // Functions
-            var funcDefns = FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>();
+            var funcDefns = FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>().ToList();
             funcDefns.GetDupedValuesBy(x => x.ToStringSignatureNoReturn()) 
                      .ForEach(x =>
                      {

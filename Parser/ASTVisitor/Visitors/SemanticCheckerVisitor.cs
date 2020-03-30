@@ -557,24 +557,28 @@ namespace Parser.ASTVisitor.Visitors
             {
                 case FunctionSymbolTableEntry f:
                     {
-                        //n.ScopeSpec = f.ScopeSpec;
+
+                        candidateFuncsInScope = new List<FunctionSymbolTableEntry>();
+                        if (!string.IsNullOrEmpty(f.ScopeSpec))
+                        {
+                            ClassSymbolTable s = _globalTable.GetClassSymbolTableByName(f.ScopeSpec);
+                            var funcsInClass = s.GetFunctions().Where(x => string.Equals(x.Name, n.FuncName)).ToList();
+                            candidateFuncsInScope = candidateFuncsInScope.Concat(funcsInClass).ToList();
+                        }
+
+                        var candidateFuncsInGlobalScope = _globalTable.FunctionSymbolTable.Entries
+                            .Cast<FunctionSymbolTableEntry>()
+                            .Where(x => string.Equals(x.Name, n.FuncName) && string.IsNullOrEmpty(x.ScopeSpec)).ToList();
 
                         // Same name, in class or free function
-                        candidateFuncsInScope = _globalTable.FunctionSymbolTable.Entries
-                            .Cast<FunctionSymbolTableEntry>() 
-                            .Where(x => string.Equals(x.Name, n.FuncName) && (string.Equals(x.ScopeSpec, f.ScopeSpec) || string.IsNullOrEmpty(x.ScopeSpec)))
-                            .ToList();
+                        //candidateFuncsInScope = s.GetFunctions().Where(x => string.Equals(x.Name, n.FuncName)).ToList();
+                        candidateFuncsInScope = candidateFuncsInScope.Concat(candidateFuncsInGlobalScope).ToList();
                     }
                     break;
                 case ClassSymbolTable s:
                     {
-                        //n.ScopeSpec = s.ClassName;
-
                         // Same name, in class
-                        candidateFuncsInScope = _globalTable.FunctionSymbolTable.Entries
-                            .Cast<FunctionSymbolTableEntry>()
-                            .Where(x => string.Equals(x.Name, n.FuncName) && (string.Equals(x.ScopeSpec, s.ClassName) || !string.IsNullOrEmpty(x.ScopeSpec)))
-                            .ToList();
+                        candidateFuncsInScope = s.GetFunctions().Where(x => string.Equals(x.Name, n.FuncName)).ToList();
                     }
                     break;
                 default:

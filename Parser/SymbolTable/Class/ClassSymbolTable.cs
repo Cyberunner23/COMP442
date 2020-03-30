@@ -1,4 +1,5 @@
 ﻿using Lexer;
+using Parser.SymbolTable.Function;
 using Parser.Utils;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Parser.SymbolTable.Class
 
         public ClassSymbolTable()
         {
-            Inherits = new List<string>(); ;
+            Inherits = new List<string>();
         }
 
         public Dictionary<string, (string, List<int>)> GetVariablesInScope(List<string> visitedClasses = null)
@@ -39,11 +40,41 @@ namespace Parser.SymbolTable.Class
                     continue;
                 }
 
+                var extraVars = classTable.GetVariablesInScope(visitedClasses);
+                variables = variables.Concat(extraVars).ToDictionary(x => x.Key, x => x.Value);
                 visitedClasses.Add(classTable.ClassName);
-                variables.Concat(classTable.GetVariablesInScope(visitedClasses));
             }
 
             return variables;
+        }
+
+        public List<FunctionSymbolTableEntry> GetFunctions(List<string> visitedClasses = null)
+        {
+            if (visitedClasses == null)
+            {
+                visitedClasses = new List<string>() { ClassName };
+            }
+
+            var functions = new List<FunctionSymbolTableEntry>();
+            foreach (var function in Parent.FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>().Where(x => string.Equals(x.ScopeSpec, this.ClassName)))
+            {
+                functions.Add(function);
+            }
+
+            foreach (var inherit in Inherits)
+            {
+                var classTable = Parent.GetClassSymbolTableByName(inherit);
+                if (visitedClasses.Contains(classTable.ClassName))
+                {
+                    continue;
+                }
+
+                var extraFuncs = classTable.GetFunctions(visitedClasses);
+                functions = functions.Concat(extraFuncs).ToList();
+                visitedClasses.Add(classTable.ClassName);
+            }
+
+            return functions;
         }
 
         public List<string> GetFunctionNamesInScope(List<string> visitedClasses = null)
