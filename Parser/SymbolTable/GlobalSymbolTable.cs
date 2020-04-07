@@ -73,6 +73,7 @@ namespace Parser.SymbolTable
 
         public void Validate()
         {
+            CheckShadowedMembers();
             CheckDeclAndDefn();
             CheckDuplicateDecls();
             CheckFunctionOverloads();
@@ -86,7 +87,14 @@ namespace Parser.SymbolTable
         // #5 in assignment
         public void CheckShadowedMembers()
         {
-            // todo
+            foreach (var classTable in ClassSymbolTables.Where(x => x.Inherits.Any()))
+            {
+                var shadowedFunctions = classTable.GetFunctions().GroupBy(x => x.ToStringSignatureNoReturn(false)).Where(x => x.Count() > 1).ToList();
+                foreach(var shadowedFunction in shadowedFunctions)
+                {
+                    _errorStream.WriteLine($"Class {classTable.ClassName} is shadowing function: {shadowedFunction.Key}");
+                }
+            }
         }
 
         // #6 in the assignment

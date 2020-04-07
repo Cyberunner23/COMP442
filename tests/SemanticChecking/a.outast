@@ -1,0 +1,31 @@
+digraph G {
+59[label="59:ProgramNode"]
+54[label="54:ClassDeclsNode"]
+59 -> 54
+53[label="53:ClassDeclNode"]
+54 -> 53
+45[label="45:IdentifierNode\nC1"]
+53 -> 45
+46[label="46:InheritListNode"]
+53 -> 46
+52[label="52:MemberDeclsNode"]
+53 -> 52
+51[label="51:MemberDeclNode\nVariable"]
+52 -> 51
+47[label="47:VisibilityNode\nPublic"]
+51 -> 47
+48[label="48:IdentifierNode\nC1"]
+51 -> 48
+49[label="49:IdentifierNode\na"]
+51 -> 49
+50[label="50:ArrayDimListNode"]
+51 -> 50
+55[label="55:FuncDefsNode"]
+59 -> 55
+58[label="58:MainFuncNode"]
+59 -> 58
+56[label="56:LocalScopeNode"]
+58 -> 56
+57[label="57:StatementsNode"]
+58 -> 57
+}

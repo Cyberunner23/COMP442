@@ -1,0 +1,129 @@
+// ====== Class declarations ====== //
+class DUPE {
+	private integer a;
+};
+
+class UTILITY {
+	public add() : integer;
+	public add(integer a, integer b) : integer;
+};
+
+class POLYNOMIAL inherits QUADRATIC {
+	public evaluate(float x) : float;
+	public float shadowed;
+};
+
+class LINEAR inherits POLYNOMIAL {
+	private float a;
+	private float b;
+	public float shadowed;
+	
+	public build(float A, float B) : LINEAR;
+	public evaluate(float x) : integer;
+	public getOffset(): float;
+};
+
+class QUADRATIC inherits POLYNOMIAL {
+	private float a;
+	private float b;
+	private float c;
+	private float a;
+	
+	public build(float A, float B, float C) : QUADRATIC;
+	public evaluate(float x) : float;
+};
+
+class DUPE {
+	private integer a;
+};
+
+// ====== Function Definitions ====== //
+POLYNOMIAL::evaluate(float x) : float
+  do
+    return (0);
+  end;
+
+LINEAR::evaluate(float x) : float
+  local
+    float result;
+  do
+    result = 0.0;
+    result = a * x + b;
+    return (result);
+  end;
+  
+LINEAR::arclength() : float
+  local
+    float length;
+  do
+    length = 0.0;
+	return (length);
+  end;
+  
+QUADRATIC::evaluate(float x) : float
+  local
+    int output;
+    float result;
+  do    //Using Horner's method
+    result = a;
+    result = result * x + b;
+    result = result * x + c;
+    return (result);
+  end;
+  
+LINEAR::build(float A, float B) : LINEAR
+  local
+    LINEAR new_function;
+  do
+    new_function.a = A;
+    new_function.b = B;
+    return (new_function);
+  end  ;
+  
+QUADRATIC::build(float A, float B, float C) : QUADRATIC
+  local
+    QUADRATIC new_function;
+  do
+    new_function.a = A;
+    new_function.b = B;
+    new_function.c = C;
+    return (new_function);
+  end;
+  
+UTILITY::add() : integer
+  do
+    return (0);
+  end;
+  
+UTILITY::add(integer a, integer b) : integer
+  do
+    return (a+b);
+  end;
+
+// ====== main ====== //
+main
+  local
+    LINEAR f1;
+    QUADRATIC f2;
+    integer counter;
+	integer array[10];
+  do
+    f1 = f1.build(2, 3.5);
+    f2 = f2.build(-2.0, 1.0, 0.0);
+    counter = f2;
+	x = 2;
+	f1.z = 10;
+	
+	array = 2;
+	array[2][4] = 3;
+	
+	array.func = 10;
+	
+    while(counter <= 10 + f1)
+      do
+        write(counter);
+        write(f1.evaluate(counter));
+        write(f2.evaluate(counter));
+		f2.evaluate(f2);
+      end;
+  end

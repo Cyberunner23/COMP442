@@ -15,6 +15,8 @@ namespace Parser.SymbolTable.Function
         public List<FunctionSymbolTableEntryParam> Params { get; set; }
         public List<FunctionSymbolTableEntryLocalScope> LocalScope { get; set; }
 
+        public int FrameSize { get; set; } = 0;
+
         public FunctionSymbolTableEntry()
         {
             Params = new List<FunctionSymbolTableEntryParam>();
@@ -82,12 +84,23 @@ namespace Parser.SymbolTable.Function
 
             builder.AppendLine();
             builder.AppendLine("+");
+
+            foreach (var param in Params)
+            {
+                builder.AppendLine($"+    Parameter: {param.Type.type} {param.Name}");
+                builder.AppendLine($"+        MemSize: {param.MemSize}, MemOffset:  {param.MemOffset}");
+            }
+
+            builder.AppendLine("+");
+            builder.AppendLine($"+    FrameSize: {FrameSize}");
+            builder.AppendLine("+");
             builder.AppendLine("+===========================================================");
             builder.AppendLine("+ Local Table");
 
             foreach (var local in LocalScope)
             {
                 builder.AppendLine($"+    Local: {local.ToString()}");
+                builder.AppendLine($"+        MemSize: {local.MemSize}, MemOffset: {local.MemOffset}");
             }
 
             builder.AppendLine("+");
@@ -110,11 +123,11 @@ namespace Parser.SymbolTable.Function
             return builder.ToString();
         }
 
-        public string ToStringSignatureNoReturn()
+        public string ToStringSignatureNoReturn(bool includeScope = true)
         {
             StringBuilder builder = new StringBuilder();
 
-            if (!string.IsNullOrEmpty(ScopeSpec))
+            if (!string.IsNullOrEmpty(ScopeSpec) && includeScope)
             {
                 builder.Append($"{ScopeSpec}::{Name}(");
             }

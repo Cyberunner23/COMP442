@@ -12,6 +12,9 @@ namespace Parser.SymbolTable.Function
         public string Name { get; set; }
         public List<int> ArrayDims {get; set;}
 
+        public int MemSize { get; set; } = 0;
+        public int MemOffset { get; set; } = 0;
+
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();

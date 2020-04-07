@@ -23,7 +23,7 @@ namespace Parser.SymbolTable.Class
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append($"Function: {Visibility} {Name}({ToStringParams()}) -> {Type.Lexeme}");
+            builder.Append($"*    Function: {Visibility} {Name}({ToStringParams()}) -> {Type.Lexeme}");
 
             return builder.ToString();
         }

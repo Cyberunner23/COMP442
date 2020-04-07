@@ -12,6 +12,7 @@ namespace Parser.SymbolTable.Class
     {
         public string ClassName { get; set; }
         public List<string> Inherits { get; private set; }
+        public int MemSize { get; set; } = 0;
 
         public ClassSymbolTable()
         {
@@ -119,6 +120,7 @@ namespace Parser.SymbolTable.Class
                 builder.AppendLine($"*    {inherit}");
             }
 
+            builder.AppendLine($"* MemSize = {MemSize}");
             builder.AppendLine("*===========================================================");
             builder.AppendLine("*");
 
@@ -127,7 +129,7 @@ namespace Parser.SymbolTable.Class
                 var text = entry.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 foreach (var line in text)
                 {
-                    builder.AppendLine($"*    {line}");
+                    builder.AppendLine($"{line}");
                 }
             }
 

@@ -1,57 +1,74 @@
-Assignment #2
+Assignment #4
 
-NOTE: The assignment is not fully completed, The parser is done but I did not have the time to fully create the AST tree,
-      I am missing some AST nodes and adding semantic rules for them in the grammar.
 
-1. LL1 Grammar
 
-The grammar is stored in docs/grammar.grm
+Stack Layout
+============
 
-2. First and follow sets
-The first and follow sets are in data/FirstFollowSets.txt
+| Address | Value (4 bytes)                        |
 
-3. Design
-The solution has 2 additonal projects, Parser and ParserDriver.
+|   M     | topaddr                                |
+|   M - 4 | Last Usable Memory Address             |  Stack grows upward (in ascending address)  
+|   ...   |                   ...                  |
+|   ...   | Stack Frames                           |  
+|   ...   |                   ...                  |
+|   B     | baseaddr (Bottom of the stack)         |
+|   B - 4 | Last bytes of code                     |
+|   ...   |                   ...                  |  
+|   8     | Code                                   |
+|   4     | Code                                   | Code executes upward (in ascending address)
+|   0     | Code                                   |  
 
-ParserDriver:
-Uses the Lexer and Parser projects, uses the Lexer to get tokens from the file.
-It then passes on the tokens to the parser which validates the program and generates an AST tree.
 
-Parser:
-The parser is a recursive descent parser with a generic parse function. Instead of having a function per nonterminal, there is one parse
-function that uses a grammar described in code. The Parser is in Parser.cs and all code relating to the grammar as well as the grammar itself
-desctibed in code is found in the Grammar folder in the Parser project.
 
-For the AST Tree, there are 3 folders, AST, ASTBuilder, ASTVisitor. 
-The AST is build with 4 types of rules. DownScope, which goes down a semantic scope, UpScope, which brings the node in the scope and brings
-it to the next scope up, MakeFamily which takes all the nodes in the scope, and makes a parent child relationship with the last node in the scope
-as the parent. Finally the MakeNode rules, which creates the node in the AST. There is one rule per type of node.
+Register Layout
+===============
 
-The semantic scope is implemented with a stack of stacks of ASTNodeBase.
-ASTNodeBase is the base class for AST nodes, it includes methods for adding siblings, children and so on.
+NOTE: GPR => General Purpose Register 
 
-AST contains the code for the AST nodes, they derive from ASTNodeBase as well as MakeNodeRule.
-ASTBuilder contains the ASTBuilder class, which is used in Parser.cs to handle semantic rules found in the grammar, as well as
-the semantic rules themselves.
+R0: GPR,  R4: GPR,  R8:  GPR,  R12: GPR
+R1: GPR,  R5: GPR,  R9:  GPR,  R13: Return Value
+R2: GPR,  R6: GPR,  R10: GPR,  R14: Stack Pointer
+R3: GPR,  R7: GPR,  R11: GPR,  R15: Return Address
 
-ASTVisitor contains the base classes for a Visitor pattern as well as a visitor to print out the AST in DOT format.
 
-The outast files which are outputted by the parser are in DOT format from GraphViz.
 
-A render of the ASTs are found in the docs directory, note that the AST generation is not complete. The files are in PNG format.
+Stack Frame Layout
+==================
 
-4. Use of tools
+| Address  | Value (4 bytes)                           | 
+|   M      | topaddr (Top of the Stack)                |
+|   M - 4  | Last Usable Memory Address                |
+|    ...   |                ...                        |   More Stack Frames
+| * K      | Bottom of previous frame                  | * Stack Pointer points to K (R14 = K) 
+| -------- | ----------------------------------------- |
+|   K - 4  | Return Address (Top of frame)             | 
+|   K - 8  | Argument 1                                |
+|   K - 12 | Argument 2                                |   A Specific Stack Frame
+|   K - 16 | Variable 1                                | 
+|   K - 20 | Variable 2                                | 
+|   K - 24 | Intermediate Variable 1                   | 
+|   K - 28 | Intermediate Variable 2 (Bottom of Stack) | 
+| -------- | ----------------------------------------- |
+|    ...   |                   ...                     |   Some Stack Frames
+|   B      | baseaddr (Bottom of the stack)            |
+|   B - 4  | Last bytes of code                        |
+|    ...   |                   ...                     |
+|   8      | Code                                      |
+|   4      | Code                                      |
+|   0      | Code                                      |
 
-I used ucalgary's tool to convert the grammar and generate the first and follor sets.
-The rest of the code is simply C# code I wrote, including the DOT printer visitor.
+Stack size is known at compile time, therefore, no need for a Base Pointer like in x86.
+When popping a stack frame, suffice to move the Stack Pointer to the bottom of the popped Stack Frame
 
-5. Running the code
-All binaries are in the bin directory.
 
-ParserDriver.exe is the executable that runs the parser on the file contents.
 
-ParserDriver.exe <filename>
 
-Test cases are in the bin folder as well, the one I created are called polynomialOK.src, polynomialError.src, tests.src, tests2.src
+
+
+
+
+
+
 
 

@@ -87,8 +87,6 @@ namespace Parser.ASTVisitor.Visitors
         #region Statements
         public void Visit(StatementsNode n)
         {
-            // TODO
-
             foreach (var node in n.GetChildren())
             {
                 node.SymTable = n.SymTable;
@@ -98,8 +96,6 @@ namespace Parser.ASTVisitor.Visitors
 
         public void Visit(IfNode n)
         {
-            //TODO 
-
             foreach (var node in n.GetChildren())
             {
                 node.SymTable = n.SymTable;
@@ -159,21 +155,7 @@ namespace Parser.ASTVisitor.Visitors
                 node.SymTable = n.SymTable;
                 node.Accept(this);
             }
-
-            // TODO(AFL): Type check
         }
-
-
-        private KeyValuePair<string, int> ExtractSubVarCallNode(SubVarCallNode node)
-        {
-            var children = node.GetChildren();
-            var name = ((IdentifierNode)children[0]).Token.Lexeme;
-            var numDims = ((IndicesNode)children[1]).GetChildren().Count;
-
-            return new KeyValuePair<string, int>(name, numDims);
-        }
-
-        
 
         public void Visit(NotNode n)
         {
@@ -372,7 +354,7 @@ namespace Parser.ASTVisitor.Visitors
             {
                 if (string.IsNullOrEmpty(currentScopeSpec))
                 {
-                    _errorStream.WriteLine($"Use of variable with no scopespec.");
+                    _errorStream.WriteLine($"ASSERT: Use of variable with no scopespec.");
                     break;
                 }
 
@@ -388,28 +370,6 @@ namespace Parser.ASTVisitor.Visitors
                 currentScopeSpec = node.ScopeSpec;
             }
         }
-
-        
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         public void Visit(VarFuncCallNode n)
         {
@@ -696,25 +656,6 @@ namespace Parser.ASTVisitor.Visitors
             n.ExprType = child.ExprType;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public void Visit(IndicesNode n)
         {
             foreach (var node in n.GetChildren())
@@ -728,10 +669,6 @@ namespace Parser.ASTVisitor.Visitors
             }
         }
 
-        
-
-        
-
         public void Visit(FloatNumNode n)
         {
             foreach (var node in n.GetChildren())
@@ -740,14 +677,6 @@ namespace Parser.ASTVisitor.Visitors
                 node.Accept(this);
             }
         }
-
-
-
-
-
-
-
-        
 
         public void Visit(VisibilityNode n)
         {
@@ -771,7 +700,12 @@ namespace Parser.ASTVisitor.Visitors
         {
             foreach (var node in n.GetChildren())
             {
-                node.SymTable = _globalTable.FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>().Where(x => string.Equals(x.Name, "main")).Single();
+                node.SymTable = _globalTable.FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>().Where(x => string.Equals(x.Name, "main")).FirstOrDefault();
+                if (node.SymTable == null)
+                {
+                    _errorStream.WriteLine("No FunctionSymbolTableEntry for \"main()\" found!!!");
+                }
+
                 node.Accept(this);
             }
         }
