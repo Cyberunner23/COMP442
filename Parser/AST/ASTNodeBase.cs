@@ -25,6 +25,8 @@ namespace Parser.AST
         public string ScopeSpec { get; set; }
         public (string Type, List<int> Dims) ExprType { get; set; }
 
+        public string TemporaryVariableName { get; set; }
+
         public ASTNodeBase()
         {
             ID = _idCtr++;

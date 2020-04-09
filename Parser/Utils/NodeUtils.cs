@@ -16,7 +16,7 @@ namespace Parser.Utils
         {
             return n.GetChildren()
                     .Cast<ArrayDimNode>()
-                    .Select(x => x.GetChildren().Single())
+                    .Select(x => x.GetChildren().FirstOrDefault() ?? new IntNumNode() { Value = 0 } )
                     .Cast<IntNumNode>()
                     .Select(x => x.Value)
                     .ToList();

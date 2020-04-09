@@ -63,6 +63,28 @@ namespace Parser.SymbolTable
 
             builder.AppendLine("|===========================================================");
 
+
+            builder.AppendLine();
+            builder.AppendLine();
+            builder.AppendLine("MEMORY LAYOUTS");
+
+            foreach (var classTable in ClassSymbolTables)
+            {
+                builder.AppendLine($"{classTable.ClassName}");
+                builder.AppendLine($"Total: {classTable.MemoryLayout.TotalSize} bytes");
+                builder.AppendLine($"{classTable.MemoryLayout}");
+            }
+
+            builder.AppendLine();
+            builder.AppendLine();
+
+            foreach (var functionTable in FunctionSymbolTable.Entries.Cast<FunctionSymbolTableEntry>())
+            {
+                builder.AppendLine($"{functionTable.ToStringSignature()}");
+                builder.AppendLine($"Total: {functionTable.MemoryLayout.TotalSize} bytes");
+                builder.AppendLine($"{functionTable.MemoryLayout}");
+            }
+
             return builder.ToString();
         }
 

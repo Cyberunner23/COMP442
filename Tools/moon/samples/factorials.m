@@ -3,7 +3,8 @@
       entry
       addi   r14,r0,topaddr  % Set stack pointer
 
-loop  lw     r1,arg(r0)     % Fetch argument
+loop  
+      lw     r1,arg(r0)     % Fetch argument
       cgti   r2,r1,12       % and decide whether
       bnz    r2,stop        % to stop.
 
@@ -37,7 +38,8 @@ loop  lw     r1,arg(r0)     % Fetch argument
       sw     arg(r0),r1
       j      loop
 
-stop  hlt
+stop  
+      hlt
 
 arg   dw     0
 m1    db     "! = ", 0
@@ -62,3 +64,5 @@ fac   sw     -4(r14),r15    % Save link
 fac1  addi   r13,r0,1       % R := 1
 fac2  lw     r15,-4(r14)    % Restore link
       jr     r15
+
+baseaddr

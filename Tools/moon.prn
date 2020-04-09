@@ -1,351 +1,353 @@
-MOON listing of moon/samples/factorials.m.
-
-    1     0 % MOON simulator: test of recursion
-    2     0 
-    3     0       entry
-    4     0       addi   r14,r0,topaddr  % Set stack pointer
-    5     4 
-    6     4 loop  lw     r1,arg(r0)     % Fetch argument
-    7     8       cgti   r2,r1,12       % and decide whether
-    8    12       bnz    r2,stop        % to stop.
-    9    16 
-   10    16       sw     -8(r14),r1     % Display argument.
-   11    20       addi   r1,r0,buf
-   12    24       sw     -12(r14),r1
-   13    28       jl     r15,intstr
-   14    32       sw     -8(r14),r13
-   15    36       jl     r15,putstr
-   16    40 
-   17    40       addi   r1,r0,m1       % "! = "
-   18    44       sw     -8(r14),r1
-   19    48       jl     r15,putstr
-   20    52 
-   21    52       lw     r1,arg(r0)     % Fetch argument again
-   22    56       sw     -8(r14),r1
-   23    60       jl     r15,fac        % and call factorial
-   24    64       sw     -8(r14),r13
-   25    68       addi   r1,r0,buf
-   26    72       sw     -12(r14),r1
-   27    76       jl     r15,intstr     % Convert and display result
-   28    80       sw     -8(r14),r13
-   29    84       jl     r15,putstr
-   30    88 
-   31    88       addi   r1,r0,m2       % CR
-   32    92       sw     -8(r14),r1
-   33    96       jl     r15,putstr
-   34   100 
-   35   100       lw     r1,arg(r0)     % Increment argument
-   36   104       addi   r1,r1,1
-   37   108       sw     arg(r0),r1
-   38   112       j      loop
-   39   116 
-   40   116 stop  hlt
-   41   120 
-   42   120 arg   dw     0
-   43   124 m1    db     "! = ", 0
-   44   129 m2    db     13, 10, 0
-   45   132 buf   res    20
-   46   152 
-   47   152 % Recursive factorial function.
-   48   152 % -8(r14) = argument.
-   49   152 % r13 = result.
-   50   152 fac   sw     -4(r14),r15    % Save link
-   51   156       lw     r1,-8(r14)     % Get N
-   52   160       ceqi   r2,r1,0
-   53   164       bnz    r2,fac1        % branch if N = 0
-   54   168       subi   r1,r1,1        % N := N - 1
-   55   172       sw     -16(r14),r1    % Store as argument
-   56   176       subi   r14,r14,8      % Adjust SP
-   57   180       jl     r15,fac        % Recursive call
-   58   184       addi   r14,r14,8      % Adjust SP
-   59   188       lw     r1,-8(r14)     % Get N again
-   60   192       mul    r13,r13,r1     % R := R * N
-   61   196       j      fac2
-   62   200 fac1  addi   r13,r0,1       % R := 1
-   63   204 fac2  lw     r15,-4(r14)    % Restore link
-   64   208       jr     r15
-
 MOON listing of moon/samples/lib.m.
 
-    1   212 % A Simple MOON Library
-    2   212 % Author: Peter Grogono
-    3   212 % Last modified: 27 Jan 1995
-    4   212 
-    5   212 % Conventions
-    6   212 %   r14 is the Stack Pointer
-    7   212 %   -4(r14) is used to store the link, if necessary.
-    8   212 %   -8(r14) contains the first argument.
-    9   212 %   -12(r14) contains the second argument, and so on.
-   10   212 %   r15 contains the link.
-   11   212 %   r13 contains the result of a function.
-   12   212 
-   13   212 %   Strings are null terminated.  Strings are passed and returned to
-   14   212 %   library functions as pointers.  It is the caller's responsibility to
-   15   212 %   provide storage for strings.
-   16   212 
-   17   212 %   "->" is read "points to".
-   18   212 
-   19   212           align               % In case previous file misaligned
-   20   212 
-   21   212 % Write a string to stdout.
-   22   212 % Entry: -8(r14) -> string argument.
-   23   212 
-   24   212 putstr    lw    r1,-8(r14)    % i := r1
-   25   216           addi  r2,r0,0
-   26   220 putstr1   lb    r2,0(r1)      % ch := B[i]
-   27   224           ceqi  r3,r2,0
-   28   228           bnz   r3,putstr2    % branch if ch = 0
-   29   232           putc  r2
-   30   236           addi  r1,r1,1       % i++
-   31   240           j     putstr1
-   32   244 putstr2   jr    r15
-   33   248 
-   34   248 % Read a string from stdin.  Read until CR (ASCII 13) but do not store
-   35   248 % the CR.
-   36   248 % Entry: -8(r14) -> buffer.
-   37   248 
-   38   248 getstr    lw    r1,-8(r14)    % i := r1
-   39   252 getstr1   getc  r2            % get ch
-   40   256           ceqi  r3,r2,10
-   41   260           bnz   r3,getstr2    % branch if ch = CR
-   42   264           sb    0(r1),r2      % B[i] := ch
-   43   268           addi  r1,r1,1       % i++
-   44   272           j     getstr1
-   45   276 getstr2   sb    0(r1),r0      % B[i] := '\0'
-   46   280           jr    r15
-   47   284 
-   48   284 % Convert string to integer.  Skip leading blanks.  Accept leading sign.
-   49   284 % Entry: -8(r14) -> string.
-   50   284 % Exit:  result in r13
-   51   284 
-   52   284 strint    addi  r13,r0,0      % R := 0 (result)
-   53   288           addi  r4,r0,0       % S := 0 (sign)
-   54   292           lw    r1,-8(r14)    % i := r1
-   55   296           addi  r2,r0,0
-   56   300 strint1   lb    r2,0(r1)      % ch := B[i]
-   57   304           cnei  r3,r2,32
-   58   308           bnz   r3,strint2    % branch if ch != blank
-   59   312           addi  r1,r1,1
-   60   316           j     strint1
-   61   320 strint2   cnei  r3,r2,43
-   62   324           bnz   r3,strint3    % branch if ch != "+"
-   63   328           j     strint4
-   64   332 strint3   cnei  r3,r2,45
-   65   336           bnz   r3,strint5    % branch if ch != "-"
-   66   340           addi  r4,r4,1       % S := 1
-   67   344 strint4   addi  r1,r1,1       % i++
-   68   348           lb    r2,0(r1)      % ch := B[i]
-   69   352 strint5   clti  r3,r2,48
-   70   356           bnz   r3,strint6    % branch if ch < "0"
-   71   360           cgti  r3,r2,57
-   72   364           bnz   r3,strint6    % branch if ch > "9"
-   73   368           subi  r2,r2,48      % ch -= "0"
-   74   372           muli  r13,r13,10    % R *= 10
-   75   376           add   r13,r13,r2    % R += ch
-   76   380           j     strint4
-   77   384 strint6   ceqi  r3,r4,0
-   78   388           bnz   r3,strint7    % branch if S = 0
-   79   392           sub   r13,r0,r13    % R := -R
-   80   396 strint7   jr    r15
-   81   400 
-   82   400 % Convert signed integer to string.
-   83   400 % Entry: -8(r14) is the integer.
-   84   400 %        -12(r14) -> buffer containing at least 12 bytes.
-   85   400 % Exit:  r13 -> first character of result string.
-   86   400 
-   87   400 intstr    lw    r13,-12(r14)
-   88   404           addi  r13,r13,11    % r13 points to end of buffer
-   89   408           sb    0(r13),r0     % store terminator
-   90   412           lw    r1,-8(r14)    % r1 := N (to be converted)
-   91   416           addi  r2,r0,0       % S := 0 (sign)
-   92   420           cgei  r3,r1,0
-   93   424           bnz   r3,intstr1    % branch if N >= 0
-   94   428           addi  r2,r2,1       % S := 1
-   95   432           sub   r1,r0,r1      % N := -N
-   96   436 intstr1   addi  r3,r1,0       % D := N (next digit)
-   97   440           modi  r3,r3,10      % D mod= 10
-   98   444           addi  r3,r3,48      % D += "0"
-   99   448           subi  r13,r13,1     % i--
-  100   452           sb    0(r13),r3     % B[i] := D
-  101   456           divi  r1,r1,10      % N div= 10
-  102   460           cnei  r3,r1,0
-  103   464           bnz   r3,intstr1    % branch if N != 0
-  104   468           ceqi  r3,r2,0
-  105   472           bnz   r3,intstr2    % branch if S = 0
-  106   476           subi  r13,r13,1     % i--
-  107   480           addi  r3,r0,45
-  108   484           sb    0(r13),r3     % B[i] := "-"
-  109   488 intstr2   jr    r15
-  110   492 
-  111   492 % Return length of string.
-  112   492 % Entry: -8(r14) -> string.
-  113   492 % Exit:  r13 = length of string.
-  114   492 
-  115   492 lenstr   lw    r1,-8(r14)     % i -> string
-  116   496          addi  r13,r0,0       % L := 0
-  117   500          addi  r2,r0,0
-  118   504 lenstr1  lb    r2,0(r1)       % ch := B[i]
-  119   508          ceqi  r3,r2,0
-  120   512          bnz   r3,lenstr2     % branch if ch = 0
-  121   516          addi  r13,r13,1      % L++
-  122   520          addi  r1,r1,1        % i++
-  123   524          j     lenstr1
-  124   528 lenstr2  jr    r15
-  125   532 
-  126   532 % Concatenate strings: Z := X + Y.
-  127   532 % Entry:   -8(r14)  ->  X
-  128   532 %         -12(r14)  ->  Y
-  129   532 %         -16(r14)  ->  Z
-  130   532 % The result string is assumed to be large enough to hold the result.
-  131   532 
-  132   532 strcat   lw    r1,-16(r14)    % r1 -> Z
-  133   536          lw    r2,-8(r14)     % r2 -> X
-  134   540          addi  r3,r0,0        % r3 = current character
-  135   544 strcat1  lb    r3,0(r2)       % char from X
-  136   548          ceqi  r4,r3,0
-  137   552          bnz   r4,strcat2     % branch at end of X
-  138   556          sb    0(r1),r3       % copy char to Z
-  139   560          addi  r1,r1,1
-  140   564          addi  r2,r2,1
-  141   568          j     strcat1
-  142   572 strcat2  lw    r2,-12(r14)    % r2 -> Y
-  143   576 strcat3  lb    r3,0(r2)       % char from Y
-  144   580          ceqi  r4,r3,0
-  145   584          bnz   r4,strcat4     % branch at end of Y
-  146   588          sb    0(r1),r3       % copy char to Z
-  147   592          addi  r1,r1,1
-  148   596          addi  r2,r2,1
-  149   600          j     strcat3
-  150   604 strcat4  sb    0(r1),r0       % Store terminator
-  151   608          jr    r15
-  152   612 
-  153   612 % The string comparison functions all use strcmp, defined below.
-  154   612 % They are all short; a smart compiler could generate this code
-  155   612 % directly, avoiding the overhead of an extra level of function
-  156   612 % call.
-  157   612 % For each function:
-  158   612 % Entry: -8(r14)  -> string A
-  159   612 %        -12(r14) -> string B
-  160   612 % Exit:  r13 = 1 for true and 0 for false.
-  161   612 % Note that r11 is used for the link to avoid saving r15.
-  162   612 
-  163   612 streq    jl    r11,strcmp
-  164   616          lw    r13,eq(r13)
-  165   620          jr    r15
-  166   624 eq       dw    1,0,0
-  167   636 
-  168   636 strne    jl    r11,strcmp
-  169   640          lw    r13,ne(r13)
-  170   644          jr    r15
-  171   648 ne       dw    0,1,1
-  172   660 
-  173   660 strlt    jl    r11,strcmp
-  174   664          lw    r13,lt(r13)
-  175   668          jr    r15
-  176   672 lt       dw    0,1,0
-  177   684 
-  178   684 strle    jl    r11,strcmp
-  179   688          lw    r13,le(r13)
-  180   692          jr    r15
-  181   696 le       dw    1,1,0
-  182   708 
-  183   708 strgt    jl    r11,strcmp
-  184   712          lw    r13,gt(r13)
-  185   716          jr    r15
-  186   720 gt       dw    0,0,1
-  187   732 
-  188   732 strge    jl    r11,strcmp
-  189   736          lw    r13,ge(r13)
-  190   740          jr    r15
-  191   744 ge       dw    1,0,1
-  192   756 
-  193   756 % Compare strings.
-  194   756 % Entry: -8(r14)  -> string A
-  195   756 %        -12(r14) -> string B
-  196   756 %             ( 0   if A = B
-  197   756 % Exit: r13 = < 4   if A < B
-  198   756 %             ( 8   if A > B
-  199   756 % Note that r11 is the link.
-  200   756 
-  201   756 strcmp   lw    r1,-8(r14)
-  202   760          lw    r2,-12(r14)
-  203   764          addi  r3,r0,0
-  204   768          addi  r4,r0,0
-  205   772 strcmp1  lb    r3,0(r1)       % get A[i]
-  206   776          lb    r4,0(r2)       % get B[j]
-  207   780          ceqi  r5,r3,0
-  208   784          bnz   r5,strcmp2     % branch if end of A
-  209   788          ceqi  r5,r4,0
-  210   792          bnz   r5,strcmp4     % branch if end of B
-  211   796          ceq   r5,r3,r4
-  212   800          bz    r5,strcmp3     % branch if A[i] != B[i]
-  213   804          addi  r1,r1,1        % i++
-  214   808          addi  r2,r2,1        % j++
-  215   812          j     strcmp1
-  216   816 strcmp2  ceqi  r5,r4,0
-  217   820          bz    r5,strcmp5     % branch if not end of B
-  218   824          addi  r13,r0,0       % A = B
-  219   828          jr    r11
-  220   832 strcmp3  clt   r5,r3,r4
-  221   836          bnz   r5,strcmp5     % branch if A[i] < B[i]
-  222   840 strcmp4  addi  r13,r0,8       % A > B
-  223   844          jr    r11
-  224   848 strcmp5  addi  r13,r0,4       % A < B
-  225   852          jr    r11
-  226   856 
-  227   856 % String indexing: return the string S[M].  The value is returned as a
-  228   856 % string rather than as a character for compatibility with other string
-  229   856 % processing functions.  Also, we must distinguish the empty string
-  230   856 % from a character.
-  231   856 % Entry: -8(r14)  -> S
-  232   856 %        -12(r14) -> M
-  233   856 %        -16(r14) -> T, the output string.
-  234   856 % Exit:  the output string contains the selected character, or is null.
-  235   856 
-  236   856 stridx   lw    r1,-8(r14)    % i
-  237   860          lw    r2,-12(r14)
-  238   864          lw    r3,-16(r14)
-  239   868          subi  r2,r2,1
-  240   872          addi  r4,r0,0
-  241   876 stridx1  lb    r4,0(r1)      % ch := S[i]
-  242   880          ceqi  r5,r4,0
-  243   884          bnz   r5,stridx3    % branch if ch = 0
-  244   888          cge   r5,r1,r2
-  245   892          bnz   r5,stridx2    % branch if i >= M
-  246   896          addi  r1,r1,1       % i++
-  247   900          j     stridx1
-  248   904 stridx2  sb    0(r3),r4      % T[0] := S[M]
-  249   908          addi  r3,r3,1
-  250   912 stridx3  sb    0(r3),r0      % T[k] := 0
-  251   916          jr    r15
-  252   920 
-  253   920 % String indexing: return the string S[M..N].
-  254   920 % Entry: -8(r14)  -> S
-  255   920 %        -12(r14) -> M
-  256   920 %        -16(r14) -> N
-  257   920 %        -20(r14) -> T, the output string.
-  258   920 % Exit:  the output string contains the selected substring, or is null.
-  259   920 
-  260   920 strsub   lw    r1,-8(r14)
-  261   924          lw    r2,-12(r14)
-  262   928          lw    r3,-16(r14)
-  263   932          lw    r4,-20(r14)
-  264   936          subi  r2,r2,1
-  265   940          subi  r3,r3,1
-  266   944          addi  r5,r0,0
-  267   948 strsub1  lb    r5,0(r1)      % ch := S[i]
-  268   952          ceqi  r6,r5,0
-  269   956          bnz   r6,strsub3    % branch if ch = 0
-  270   960          clt   r6,r1,r2
-  271   964          bnz   r6,strsub2    % branch if i < M
-  272   968          cgt   r6,r1,r3
-  273   972          bnz   r6,strsub3    % branch if i > N
-  274   976          sb    0(r3),r5      % T[k] := S[i]
-  275   980          addi  r3,r3,1       % k++
-  276   984 strsub2  addi  r1,r1,1       % i++
-  277   988          j     strsub1
-  278   992 strsub3  sb    0(r3),r0      % T[k] := 0
-  279   996          jr    r15
-  280  1000 
-  281  1000 baseaddr
+    1     0 % A Simple MOON Library
+    2     0 % Author: Peter Grogono
+    3     0 % Last modified: 27 Jan 1995
+    4     0 
+    5     0 % Conventions
+    6     0 %   r14 is the Stack Pointer
+    7     0 %   -4(r14) is used to store the link, if necessary.
+    8     0 %   -8(r14) contains the first argument.
+    9     0 %   -12(r14) contains the second argument, and so on.
+   10     0 %   r15 contains the link.
+   11     0 %   r13 contains the result of a function.
+   12     0 
+   13     0 %   Strings are null terminated.  Strings are passed and returned to
+   14     0 %   library functions as pointers.  It is the caller's responsibility to
+   15     0 %   provide storage for strings.
+   16     0 
+   17     0 %   "->" is read "points to".
+   18     0 
+   19     0           align               % In case previous file misaligned
+   20     0 
+   21     0 % Write a string to stdout.
+   22     0 % Entry: -8(r14) -> string argument.
+   23     0 
+   24     0 putstr    lw    r1,-8(r14)    % i := r1
+   25     4           addi  r2,r0,0
+   26     8 putstr1   lb    r2,0(r1)      % ch := B[i]
+   27    12           ceqi  r3,r2,0
+   28    16           bnz   r3,putstr2    % branch if ch = 0
+   29    20           putc  r2
+   30    24           addi  r1,r1,1       % i++
+   31    28           j     putstr1
+   32    32 putstr2   jr    r15
+   33    36 
+   34    36 % Read a string from stdin.  Read until CR (ASCII 13) but do not store
+   35    36 % the CR.
+   36    36 % Entry: -8(r14) -> buffer.
+   37    36 
+   38    36 getstr    lw    r1,-8(r14)    % i := r1
+   39    40 getstr1   getc  r2            % get ch
+   40    44           ceqi  r3,r2,10
+   41    48           bnz   r3,getstr2    % branch if ch = CR
+   42    52           sb    0(r1),r2      % B[i] := ch
+   43    56           addi  r1,r1,1       % i++
+   44    60           j     getstr1
+   45    64 getstr2   sb    0(r1),r0      % B[i] := '\0'
+   46    68           jr    r15
+   47    72 
+   48    72 % Convert string to integer.  Skip leading blanks.  Accept leading sign.
+   49    72 % Entry: -8(r14) -> string.
+   50    72 % Exit:  result in r13
+   51    72 
+   52    72 strint    addi  r13,r0,0      % R := 0 (result)
+   53    76           addi  r4,r0,0       % S := 0 (sign)
+   54    80           lw    r1,-8(r14)    % i := r1
+   55    84           addi  r2,r0,0
+   56    88 strint1   lb    r2,0(r1)      % ch := B[i]
+   57    92           cnei  r3,r2,32
+   58    96           bnz   r3,strint2    % branch if ch != blank
+   59   100           addi  r1,r1,1
+   60   104           j     strint1
+   61   108 strint2   cnei  r3,r2,43
+   62   112           bnz   r3,strint3    % branch if ch != "+"
+   63   116           j     strint4
+   64   120 strint3   cnei  r3,r2,45
+   65   124           bnz   r3,strint5    % branch if ch != "-"
+   66   128           addi  r4,r4,1       % S := 1
+   67   132 strint4   addi  r1,r1,1       % i++
+   68   136           lb    r2,0(r1)      % ch := B[i]
+   69   140 strint5   clti  r3,r2,48
+   70   144           bnz   r3,strint6    % branch if ch < "0"
+   71   148           cgti  r3,r2,57
+   72   152           bnz   r3,strint6    % branch if ch > "9"
+   73   156           subi  r2,r2,48      % ch -= "0"
+   74   160           muli  r13,r13,10    % R *= 10
+   75   164           add   r13,r13,r2    % R += ch
+   76   168           j     strint4
+   77   172 strint6   ceqi  r3,r4,0
+   78   176           bnz   r3,strint7    % branch if S = 0
+   79   180           sub   r13,r0,r13    % R := -R
+   80   184 strint7   jr    r15
+   81   188 
+   82   188 % Convert signed integer to string.
+   83   188 % Entry: -8(r14) is the integer.
+   84   188 %        -12(r14) -> buffer containing at least 12 bytes.
+   85   188 % Exit:  r13 -> first character of result string.
+   86   188 
+   87   188 intstr    lw    r13,-12(r14)
+   88   192           addi  r13,r13,11    % r13 points to end of buffer
+   89   196           sb    0(r13),r0     % store terminator
+   90   200           lw    r1,-8(r14)    % r1 := N (to be converted)
+   91   204           addi  r2,r0,0       % S := 0 (sign)
+   92   208           cgei  r3,r1,0
+   93   212           bnz   r3,intstr1    % branch if N >= 0
+   94   216           addi  r2,r2,1       % S := 1
+   95   220           sub   r1,r0,r1      % N := -N
+   96   224 intstr1   addi  r3,r1,0       % D := N (next digit)
+   97   228           modi  r3,r3,10      % D mod= 10
+   98   232           addi  r3,r3,48      % D += "0"
+   99   236           subi  r13,r13,1     % i--
+  100   240           sb    0(r13),r3     % B[i] := D
+  101   244           divi  r1,r1,10      % N div= 10
+  102   248           cnei  r3,r1,0
+  103   252           bnz   r3,intstr1    % branch if N != 0
+  104   256           ceqi  r3,r2,0
+  105   260           bnz   r3,intstr2    % branch if S = 0
+  106   264           subi  r13,r13,1     % i--
+  107   268           addi  r3,r0,45
+  108   272           sb    0(r13),r3     % B[i] := "-"
+  109   276 intstr2   jr    r15
+  110   280 
+  111   280 % Return length of string.
+  112   280 % Entry: -8(r14) -> string.
+  113   280 % Exit:  r13 = length of string.
+  114   280 
+  115   280 lenstr   lw    r1,-8(r14)     % i -> string
+  116   284          addi  r13,r0,0       % L := 0
+  117   288          addi  r2,r0,0
+  118   292 lenstr1  lb    r2,0(r1)       % ch := B[i]
+  119   296          ceqi  r3,r2,0
+  120   300          bnz   r3,lenstr2     % branch if ch = 0
+  121   304          addi  r13,r13,1      % L++
+  122   308          addi  r1,r1,1        % i++
+  123   312          j     lenstr1
+  124   316 lenstr2  jr    r15
+  125   320 
+  126   320 % Concatenate strings: Z := X + Y.
+  127   320 % Entry:   -8(r14)  ->  X
+  128   320 %         -12(r14)  ->  Y
+  129   320 %         -16(r14)  ->  Z
+  130   320 % The result string is assumed to be large enough to hold the result.
+  131   320 
+  132   320 strcat   lw    r1,-16(r14)    % r1 -> Z
+  133   324          lw    r2,-8(r14)     % r2 -> X
+  134   328          addi  r3,r0,0        % r3 = current character
+  135   332 strcat1  lb    r3,0(r2)       % char from X
+  136   336          ceqi  r4,r3,0
+  137   340          bnz   r4,strcat2     % branch at end of X
+  138   344          sb    0(r1),r3       % copy char to Z
+  139   348          addi  r1,r1,1
+  140   352          addi  r2,r2,1
+  141   356          j     strcat1
+  142   360 strcat2  lw    r2,-12(r14)    % r2 -> Y
+  143   364 strcat3  lb    r3,0(r2)       % char from Y
+  144   368          ceqi  r4,r3,0
+  145   372          bnz   r4,strcat4     % branch at end of Y
+  146   376          sb    0(r1),r3       % copy char to Z
+  147   380          addi  r1,r1,1
+  148   384          addi  r2,r2,1
+  149   388          j     strcat3
+  150   392 strcat4  sb    0(r1),r0       % Store terminator
+  151   396          jr    r15
+  152   400 
+  153   400 % The string comparison functions all use strcmp, defined below.
+  154   400 % They are all short; a smart compiler could generate this code
+  155   400 % directly, avoiding the overhead of an extra level of function
+  156   400 % call.
+  157   400 % For each function:
+  158   400 % Entry: -8(r14)  -> string A
+  159   400 %        -12(r14) -> string B
+  160   400 % Exit:  r13 = 1 for true and 0 for false.
+  161   400 % Note that r11 is used for the link to avoid saving r15.
+  162   400 
+  163   400 streq    jl    r11,strcmp
+  164   404          lw    r13,eq(r13)
+  165   408          jr    r15
+  166   412 eq       dw    1,0,0
+  167   424 
+  168   424 strne    jl    r11,strcmp
+  169   428          lw    r13,ne(r13)
+  170   432          jr    r15
+  171   436 ne       dw    0,1,1
+  172   448 
+  173   448 strlt    jl    r11,strcmp
+  174   452          lw    r13,lt(r13)
+  175   456          jr    r15
+  176   460 lt       dw    0,1,0
+  177   472 
+  178   472 strle    jl    r11,strcmp
+  179   476          lw    r13,le(r13)
+  180   480          jr    r15
+  181   484 le       dw    1,1,0
+  182   496 
+  183   496 strgt    jl    r11,strcmp
+  184   500          lw    r13,gt(r13)
+  185   504          jr    r15
+  186   508 gt       dw    0,0,1
+  187   520 
+  188   520 strge    jl    r11,strcmp
+  189   524          lw    r13,ge(r13)
+  190   528          jr    r15
+  191   532 ge       dw    1,0,1
+  192   544 
+  193   544 % Compare strings.
+  194   544 % Entry: -8(r14)  -> string A
+  195   544 %        -12(r14) -> string B
+  196   544 %             ( 0   if A = B
+  197   544 % Exit: r13 = < 4   if A < B
+  198   544 %             ( 8   if A > B
+  199   544 % Note that r11 is the link.
+  200   544 
+  201   544 strcmp   lw    r1,-8(r14)
+  202   548          lw    r2,-12(r14)
+  203   552          addi  r3,r0,0
+  204   556          addi  r4,r0,0
+  205   560 strcmp1  lb    r3,0(r1)       % get A[i]
+  206   564          lb    r4,0(r2)       % get B[j]
+  207   568          ceqi  r5,r3,0
+  208   572          bnz   r5,strcmp2     % branch if end of A
+  209   576          ceqi  r5,r4,0
+  210   580          bnz   r5,strcmp4     % branch if end of B
+  211   584          ceq   r5,r3,r4
+  212   588          bz    r5,strcmp3     % branch if A[i] != B[i]
+  213   592          addi  r1,r1,1        % i++
+  214   596          addi  r2,r2,1        % j++
+  215   600          j     strcmp1
+  216   604 strcmp2  ceqi  r5,r4,0
+  217   608          bz    r5,strcmp5     % branch if not end of B
+  218   612          addi  r13,r0,0       % A = B
+  219   616          jr    r11
+  220   620 strcmp3  clt   r5,r3,r4
+  221   624          bnz   r5,strcmp5     % branch if A[i] < B[i]
+  222   628 strcmp4  addi  r13,r0,8       % A > B
+  223   632          jr    r11
+  224   636 strcmp5  addi  r13,r0,4       % A < B
+  225   640          jr    r11
+  226   644 
+  227   644 % String indexing: return the string S[M].  The value is returned as a
+  228   644 % string rather than as a character for compatibility with other string
+  229   644 % processing functions.  Also, we must distinguish the empty string
+  230   644 % from a character.
+  231   644 % Entry: -8(r14)  -> S
+  232   644 %        -12(r14) -> M
+  233   644 %        -16(r14) -> T, the output string.
+  234   644 % Exit:  the output string contains the selected character, or is null.
+  235   644 
+  236   644 stridx   lw    r1,-8(r14)    % i
+  237   648          lw    r2,-12(r14)
+  238   652          lw    r3,-16(r14)
+  239   656          subi  r2,r2,1
+  240   660          addi  r4,r0,0
+  241   664 stridx1  lb    r4,0(r1)      % ch := S[i]
+  242   668          ceqi  r5,r4,0
+  243   672          bnz   r5,stridx3    % branch if ch = 0
+  244   676          cge   r5,r1,r2
+  245   680          bnz   r5,stridx2    % branch if i >= M
+  246   684          addi  r1,r1,1       % i++
+  247   688          j     stridx1
+  248   692 stridx2  sb    0(r3),r4      % T[0] := S[M]
+  249   696          addi  r3,r3,1
+  250   700 stridx3  sb    0(r3),r0      % T[k] := 0
+  251   704          jr    r15
+  252   708 
+  253   708 % String indexing: return the string S[M..N].
+  254   708 % Entry: -8(r14)  -> S
+  255   708 %        -12(r14) -> M
+  256   708 %        -16(r14) -> N
+  257   708 %        -20(r14) -> T, the output string.
+  258   708 % Exit:  the output string contains the selected substring, or is null.
+  259   708 
+  260   708 strsub   lw    r1,-8(r14)
+  261   712          lw    r2,-12(r14)
+  262   716          lw    r3,-16(r14)
+  263   720          lw    r4,-20(r14)
+  264   724          subi  r2,r2,1
+  265   728          subi  r3,r3,1
+  266   732          addi  r5,r0,0
+  267   736 strsub1  lb    r5,0(r1)      % ch := S[i]
+  268   740          ceqi  r6,r5,0
+  269   744          bnz   r6,strsub3    % branch if ch = 0
+  270   748          clt   r6,r1,r2
+  271   752          bnz   r6,strsub2    % branch if i < M
+  272   756          cgt   r6,r1,r3
+  273   760          bnz   r6,strsub3    % branch if i > N
+  274   764          sb    0(r3),r5      % T[k] := S[i]
+  275   768          addi  r3,r3,1       % k++
+  276   772 strsub2  addi  r1,r1,1       % i++
+  277   776          j     strsub1
+  278   780 strsub3  sb    0(r3),r0      % T[k] := 0
+  279   784          jr    r15
+
+MOON listing of moon/samples/factorials.m.
+
+    1   788 % MOON simulator: test of recursion
+    2   788 
+    3   788       entry
+    4   788       addi   r14,r0,topaddr  % Set stack pointer
+    5   792 
+    6   792 loop  
+    7   792       lw     r1,arg(r0)     % Fetch argument
+    8   796       cgti   r2,r1,12       % and decide whether
+    9   800       bnz    r2,stop        % to stop.
+   10   804 
+   11   804       sw     -8(r14),r1     % Display argument.
+   12   808       addi   r1,r0,buf
+   13   812       sw     -12(r14),r1
+   14   816       jl     r15,intstr
+   15   820       sw     -8(r14),r13
+   16   824       jl     r15,putstr
+   17   828 
+   18   828       addi   r1,r0,m1       % "! = "
+   19   832       sw     -8(r14),r1
+   20   836       jl     r15,putstr
+   21   840 
+   22   840       lw     r1,arg(r0)     % Fetch argument again
+   23   844       sw     -8(r14),r1
+   24   848       jl     r15,fac        % and call factorial
+   25   852       sw     -8(r14),r13
+   26   856       addi   r1,r0,buf
+   27   860       sw     -12(r14),r1
+   28   864       jl     r15,intstr     % Convert and display result
+   29   868       sw     -8(r14),r13
+   30   872       jl     r15,putstr
+   31   876 
+   32   876       addi   r1,r0,m2       % CR
+   33   880       sw     -8(r14),r1
+   34   884       jl     r15,putstr
+   35   888 
+   36   888       lw     r1,arg(r0)     % Increment argument
+   37   892       addi   r1,r1,1
+   38   896       sw     arg(r0),r1
+   39   900       j      loop
+   40   904 
+   41   904 stop  
+   42   904       hlt
+   43   908 
+   44   908 arg   dw     0
+   45   912 m1    db     "! = ", 0
+   46   917 m2    db     13, 10, 0
+   47   920 buf   res    20
+   48   940 
+   49   940 % Recursive factorial function.
+   50   940 % -8(r14) = argument.
+   51   940 % r13 = result.
+   52   940 fac   sw     -4(r14),r15    % Save link
+   53   944       lw     r1,-8(r14)     % Get N
+   54   948       ceqi   r2,r1,0
+   55   952       bnz    r2,fac1        % branch if N = 0
+   56   956       subi   r1,r1,1        % N := N - 1
+   57   960       sw     -16(r14),r1    % Store as argument
+   58   964       subi   r14,r14,8      % Adjust SP
+   59   968       jl     r15,fac        % Recursive call
+   60   972       addi   r14,r14,8      % Adjust SP
+   61   976       lw     r1,-8(r14)     % Get N again
+   62   980       mul    r13,r13,r1     % R := R * N
+   63   984       j      fac2
+   64   988 fac1  addi   r13,r0,1       % R := 1
+   65   992 fac2  lw     r15,-4(r14)    % Restore link
+   66   996       jr     r15
+   67  1000 
+   68  1000 baseaddr
 

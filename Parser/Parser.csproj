@@ -119,6 +119,10 @@
     <Compile Include="Utils\TypePrintUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeGenUtils\CodeGenUtils.csproj">
+      <Project>{ecc35f1a-1d21-48c3-9d53-1f9cab9f64c8}</Project>
+      <Name>CodeGenUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lexer\Lexer.csproj">
       <Project>{D85D0632-52C3-4955-A8CE-E721F4BB251A}</Project>
       <Name>Lexer</Name>

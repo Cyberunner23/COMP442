@@ -1,4 +1,5 @@
-﻿using Lexer;
+﻿using CodeGenUtils;
+using Lexer;
 using Parser.Utils;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,13 @@ namespace Parser.SymbolTable.Function
         public List<FunctionSymbolTableEntryParam> Params { get; set; }
         public List<FunctionSymbolTableEntryLocalScope> LocalScope { get; set; }
 
-        public int FrameSize { get; set; } = 0;
+        public FrameMemoryLayout MemoryLayout { get; private set; }
 
         public FunctionSymbolTableEntry()
         {
             Params = new List<FunctionSymbolTableEntryParam>();
             LocalScope = new List<FunctionSymbolTableEntryLocalScope>();
+            MemoryLayout = new FrameMemoryLayout();
         }
 
         public void AddParamEntry(FunctionSymbolTableEntryParam param)
@@ -52,6 +54,11 @@ namespace Parser.SymbolTable.Function
         public Dictionary<string, (string, List<int>)> GetVariablesInScope()
         {
             var variables = new Dictionary<string, (string, List<int>)>();
+
+            foreach (var paramVar in Params)
+            {
+                variables.Add(paramVar.Name, paramVar.Type);
+            }
 
             foreach (var localVar in LocalScope.DedupeBy(x => x.Name))
             {
@@ -92,7 +99,7 @@ namespace Parser.SymbolTable.Function
             }
 
             builder.AppendLine("+");
-            builder.AppendLine($"+    FrameSize: {FrameSize}");
+            builder.AppendLine($"+    FrameSize: {MemoryLayout.TotalSize}");
             builder.AppendLine("+");
             builder.AppendLine("+===========================================================");
             builder.AppendLine("+ Local Table");

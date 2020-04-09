@@ -1,7 +1,0 @@
-[10:1] Expected token: SemiColon, saw: Class
-[14:1] Expected token: SemiColon, saw: Class
-[21:1] Expected token: SemiColon, saw: Identifier
-[28:1] Expected token: SemiColon, saw: Identifier
-[35:1] Expected token: SemiColon, saw: Identifier
-[40:1] Expected token: SemiColon, saw: Identifier
-[45:1] Expected token: SemiColon, saw: Main

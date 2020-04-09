@@ -1,9 +1,20 @@
 
 class C1 {
-	public C1 a;
+    public call(integer arg[]) : integer;
 };
+
+C1::call(integer arg[]) : integer
+  local
+    integer val;
+  do
+    val = arg[1];
+	return (val);
+  end;
 
 main
   local
+  C1 c1;
+  integer a[5];
   do
+    c1.call(a);
   end

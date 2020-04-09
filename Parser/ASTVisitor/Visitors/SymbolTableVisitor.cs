@@ -249,6 +249,7 @@ namespace Parser.ASTVisitor.Visitors
             }
 
             n.Table.AddEntry(tableEntry);
+            n.SymTable = tableEntry;
         }
 
         private bool CheckTypeExists(string type)

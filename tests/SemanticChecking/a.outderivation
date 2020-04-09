@@ -10,15 +10,142 @@ Visibility -> Public
 Public -> public
 MemberDecl -> Identifier FuncOrVarDecl 
 Identifier -> identifier
-FuncOrVarDecl -> VarDecl 
+FuncOrVarDecl -> FuncDecl 
+FuncDecl -> OpenBrace FuncParams CloseBrace Colon TypeOrVoid SemiColon 
+OpenBrace -> openBrace
+FuncParams -> Type Identifier ArrayDims FuncParamsRests 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+Identifier -> identifier
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+CloseSquareBrace -> closeSquareBrace
+CloseBrace -> closeBrace
+Colon -> colon
+TypeOrVoid -> Type 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+SemiColon -> semiColon
+CloseCurlyBrace -> closeCurlyBrace
+SemiColon -> semiColon
+FuncDefs -> FuncDef FuncDefs 
+FuncDef -> FuncSig FuncBody SemiColon 
+FuncSig -> Identifier FuncSigNamespace 
+Identifier -> identifier
+FuncSigNamespace -> ColonColon Identifier FuncSigExt 
+ColonColon -> colonColon
+Identifier -> identifier
+FuncSigExt -> OpenBrace FuncParams CloseBrace Colon TypeOrVoid 
+OpenBrace -> openBrace
+FuncParams -> Type Identifier ArrayDims FuncParamsRests 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+Identifier -> identifier
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+CloseSquareBrace -> closeSquareBrace
+CloseBrace -> closeBrace
+Colon -> colon
+TypeOrVoid -> Type 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+FuncBody -> LocalScope Do Statements End 
+LocalScope -> Local VarDecls 
+Local -> local
+VarDecls -> Type VarDecl VarDecls 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
 SemiColon -> semiColon
-CloseCurlyBrace -> closeCurlyBrace
+Do -> do
+Statements -> Statement Statements 
+Statement -> AssignStatementOrFuncCall 
+AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
+Identifier -> identifier
+VarOrFuncCallExt -> Indices VarExt 
+VarExt -> Equal Expression SemiColon 
+Equal -> equal
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+VarOrFuncCall -> Indices FactorVar 
+Indices -> Index Indices 
+Index -> OpenSquareBrace ArithExpr CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
+SemiColon -> semiColon
+Statements -> Statement Statements 
+Statement -> Return OpenBrace Expression CloseBrace SemiColon 
+Return -> return
+OpenBrace -> openBrace
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+CloseBrace -> closeBrace
+SemiColon -> semiColon
+End -> end
 SemiColon -> semiColon
 Main -> main
 FuncBody -> LocalScope Do Statements End 
 LocalScope -> Local VarDecls 
 Local -> local
+VarDecls -> Type VarDecl VarDecls 
+Type -> Identifier 
+Identifier -> identifier
+VarDecl -> Identifier ArrayDims SemiColon 
+Identifier -> identifier
+SemiColon -> semiColon
+VarDecls -> Type VarDecl VarDecls 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+VarDecl -> Identifier ArrayDims SemiColon 
+Identifier -> identifier
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+OptionalInt -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
+SemiColon -> semiColon
 Do -> do
+Statements -> Statement Statements 
+Statement -> AssignStatementOrFuncCall 
+AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
+Identifier -> identifier
+VarOrFuncCallExt -> Indices VarExt 
+VarExt -> Period AssignStatementOrFuncCall 
+Period -> period
+AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
+Identifier -> identifier
+VarOrFuncCallExt -> OpenBrace FuncCallParams CloseBrace FuncCallExt 
+OpenBrace -> openBrace
+FuncCallParams -> Expression FuncCallParamsRests 
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+CloseBrace -> closeBrace
+FuncCallExt -> SemiColon 
+SemiColon -> semiColon
 End -> end

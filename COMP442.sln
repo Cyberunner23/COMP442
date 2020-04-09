@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGen", "CodeGen\CodeGen.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenDriver", "CodeGenDriver\CodeGenDriver.csproj", "{F8F9C303-0E73-4818-A804-FCE5D1FD96F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenUtils", "CodeGenUtils\CodeGenUtils.csproj", "{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{F8F9C303-0E73-4818-A804-FCE5D1FD96F0}.Release|x64.Build.0 = Release|Any CPU
 		{F8F9C303-0E73-4818-A804-FCE5D1FD96F0}.Release|x86.ActiveCfg = Release|Any CPU
 		{F8F9C303-0E73-4818-A804-FCE5D1FD96F0}.Release|x86.Build.0 = Release|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Debug|x64.Build.0 = Debug|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Debug|x86.Build.0 = Debug|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Release|x64.ActiveCfg = Release|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Release|x64.Build.0 = Release|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{ECC35F1A-1D21-48C3-9D53-1F9CAB9F64C8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

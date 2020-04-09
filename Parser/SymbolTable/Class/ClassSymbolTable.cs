@@ -1,4 +1,5 @@
-﻿using Lexer;
+﻿using CodeGenUtils;
+using Lexer;
 using Parser.SymbolTable.Function;
 using Parser.Utils;
 using System;
@@ -12,11 +13,13 @@ namespace Parser.SymbolTable.Class
     {
         public string ClassName { get; set; }
         public List<string> Inherits { get; private set; }
-        public int MemSize { get; set; } = 0;
+
+        public ClassMemoryLayout MemoryLayout { get; private set; }
 
         public ClassSymbolTable()
         {
             Inherits = new List<string>();
+            MemoryLayout = new ClassMemoryLayout();
         }
 
         public Dictionary<string, (string, List<int>)> GetVariablesInScope(List<string> visitedClasses = null)
@@ -120,7 +123,7 @@ namespace Parser.SymbolTable.Class
                 builder.AppendLine($"*    {inherit}");
             }
 
-            builder.AppendLine($"* MemSize = {MemSize}");
+            builder.AppendLine($"* MemSize = {MemoryLayout.TotalSize}");
             builder.AppendLine("*===========================================================");
             builder.AppendLine("*");
 

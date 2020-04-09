@@ -36,27 +36,29 @@ R3: GPR,  R7: GPR,  R11: GPR,  R15: Return Address
 Stack Frame Layout
 ==================
 
-| Address  | Value (4 bytes)                           | 
-|   M      | topaddr (Top of the Stack)                |
-|   M - 4  | Last Usable Memory Address                |
-|    ...   |                ...                        |   More Stack Frames
-| * K      | Bottom of previous frame                  | * Stack Pointer points to K (R14 = K) 
-| -------- | ----------------------------------------- |
-|   K - 4  | Return Address (Top of frame)             | 
-|   K - 8  | Argument 1                                |
-|   K - 12 | Argument 2                                |   A Specific Stack Frame
-|   K - 16 | Variable 1                                | 
-|   K - 20 | Variable 2                                | 
-|   K - 24 | Intermediate Variable 1                   | 
-|   K - 28 | Intermediate Variable 2 (Bottom of Stack) | 
-| -------- | ----------------------------------------- |
-|    ...   |                   ...                     |   Some Stack Frames
-|   B      | baseaddr (Bottom of the stack)            |
-|   B - 4  | Last bytes of code                        |
-|    ...   |                   ...                     |
-|   8      | Code                                      |
-|   4      | Code                                      |
-|   0      | Code                                      |
+| Address  | Value (4 bytes)                              | 
+|   M      | topaddr (Top of the Stack)                   |
+|   M - 4  | Last Usable Memory Address                   |
+|    ...   |                     ...                      |   More Stack Frames
+| * K      | Bottom of previous frame                     | * Stack Pointer points to K (R14 = K)
+| -------- | -------------------------------------------- |
+|   K - 4  | Return Address (Top of frame)                |
+|   K - 8  | Address to self (0 if not a member function) |
+|   K - 12 | Argument 1                                   |
+|   K - 16 | Argument 2                                   |   A Specific Stack Frame
+|   K - 20 | Variable 1                                   |
+|   K - 24 | Variable 2                                   |
+|   K - 28 | Temporary Variable 1                         |
+|   K - 32 | Temporary Variable 2 (Bottom of frame)       |
+| -------- | -------------------------------------------- |
+|    ...   |                     ...                      |   Some Stack Frames
+|   B      | baseaddr (Bottom of the stack)               |
+|   B - 4  | zeroval (constant 0)                         |
+|   B - 8  | Last bytes of code                           |
+|    ...   |                     ...                      |
+|   8      | Code                                         |
+|   4      | Code                                         |
+|   0      | Code                                         |
 
 Stack size is known at compile time, therefore, no need for a Base Pointer like in x86.
 When popping a stack frame, suffice to move the Stack Pointer to the bottom of the popped Stack Frame

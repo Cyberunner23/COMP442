@@ -8,17 +8,32 @@ class C2 {
 	public C1 a;
 	public integer b;
 	
-	public hello(integer a) : integer;
+	public hello(integer c) : integer;
 };
 
-C2::hello(integer a) : integer
+C2::hello(integer c) : integer
   local
     C1 c1;
     integer hey;
   do
+    //hey = ((30 * -2) / not 2) / (5 + (5*5));
   end;
+
+/*squared(integer a) : integer
+  local
+    integer result;
+  do
+    result = a * a;
+	return (result);
+  end;*/
 
 main
   local
+    integer val;
+	integer result;
   do
+    val = 5 - 3;
+	val = 7 / 8;
+	//result = squared(val);
+	//write (result);
   end

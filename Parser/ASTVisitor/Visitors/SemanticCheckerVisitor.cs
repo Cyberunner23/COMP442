@@ -205,6 +205,14 @@ namespace Parser.ASTVisitor.Visitors
                 node.Accept(this);
             }
 
+            if (!string.Equals(children[0].ExprType.Type, TypeConstants.IntType) 
+                && !string.Equals(children[1].ExprType.Type, TypeConstants.IntType)
+                && !string.Equals(children[0].ExprType.Type, TypeConstants.FloatType)
+                && !string.Equals(children[1].ExprType.Type, TypeConstants.FloatType))
+            {
+                _errorStream.WriteLine($"Operation must be done with numerical operands! ({n.Token.StartLine}:{n.Token.StartColumn})");
+            }
+
             if (children[0].ExprType.Dims.Count > 0 || children[1].ExprType.Dims.Count > 0)
             {
                 _errorStream.WriteLine($"Cannot multiply/divide arrays! ({n.Token.StartLine}:{n.Token.StartColumn})");
@@ -486,7 +494,6 @@ namespace Parser.ASTVisitor.Visitors
             (string Type, List<int> Dims) typeDims;
             if (!varsInScope.TryGetValue(n.VarName, out typeDims))
             {
-
                 _errorStream.WriteLine($"Use of undeclared variable \"{n.VarName}\" ({varNameToken.StartLine}:{varNameToken.StartColumn})");
             }
             else
@@ -571,6 +578,12 @@ namespace Parser.ASTVisitor.Visitors
                     if (!string.Equals(candidateFunc.Params[i].Type.type, unpacked.type))
                     {
                         matches = false;
+                        break;
+                    }
+
+                    if (candidateFunc.Params[i].Type.dims.Count == unpacked.dims.Count && candidateFunc.Params[i].Type.dims.All(x => x == 0))
+                    {
+                        matches = true;
                         break;
                     }
 

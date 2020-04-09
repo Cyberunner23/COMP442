@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using CodeGen.ASTVisitors;
 using Lexer;
 using Parser.AST;
 using Parser.SymbolTable;
@@ -41,8 +41,6 @@ namespace CodeGen.Phases
 
         private void CalculateClassSize(ClassSymbolTable classTable)
         {
-
-            var currentOffset = 0;
             foreach (var variableEntry in classTable.Entries.Where(x => x is ClassSymbolTableEntryVariable).Cast<ClassSymbolTableEntryVariable>())
             {
                 var multiplier = 1;
@@ -56,27 +54,28 @@ namespace CodeGen.Phases
                 {
                     case TokenType.Integer:
                         variableEntry.MemSize = multiplier * TypeConstants.IntTypeSize;
+                        classTable.MemoryLayout.AddEntry(variableEntry.Name, variableEntry.MemSize);
                         break;
                     case TokenType.Float:
                         variableEntry.MemSize = multiplier * TypeConstants.FloatTypeSize;
+                        classTable.MemoryLayout.AddEntry(variableEntry.Name, variableEntry.MemSize);
                         break;
                     case TokenType.Identifier:
                         {
                             var varClassTable = _globalSymbolTable.GetClassSymbolTableByName(type.Lexeme);
-                            if (varClassTable.MemSize == 0)
+                            if (varClassTable.MemoryLayout.TotalSize == 0)
                             {
                                 CalculateClassSize(varClassTable);
                             }
 
-                            variableEntry.MemSize = multiplier * varClassTable.MemSize;
+                            variableEntry.MemSize = multiplier * varClassTable.MemoryLayout.TotalSize;
+                            classTable.MemoryLayout.AddEntry(variableEntry.Name, variableEntry.MemSize);
 
                             break;
                         }
                 }
 
-                variableEntry.MemOffset = currentOffset;
-                currentOffset += variableEntry.MemSize;
-                classTable.MemSize += variableEntry.MemSize;
+                variableEntry.MemOffset = classTable.MemoryLayout.GetOffset(variableEntry.Name);
             }
         }
 
@@ -90,9 +89,6 @@ namespace CodeGen.Phases
 
         private void CalculateFunctionFrameSize(FunctionSymbolTableEntry functionTable)
         {
-            const int returnOffset = 4; // Room for return address
-
-            int currentFrameOffset = -returnOffset;
             foreach (var parameter in functionTable.Params)
             {
                 var type = parameter.Type;
@@ -104,25 +100,25 @@ namespace CodeGen.Phases
 
                 if (string.Equals(type.type, TypeConstants.IntType))
                 {
-                    parameter.MemSize += multiplier * TypeConstants.IntTypeSize;
+                    parameter.MemSize = multiplier * TypeConstants.IntTypeSize;
+                    functionTable.MemoryLayout.AddArgumentEntry(parameter.Name, parameter.MemSize);
                 }
                 else if (string.Equals(type.type, TypeConstants.FloatType))
                 {
-                    parameter.MemSize += multiplier * TypeConstants.FloatTypeSize;
+                    parameter.MemSize = multiplier * TypeConstants.FloatTypeSize;
+                    functionTable.MemoryLayout.AddArgumentEntry(parameter.Name, parameter.MemSize);
                 }
                 else
                 {
                     var varClassTable = _globalSymbolTable.GetClassSymbolTableByName(type.type);
-                    if (varClassTable.MemSize == 0)
+                    if (varClassTable.MemoryLayout.TotalSize == 0)
                     {
                         CalculateClassSize(varClassTable);
                     }
 
-                    parameter.MemSize += multiplier * varClassTable.MemSize;
+                    parameter.MemSize += multiplier * varClassTable.MemoryLayout.TotalSize;
+                    functionTable.MemoryLayout.AddArgumentEntry(parameter.Name, parameter.MemSize);
                 }
-
-                currentFrameOffset -= parameter.MemSize;
-                parameter.MemOffset = currentFrameOffset;
             }
 
             foreach (var variable in functionTable.LocalScope)
@@ -138,34 +134,32 @@ namespace CodeGen.Phases
                 {
                     case TokenType.Integer:
                         variable.MemSize += multiplier * TypeConstants.IntTypeSize;
+                        functionTable.MemoryLayout.AddVariableEntry(variable.Name, variable.MemSize);
                         break;
                     case TokenType.Float:
                         variable.MemSize += multiplier * TypeConstants.FloatTypeSize;
+                        functionTable.MemoryLayout.AddVariableEntry(variable.Name, variable.MemSize);
                         break;
                     case TokenType.Identifier:
                         {
                             var varClassTable = _globalSymbolTable.GetClassSymbolTableByName(type.Lexeme);
-                            if (varClassTable.MemSize == 0)
+                            if (varClassTable.MemoryLayout.TotalSize == 0)
                             {
                                 CalculateClassSize(varClassTable);
                             }
 
-                            variable.MemSize += multiplier * varClassTable.MemSize;
+                            variable.MemSize += multiplier * varClassTable.MemoryLayout.TotalSize;
 
                             break;
                         }
                 }
-
-                currentFrameOffset -= variable.MemSize;
-                variable.MemOffset = currentFrameOffset;
             }
-
-            functionTable.FrameSize = -currentFrameOffset;
         }
 
         private void CalculateFunctionFrameSizesWithIntermediates()
         {
-            
+            var visitor = new IntermediateSizeCalculatorVisitor();
+            _astTree.Accept(visitor);
         }
     }
 }

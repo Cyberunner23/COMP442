@@ -30,26 +30,26 @@
 |    *        MemSize: 28, MemOffset: 0
 |    *    Variable: Public integer b
 |    *        MemSize: 4, MemOffset: 28
-|    *    Function: Public hello(integer a) -> integer
+|    *    Function: Public hello(integer c) -> integer
 |    *
 |    *===========================================================
 |    
 |
 |    +===========================================================
 |    + Function Table
-|    +    C2::hello(integer a) -> integer
+|    +    C2::hello(integer c) -> integer
 |    +
-|    +    Parameter: integer a
-|    +        MemSize: 4, MemOffset:  -8
+|    +    Parameter: integer c
+|    +        MemSize: 4, MemOffset:  0
 |    +
-|    +    FrameSize: 40
+|    +    FrameSize: 16
 |    +
 |    +===========================================================
 |    + Local Table
 |    +    Local: C1 c1
-|    +        MemSize: 28, MemOffset: -36
+|    +        MemSize: 28, MemOffset: 0
 |    +    Local: integer hey
-|    +        MemSize: 4, MemOffset: -40
+|    +        MemSize: 4, MemOffset: 0
 |    +
 |    +===========================================================
 |    
@@ -59,13 +59,63 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 4
+|    +    FrameSize: 48
 |    +
 |    +===========================================================
 |    + Local Table
+|    +    Local: integer val
+|    +        MemSize: 4, MemOffset: 0
+|    +    Local: integer result
+|    +        MemSize: 4, MemOffset: 0
 |    +
 |    +===========================================================
 |    
 |
 |===========================================================
+
+
+MEMORY LAYOUTS
+C1
+Total: 28 bytes
+-------------------------------------
+  24 |    4 | c
+   4 |   20 | b
+   0 |    4 | a
+-------------------------------------
+
+C2
+Total: 32 bytes
+-------------------------------------
+  28 |    4 | b
+   0 |   28 | a
+-------------------------------------
+
+
+
+C2::hello(integer c) -> integer
+Total: 16 bytes
+-------------------------------------
+  -4 |    4 | Return            | __returnaddr__
+  -8 |    4 | SelfAddr          | __selfaddr__
+ -12 |    4 | Argument          | c
+ -16 |    4 | Variable          | hey
+-------------------------------------
+
+main()
+Total: 48 bytes
+-------------------------------------
+  -4 |    4 | Return            | __returnaddr__
+  -8 |    4 | SelfAddr          | __selfaddr__
+ -12 |    4 | Variable          | val
+ -16 |    4 | Variable          | result
+ -20 |    4 | TemporaryVariable | __temp_0__
+ -24 |    4 | TemporaryVariable | __temp_1__
+ -28 |    4 | TemporaryVariable | __temp_2__
+ -32 |    4 | TemporaryVariable | __temp_3__
+ -36 |    4 | TemporaryVariable | __temp_4__
+ -40 |    4 | TemporaryVariable | __temp_5__
+ -44 |    4 | TemporaryVariable | __temp_6__
+ -48 |    4 | TemporaryVariable | __temp_7__
+-------------------------------------
+
 

@@ -277,5 +277,3 @@ strsub2  addi  r1,r1,1       % i++
          j     strsub1
 strsub3  sb    0(r3),r0      % T[k] := 0
          jr    r15
-
-baseaddr

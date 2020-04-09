@@ -59,6 +59,8 @@ namespace ParserDriver
                 Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
                 Console.WriteLine(parser.Parse());
                 var tree = parser.GetASTTree();
+                derivationsStream.Flush();
+                syntaxErrorStream.Flush();
 
                 var printVisitor = new DOTPrinterVisitor(astStream);
                 tree.Accept(printVisitor);

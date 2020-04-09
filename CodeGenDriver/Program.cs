@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
+using CodeGen;
 using Lexer;
 using Parser.ASTVisitor.Visitors;
 
@@ -82,7 +82,8 @@ namespace CodeGenDriver
                 }
 
                 // Codegen
-                var codeGen = new CodeGen.CodeGen(tree, symbolTableVisitor.GlobalSymbolTable, codeGenOutput);
+                var codeWriter = new CodeWriter(codeGenOutput);
+                var codeGen = new CodeGen.CodeGen(tree, symbolTableVisitor.GlobalSymbolTable, codeWriter);
                 codeGen.GenerateCode();
 
                 symbolTablesStream.WriteLine(symbolTableVisitor.GlobalSymbolTable);
