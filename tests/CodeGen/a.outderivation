@@ -153,31 +153,58 @@ Equal -> equal
 Expression -> ArithExpr BoolExprOrNone 
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-RightArithExpr -> AddOp Term RightArithExpr 
-AddOp -> Minus 
-Minus -> minus
+Factor -> OpenBrace ArithExpr CloseBrace 
+OpenBrace -> openBrace
+ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-SemiColon -> semiColon
-Statements -> Statement Statements 
-Statement -> AssignStatementOrFuncCall 
-AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
-Identifier -> identifier
-VarOrFuncCallExt -> Indices VarExt 
-VarExt -> Equal Expression SemiColon 
-Equal -> equal
-Expression -> ArithExpr BoolExprOrNone 
+Factor -> OpenBrace ArithExpr CloseBrace 
+OpenBrace -> openBrace
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
 RightTerm -> MultOp Factor RightTerm 
-MultOp -> FwdSlash 
-FwdSlash -> fwdSlash
+MultOp -> Asterix 
+Asterix -> asterix
+Factor -> Sign Factor 
+Sign -> Minus 
+Minus -> minus
 Factor -> IntNum 
 IntNum -> intNum
+CloseBrace -> closeBrace
+RightTerm -> MultOp Factor RightTerm 
+MultOp -> FwdSlash 
+FwdSlash -> fwdSlash
+Factor -> Not Factor 
+Not -> not
+Factor -> IntNum 
+IntNum -> intNum
+CloseBrace -> closeBrace
+RightTerm -> MultOp Factor RightTerm 
+MultOp -> FwdSlash 
+FwdSlash -> fwdSlash
+Factor -> OpenBrace ArithExpr CloseBrace 
+OpenBrace -> openBrace
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Plus 
+Plus -> plus
+Term -> Factor RightTerm 
+Factor -> OpenBrace ArithExpr CloseBrace 
+OpenBrace -> openBrace
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+RightTerm -> MultOp Factor RightTerm 
+MultOp -> Asterix 
+Asterix -> asterix
+Factor -> IntNum 
+IntNum -> intNum
+CloseBrace -> closeBrace
+CloseBrace -> closeBrace
 SemiColon -> semiColon
 End -> end

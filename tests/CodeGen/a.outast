@@ -1,7 +1,7 @@
 digraph G {
-138[label="138:ProgramNode"]
+143[label="143:ProgramNode"]
 88[label="88:ClassDeclsNode"]
-138 -> 88
+143 -> 88
 65[label="65:ClassDeclNode"]
 88 -> 65
 45[label="45:IdentifierNode\nC1"]
@@ -89,7 +89,7 @@ digraph G {
 84[label="84:TypeNode\nInteger"]
 85 -> 84
 108[label="108:FuncDefsNode"]
-138 -> 108
+143 -> 108
 107[label="107:FuncDefNode"]
 108 -> 107
 89[label="89:IdentifierNode\nC2"]
@@ -128,10 +128,10 @@ digraph G {
 103 -> 102
 105[label="105:StatementsNode"]
 106 -> 105
-137[label="137:MainFuncNode"]
-138 -> 137
+142[label="142:MainFuncNode"]
+143 -> 142
 117[label="117:LocalScopeNode"]
-137 -> 117
+142 -> 117
 112[label="112:VarDeclNode"]
 117 -> 112
 109[label="109:TypeNode\nInteger"]
@@ -148,42 +148,52 @@ digraph G {
 116 -> 114
 115[label="115:ArrayDimListNode"]
 116 -> 115
-136[label="136:StatementsNode"]
-137 -> 136
-126[label="126:AssignmentNode"]
-136 -> 126
+141[label="141:StatementsNode"]
+142 -> 141
+140[label="140:AssignmentNode"]
+141 -> 140
 120[label="120:SubVarCallNode"]
-126 -> 120
+140 -> 120
 118[label="118:IdentifierNode\nval"]
 120 -> 118
 119[label="119:IndicesNode"]
 120 -> 119
-125[label="125:ExpressionNode"]
-126 -> 125
-124[label="124:ArithExprNode"]
-125 -> 124
-122[label="122:AddOpNode\nSubtract"]
-124 -> 122
-123[label="123:IntNumNode\n3"]
-122 -> 123
-121[label="121:IntNumNode\n5"]
-122 -> 121
-135[label="135:AssignmentNode"]
-136 -> 135
-129[label="129:SubVarCallNode"]
-135 -> 129
-127[label="127:IdentifierNode\nval"]
-129 -> 127
-128[label="128:IndicesNode"]
-129 -> 128
-134[label="134:ExpressionNode"]
-135 -> 134
-133[label="133:ArithExprNode"]
+139[label="139:ExpressionNode"]
+140 -> 139
+138[label="138:ArithExprNode"]
+139 -> 138
+130[label="130:MultOpNode\nDivide"]
+138 -> 130
+137[label="137:ArithExprNode"]
+130 -> 137
+132[label="132:AddOpNode\nAdd"]
+137 -> 132
+136[label="136:ArithExprNode"]
+132 -> 136
+134[label="134:MultOpNode\nMultiply"]
+136 -> 134
+135[label="135:IntNumNode\n5"]
+134 -> 135
+133[label="133:IntNumNode\n4"]
 134 -> 133
-131[label="131:MultOpNode\nDivide"]
-133 -> 131
-132[label="132:IntNumNode\n8"]
-131 -> 132
-130[label="130:IntNumNode\n7"]
-131 -> 130
+131[label="131:IntNumNode\n3"]
+132 -> 131
+129[label="129:ArithExprNode"]
+130 -> 129
+126[label="126:MultOpNode\nDivide"]
+129 -> 126
+128[label="128:NotNode"]
+126 -> 128
+127[label="127:IntNumNode\n1"]
+128 -> 127
+125[label="125:ArithExprNode"]
+126 -> 125
+122[label="122:MultOpNode\nMultiply"]
+125 -> 122
+124[label="124:SignNode\nMinus"]
+122 -> 124
+123[label="123:IntNumNode\n2"]
+124 -> 123
+121[label="121:IntNumNode\n30"]
+122 -> 121
 }

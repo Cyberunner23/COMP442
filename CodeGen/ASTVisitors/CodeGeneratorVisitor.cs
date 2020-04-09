@@ -346,19 +346,59 @@ namespace CodeGen.ASTVisitors
         public void Visit(NotNode n)
         {
             var children = n.GetChildren();
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var resultOffset = table.MemoryLayout.GetOffset(n.TemporaryVariableName);
+
+            var operandVarOffsets = new List<int>();
             foreach (var child in children)
             {
                 child.Accept(this);
+                var offset = table.MemoryLayout.GetOffset(child.TemporaryVariableName);
+                operandVarOffsets.Add(offset);
             }
+
+            _writer.WriteComment($"Not at ({n.Token.StartLine}:{n.Token.StartColumn})");
+
+            var opReg = PopRegister();
+            var destReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Lw, opReg, $"{operandVarOffsets[0]}({FSP})");
+            _writer.WriteInstruction(Instructions.Not, destReg, opReg);
+            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSP})", destReg);
+
+            PushRegister(destReg);
+            PushRegister(opReg);
         }
 
         public void Visit(SignNode n)
         {
             var children = n.GetChildren();
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var resultOffset = table.MemoryLayout.GetOffset(n.TemporaryVariableName);
+
+            var operandVarOffsets = new List<int>();
             foreach (var child in children)
             {
                 child.Accept(this);
+                var offset = table.MemoryLayout.GetOffset(child.TemporaryVariableName);
+                operandVarOffsets.Add(offset);
             }
+
+            if (n.Sign == Sign.Minus)
+            {
+                _writer.WriteComment($"SignNode '{n.Sign}' at ({n.Token.StartLine}:{n.Token.StartColumn})");
+
+                var opReg = PopRegister();
+                var destReg = PopRegister();
+
+                _writer.WriteInstruction(Instructions.Lw, opReg, $"{operandVarOffsets[0]}({FSP})");
+                _writer.WriteInstruction(Instructions.Sub, destReg, destReg, opReg);
+                _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSP})", destReg);
+
+                PushRegister(destReg);
+                PushRegister(opReg);
+            }
+            
         }
 
         public void Visit(AddOpNode n)
@@ -459,6 +499,7 @@ namespace CodeGen.ASTVisitors
             foreach (var child in children)
             {
                 child.Accept(this);
+                n.TemporaryVariableName = child.TemporaryVariableName;
             }
         }
 

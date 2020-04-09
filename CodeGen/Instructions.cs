@@ -47,7 +47,7 @@ namespace CodeGen
         Jl,     // Jump and link
         Jlr,    // Jump and link (register)
         Nop,    // nop
-        hlt,    // Halt
+        Hlt,    // Halt
         Entry,  // Entry
         Align,  // Align
         Org,    // Same as x86
@@ -102,7 +102,7 @@ namespace CodeGen
             {Instructions.Jl,    2},
             {Instructions.Jlr,   2},
             {Instructions.Nop,   0},
-            {Instructions.hlt,   0},
+            {Instructions.Hlt,   0},
             {Instructions.Entry, 0},
             {Instructions.Align, 0},
             {Instructions.Org,   1},

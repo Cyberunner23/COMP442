@@ -40,14 +40,13 @@ namespace CodeGen
             _writer.WriteInstruction(Instructions.Align);
             _writer.WriteInstruction(Instructions.Entry);
             _writer.WriteComment("Set stack pointer to initial value (baseaddr)");
-            _writer.WriteInstruction(Instructions.Add, Registers.R14, Registers.R14, Tags.BaseAddr);
+            _writer.WriteInstruction(Instructions.Addi, Registers.R14, Registers.R14, Tags.BaseAddr);
         }
 
         private void GenerateFooter()
         {
             _writer.WriteComment("Program footer");
-            _writer.WriteTag(Tags.Zeroval);
-            _writer.WriteInstruction(Instructions.Dw, "0");
+            _writer.WriteInstruction(Instructions.Hlt);
             _writer.WriteTag(Tags.BaseAddr);
         }
 

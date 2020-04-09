@@ -27,7 +27,7 @@ namespace Parser.ASTVisitor.Visitors
         public void Visit(ProgramNode n)
         {
             var children = n.GetChildren();
-            foreach(var child in children)
+            foreach (var child in children)
             {
                 child.Accept(this);
             }
@@ -74,7 +74,7 @@ namespace Parser.ASTVisitor.Visitors
         private void HandleMemberDeclVariable(MemberDeclNode n)
         {
             var children = n.GetChildren();
-            
+
             var visibility = children.GetCast<VisibilityNode>(0).Visibility;
             var type = children[1].Token;
             var name = children[2].Token.Lexeme;
@@ -225,7 +225,12 @@ namespace Parser.ASTVisitor.Visitors
             var tableEntry = new FunctionSymbolTableEntry();
             tableEntry.Name = "main";
 
-            
+            foreach (var child in n.GetChildren())
+            {
+                child.SymTable = tableEntry;
+                child.Accept(this);
+            }
+
             var localScope = n.GetChildren().First().GetChildren().SelectMany(x => x.GetChildren()).ToList();
             for (int i = 0; i < localScope.Count; i += 3)
             {
@@ -267,172 +272,342 @@ namespace Parser.ASTVisitor.Visitors
         #region Unused
         public void Visit(NullNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(IdentifierNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(InheritListNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(TypeNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(FuncParamListNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(ArrayDimListNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(ArrayDimNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(IntNumNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(FuncBodyNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(LocalScopeNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(StatementsNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(VarDeclNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(IfNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(BoolExpressionNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(CompareOpNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(WhileNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(ReadNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(WriteNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(ReturnNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(FuncCallNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(AssignmentNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(SubFuncCallNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(SubVarCallNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(IndicesNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(FuncCallParamsNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(ExpressionNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(FloatNumNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(NotNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(SignNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(AddOpNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(MultOpNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(ArithExprNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(VarFuncCallNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
 
         public void Visit(VisibilityNode n)
         {
-            throw new NotImplementedException();
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.SymTable = n.SymTable;
+                child.Accept(this);
+            }
         }
         #endregion
     }

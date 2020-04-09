@@ -82,6 +82,7 @@ namespace CodeGenDriver
                 }
 
                 // Codegen
+                codeGenOutput.NewLine = "\n";
                 var codeWriter = new CodeWriter(codeGenOutput);
                 var codeGen = new CodeGen.CodeGen(tree, symbolTableVisitor.GlobalSymbolTable, codeWriter);
                 codeGen.GenerateCode();

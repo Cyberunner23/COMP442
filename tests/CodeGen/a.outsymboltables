@@ -59,7 +59,7 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 48
+|    +    FrameSize: 68
 |    +
 |    +===========================================================
 |    + Local Table
@@ -102,7 +102,7 @@ Total: 16 bytes
 -------------------------------------
 
 main()
-Total: 48 bytes
+Total: 68 bytes
 -------------------------------------
   -4 |    4 | Return            | __returnaddr__
   -8 |    4 | SelfAddr          | __selfaddr__
@@ -116,6 +116,11 @@ Total: 48 bytes
  -40 |    4 | TemporaryVariable | __temp_5__
  -44 |    4 | TemporaryVariable | __temp_6__
  -48 |    4 | TemporaryVariable | __temp_7__
+ -52 |    4 | TemporaryVariable | __temp_8__
+ -56 |    4 | TemporaryVariable | __temp_9__
+ -60 |    4 | TemporaryVariable | __temp_10__
+ -64 |    4 | TemporaryVariable | __temp_11__
+ -68 |    4 | TemporaryVariable | __temp_12__
 -------------------------------------
 
 
