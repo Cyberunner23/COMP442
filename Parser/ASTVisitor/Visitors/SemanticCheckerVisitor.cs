@@ -140,9 +140,9 @@ namespace Parser.ASTVisitor.Visitors
             }
 
             var table = (FunctionSymbolTableEntry)n.SymTable;
-            if (!string.Equals(children.Last().ExprType.Type, table.ReturnType.Lexeme))
+            if (!string.Equals(children.Last().ExprType.Type, table.ReturnType?.Lexeme ?? ""))
             {
-                _errorStream.WriteLine($"Type of value for return is invalid (line: {n.Token.StartLine}), expected: {table.ReturnType.Lexeme}, received: {children.Last().ExprType.Type}");
+                _errorStream.WriteLine($"Type of value for return is invalid (line: {n.Token.StartLine}), expected: {table.ReturnType?.Lexeme ?? "void"}, received: {children.Last().ExprType.Type}");
             }
         }
         #endregion

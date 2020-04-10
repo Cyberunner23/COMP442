@@ -8,10 +8,10 @@ class C2 {
 	public C1 a;
 	public integer b;
 	
-	public hello(integer c) : integer;
+	//public hello(integer c) : integer;
 };
 
-C2::hello(integer c) : integer
+/*C2::hello(integer c) : integer
   local
     C1 c1;
     integer hey;
@@ -19,20 +19,21 @@ C2::hello(integer c) : integer
     //hey = ((30 * -2) / not 2) / (5 + (5*5));
   end;
 
-/*squared(integer a) : integer
+squared(integer a) : integer
   local
     integer result;
   do
-    result = a * a;
-	return (result);
+    //result = a * a;
+	return (a);
   end;*/
 
 main
   local
-    integer val;
-	integer result;
+    integer val[3][2];
+	integer arr[2];
   do
-     val = ((30 * -2) / not 1) / (3 + (4*5));
+
+    val[1][0] = 5;
     //val = 5 - 3;
 	//val = 7 / 8 * 9;
 	//val = val * val;

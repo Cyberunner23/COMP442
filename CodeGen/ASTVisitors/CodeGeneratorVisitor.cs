@@ -3,6 +3,7 @@ using Parser.ASTVisitor;
 using Parser.SymbolTable.Function;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeGen.ASTVisitors
 {
@@ -11,7 +12,7 @@ namespace CodeGen.ASTVisitors
         private CodeWriter _writer;
         private Stack<string> _availableRegisters;
 
-        private string FSP { get { return Registers.R14; } }
+        private string FSPReg { get { return Registers.R14; } }
 
         public CodeGeneratorVisitor(CodeWriter writer)
         {
@@ -30,7 +31,6 @@ namespace CodeGen.ASTVisitors
             _availableRegisters.Push(Registers.R3);
             _availableRegisters.Push(Registers.R2);
             _availableRegisters.Push(Registers.R1);
-            _availableRegisters.Push(Registers.R0);
         }
 
         private string PopRegister()
@@ -168,7 +168,7 @@ namespace CodeGen.ASTVisitors
             _writer.WriteComment($"Init const int value {n.Value} ({n.Token.StartLine}:{n.Token.StartColumn})");
             var reg = PopRegister();
             _writer.WriteInstruction(Instructions.Addi, reg, reg, n.Value.ToString());
-            _writer.WriteInstruction(Instructions.Sw, $"{offset}({FSP})", reg);
+            _writer.WriteInstruction(Instructions.Sw, $"{offset}({FSPReg})", reg);
             PushRegister(reg);
         }
 
@@ -305,6 +305,80 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
             }
+
+            var identifierNode = (IdentifierNode)children[0];
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var varOffset = table.MemoryLayout.GetOffset(identifierNode.Name);
+            
+            _writer.WriteComment("SUB VAR CALL");
+
+            // Get variable address
+            _writer.WriteComment("Compute absolute address of variable, (we don't have lea...)");
+            var absoluteAddressReg = PopRegister();
+            _writer.WriteInstruction(Instructions.Add, absoluteAddressReg, absoluteAddressReg, FSPReg); // grab FSP
+            _writer.WriteInstruction(Instructions.Addi, absoluteAddressReg, absoluteAddressReg, $"{varOffset}"); // Add offset, we have absolute address now
+            
+            // Get variable address with indexing, if used
+            //           x  y  z
+            // integer a[3][3][3]
+            // a[1][0][2] -> a + 1*sizeof(integer)*3*3 + 0*sizeof(integer)*3 + 2*sizeof(integer)
+            //                     ^               ^
+            //                      typeSize       runningMultiplier
+            var indicesNode = (IndicesNode)children[1];
+            var indices = indicesNode.TemporaryVariableNames;
+            if (indices.Count > 0)
+            {
+                _writer.WriteComment("Computing address from array index");
+
+                var varType = table.MemoryLayout.GetVarType(identifierNode.Name);
+                var typeSize = table.MemoryLayout.GetTypeSize(identifierNode.Name);
+
+                // Set type size register
+                var typeSizeReg = PopRegister();
+                _writer.WriteInstruction(Instructions.Addi, typeSizeReg, typeSizeReg, $"{typeSize}");
+
+                var runningMultiplierReg = PopRegister(); // 3*3
+                var indexValueReg = PopRegister();
+                var indexingElementOffsetReg = PopRegister(); // the 1*sizeof(integer)*3*3 value will be stored here and added to absoluteAddressReg
+                for (int i = 0; i < indices.Count; ++i)
+                {
+                    _writer.WriteComment($"Computing for {i}th index");
+
+                    // Set runningMultiplierReg
+                    if (i == 0) // InitialValue
+                    {
+                        _writer.WriteInstruction(Instructions.Addi, runningMultiplierReg, runningMultiplierReg, "1");
+                    }
+                    else
+                    {
+                        _writer.WriteInstruction(Instructions.Muli, runningMultiplierReg, runningMultiplierReg, $"{varType.dims[i]}");
+                    }
+
+                    // Clear indexingElementOffsetReg
+                    _writer.WriteInstruction(Instructions.Sub, indexingElementOffsetReg, indexingElementOffsetReg, indexingElementOffsetReg);
+                    _writer.WriteInstruction(Instructions.Addi, indexingElementOffsetReg, indexingElementOffsetReg, "1"); // set initial multiplier value
+
+                    // Load index value
+                    var indexOffset = table.MemoryLayout.GetOffset(indices.FastReverse().ToList()[i]);
+                    _writer.WriteInstruction(Instructions.Lw, indexValueReg, $"{indexOffset}({FSPReg})");
+
+                    _writer.WriteInstruction(Instructions.Mul, indexingElementOffsetReg, indexValueReg, typeSizeReg); // 1*sizeof(integer)
+                    _writer.WriteInstruction(Instructions.Mul, indexingElementOffsetReg, indexingElementOffsetReg, runningMultiplierReg); // 1*sizeof(integer)*3*3
+
+                    // Add indexingElementOffsetReg to absoluteAddressReg
+                    _writer.WriteInstruction(Instructions.Add, absoluteAddressReg, absoluteAddressReg, indexingElementOffsetReg);
+                }
+
+                PushRegister(indexValueReg);
+                PushRegister(runningMultiplierReg);
+                PushRegister(typeSizeReg);
+            }
+
+            // Store absolute address into temp var associated to this SubVarCall
+            _writer.WriteComment("Storing final address");
+            var tempVarOffset = table.MemoryLayout.GetOffset(n.TemporaryVariableName);
+            _writer.WriteInstruction(Instructions.Sw, $"{tempVarOffset}({FSPReg})", absoluteAddressReg);
+            PushRegister(absoluteAddressReg);
         }
 
         public void Visit(IndicesNode n)
@@ -313,6 +387,7 @@ namespace CodeGen.ASTVisitors
             foreach (var child in children)
             {
                 child.Accept(this);
+                n.TemporaryVariableNames.Add(child.TemporaryVariableName);
             }
         }
 
@@ -362,9 +437,9 @@ namespace CodeGen.ASTVisitors
             var opReg = PopRegister();
             var destReg = PopRegister();
 
-            _writer.WriteInstruction(Instructions.Lw, opReg, $"{operandVarOffsets[0]}({FSP})");
+            _writer.WriteInstruction(Instructions.Lw, opReg, $"{operandVarOffsets[0]}({FSPReg})");
             _writer.WriteInstruction(Instructions.Not, destReg, opReg);
-            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSP})", destReg);
+            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSPReg})", destReg);
 
             PushRegister(destReg);
             PushRegister(opReg);
@@ -391,9 +466,9 @@ namespace CodeGen.ASTVisitors
                 var opReg = PopRegister();
                 var destReg = PopRegister();
 
-                _writer.WriteInstruction(Instructions.Lw, opReg, $"{operandVarOffsets[0]}({FSP})");
+                _writer.WriteInstruction(Instructions.Lw, opReg, $"{operandVarOffsets[0]}({FSPReg})");
                 _writer.WriteInstruction(Instructions.Sub, destReg, destReg, opReg);
-                _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSP})", destReg);
+                _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSPReg})", destReg);
 
                 PushRegister(destReg);
                 PushRegister(opReg);
@@ -437,10 +512,10 @@ namespace CodeGen.ASTVisitors
             var op1Reg = PopRegister();
             var op2Reg = PopRegister();
 
-            _writer.WriteInstruction(Instructions.Lw, op1Reg, $"{operandVarOffsets[0]}({FSP})");
-            _writer.WriteInstruction(Instructions.Lw, op2Reg, $"{operandVarOffsets[1]}({FSP})");
+            _writer.WriteInstruction(Instructions.Lw, op1Reg, $"{operandVarOffsets[0]}({FSPReg})");
+            _writer.WriteInstruction(Instructions.Lw, op2Reg, $"{operandVarOffsets[1]}({FSPReg})");
             _writer.WriteInstruction(instruction, destReg, op1Reg, op2Reg);
-            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSP})", destReg);
+            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSPReg})", destReg);
 
             PushRegister(op2Reg);
             PushRegister(op1Reg);
@@ -483,10 +558,10 @@ namespace CodeGen.ASTVisitors
             var op1Reg = PopRegister();
             var op2Reg = PopRegister();
 
-            _writer.WriteInstruction(Instructions.Lw, op1Reg, $"{operandVarOffsets[0]}({FSP})");
-            _writer.WriteInstruction(Instructions.Lw, op2Reg, $"{operandVarOffsets[1]}({FSP})");
+            _writer.WriteInstruction(Instructions.Lw, op1Reg, $"{operandVarOffsets[0]}({FSPReg})");
+            _writer.WriteInstruction(Instructions.Lw, op2Reg, $"{operandVarOffsets[1]}({FSPReg})");
             _writer.WriteInstruction(instruction, destReg, op2Reg, op1Reg);
-            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSP})", destReg);
+            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSPReg})", destReg);
 
             PushRegister(op2Reg);
             PushRegister(op1Reg);
@@ -536,7 +611,7 @@ namespace CodeGen.ASTVisitors
             var frameSize = table.MemoryLayout.TotalSize;
 
             _writer.WriteComment("Set FSP for main function");
-            _writer.WriteInstruction(Instructions.Addi, FSP, FSP, frameSize.ToString());
+            _writer.WriteInstruction(Instructions.Addi, FSPReg, FSPReg, frameSize.ToString());
             _writer.WriteTag("main");
 
             var children = n.GetChildren();

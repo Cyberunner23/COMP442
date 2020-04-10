@@ -50,6 +50,7 @@
     <Compile Include="Phases\SizeCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registers.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeGenUtils\CodeGenUtils.csproj">

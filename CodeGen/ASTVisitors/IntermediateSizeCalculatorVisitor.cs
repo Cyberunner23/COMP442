@@ -258,6 +258,9 @@ namespace CodeGen.ASTVisitors
 
         public void Visit(SubVarCallNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            n.TemporaryVariableName = table.MemoryLayout.AddTemporaryVariable();
+
             var children = n.GetChildren();
             foreach (var child in children)
             {

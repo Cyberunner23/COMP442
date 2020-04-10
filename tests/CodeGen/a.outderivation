@@ -63,66 +63,7 @@ Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
 SemiColon -> semiColon
-MemberDecls -> Visibility MemberDecl MemberDecls 
-Visibility -> Public 
-Public -> public
-MemberDecl -> Identifier FuncOrVarDecl 
-Identifier -> identifier
-FuncOrVarDecl -> FuncDecl 
-FuncDecl -> OpenBrace FuncParams CloseBrace Colon TypeOrVoid SemiColon 
-OpenBrace -> openBrace
-FuncParams -> Type Identifier ArrayDims FuncParamsRests 
-Type -> TypeNoID 
-TypeNoID -> Integer 
-Integer -> integer
-Identifier -> identifier
-CloseBrace -> closeBrace
-Colon -> colon
-TypeOrVoid -> Type 
-Type -> TypeNoID 
-TypeNoID -> Integer 
-Integer -> integer
-SemiColon -> semiColon
 CloseCurlyBrace -> closeCurlyBrace
-SemiColon -> semiColon
-FuncDefs -> FuncDef FuncDefs 
-FuncDef -> FuncSig FuncBody SemiColon 
-FuncSig -> Identifier FuncSigNamespace 
-Identifier -> identifier
-FuncSigNamespace -> ColonColon Identifier FuncSigExt 
-ColonColon -> colonColon
-Identifier -> identifier
-FuncSigExt -> OpenBrace FuncParams CloseBrace Colon TypeOrVoid 
-OpenBrace -> openBrace
-FuncParams -> Type Identifier ArrayDims FuncParamsRests 
-Type -> TypeNoID 
-TypeNoID -> Integer 
-Integer -> integer
-Identifier -> identifier
-CloseBrace -> closeBrace
-Colon -> colon
-TypeOrVoid -> Type 
-Type -> TypeNoID 
-TypeNoID -> Integer 
-Integer -> integer
-FuncBody -> LocalScope Do Statements End 
-LocalScope -> Local VarDecls 
-Local -> local
-VarDecls -> Type VarDecl VarDecls 
-Type -> Identifier 
-Identifier -> identifier
-VarDecl -> Identifier ArrayDims SemiColon 
-Identifier -> identifier
-SemiColon -> semiColon
-VarDecls -> Type VarDecl VarDecls 
-Type -> TypeNoID 
-TypeNoID -> Integer 
-Integer -> integer
-VarDecl -> Identifier ArrayDims SemiColon 
-Identifier -> identifier
-SemiColon -> semiColon
-Do -> do
-End -> end
 SemiColon -> semiColon
 Main -> main
 FuncBody -> LocalScope Do Statements End 
@@ -134,6 +75,18 @@ TypeNoID -> Integer
 Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+OptionalInt -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+OptionalInt -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
 SemiColon -> semiColon
 VarDecls -> Type VarDecl VarDecls 
 Type -> TypeNoID 
@@ -141,6 +94,12 @@ TypeNoID -> Integer
 Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+OptionalInt -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
 SemiColon -> semiColon
 Do -> do
 Statements -> Statement Statements 
@@ -148,63 +107,28 @@ Statement -> AssignStatementOrFuncCall
 AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
 Identifier -> identifier
 VarOrFuncCallExt -> Indices VarExt 
+Indices -> Index Indices 
+Index -> OpenSquareBrace ArithExpr CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
+Indices -> Index Indices 
+Index -> OpenSquareBrace ArithExpr CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
 VarExt -> Equal Expression SemiColon 
 Equal -> equal
 Expression -> ArithExpr BoolExprOrNone 
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
-Factor -> OpenBrace ArithExpr CloseBrace 
-OpenBrace -> openBrace
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
-Factor -> OpenBrace ArithExpr CloseBrace 
-OpenBrace -> openBrace
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
-RightTerm -> MultOp Factor RightTerm 
-MultOp -> Asterix 
-Asterix -> asterix
-Factor -> Sign Factor 
-Sign -> Minus 
-Minus -> minus
-Factor -> IntNum 
-IntNum -> intNum
-CloseBrace -> closeBrace
-RightTerm -> MultOp Factor RightTerm 
-MultOp -> FwdSlash 
-FwdSlash -> fwdSlash
-Factor -> Not Factor 
-Not -> not
-Factor -> IntNum 
-IntNum -> intNum
-CloseBrace -> closeBrace
-RightTerm -> MultOp Factor RightTerm 
-MultOp -> FwdSlash 
-FwdSlash -> fwdSlash
-Factor -> OpenBrace ArithExpr CloseBrace 
-OpenBrace -> openBrace
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-RightArithExpr -> AddOp Term RightArithExpr 
-AddOp -> Plus 
-Plus -> plus
-Term -> Factor RightTerm 
-Factor -> OpenBrace ArithExpr CloseBrace 
-OpenBrace -> openBrace
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-RightTerm -> MultOp Factor RightTerm 
-MultOp -> Asterix 
-Asterix -> asterix
-Factor -> IntNum 
-IntNum -> intNum
-CloseBrace -> closeBrace
-CloseBrace -> closeBrace
 SemiColon -> semiColon
 End -> end

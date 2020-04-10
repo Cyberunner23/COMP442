@@ -54,11 +54,11 @@ namespace CodeGen.Phases
                 {
                     case TokenType.Integer:
                         variableEntry.MemSize = multiplier * TypeConstants.IntTypeSize;
-                        classTable.MemoryLayout.AddEntry(variableEntry.Name, variableEntry.MemSize);
+                        classTable.MemoryLayout.AddEntry((TypeConstants.IntType, variableEntry.ArrayDims), variableEntry.Name, TypeConstants.IntTypeSize, variableEntry.MemSize);
                         break;
                     case TokenType.Float:
                         variableEntry.MemSize = multiplier * TypeConstants.FloatTypeSize;
-                        classTable.MemoryLayout.AddEntry(variableEntry.Name, variableEntry.MemSize);
+                        classTable.MemoryLayout.AddEntry((TypeConstants.FloatType, variableEntry.ArrayDims), variableEntry.Name, TypeConstants.FloatTypeSize, variableEntry.MemSize);
                         break;
                     case TokenType.Identifier:
                         {
@@ -69,7 +69,7 @@ namespace CodeGen.Phases
                             }
 
                             variableEntry.MemSize = multiplier * varClassTable.MemoryLayout.TotalSize;
-                            classTable.MemoryLayout.AddEntry(variableEntry.Name, variableEntry.MemSize);
+                            classTable.MemoryLayout.AddEntry((varClassTable.ClassName, variableEntry.ArrayDims), variableEntry.Name, varClassTable.MemoryLayout.TotalSize, variableEntry.MemSize);
 
                             break;
                         }
@@ -101,12 +101,12 @@ namespace CodeGen.Phases
                 if (string.Equals(type.type, TypeConstants.IntType))
                 {
                     parameter.MemSize = multiplier * TypeConstants.IntTypeSize;
-                    functionTable.MemoryLayout.AddArgumentEntry(parameter.Name, parameter.MemSize);
+                    functionTable.MemoryLayout.AddArgumentEntry(type, parameter.Name, TypeConstants.IntTypeSize, parameter.MemSize);
                 }
                 else if (string.Equals(type.type, TypeConstants.FloatType))
                 {
                     parameter.MemSize = multiplier * TypeConstants.FloatTypeSize;
-                    functionTable.MemoryLayout.AddArgumentEntry(parameter.Name, parameter.MemSize);
+                    functionTable.MemoryLayout.AddArgumentEntry(type, parameter.Name, TypeConstants.FloatTypeSize, parameter.MemSize);
                 }
                 else
                 {
@@ -117,7 +117,7 @@ namespace CodeGen.Phases
                     }
 
                     parameter.MemSize += multiplier * varClassTable.MemoryLayout.TotalSize;
-                    functionTable.MemoryLayout.AddArgumentEntry(parameter.Name, parameter.MemSize);
+                    functionTable.MemoryLayout.AddArgumentEntry(type, parameter.Name, varClassTable.MemoryLayout.TotalSize, parameter.MemSize);
                 }
             }
 
@@ -134,11 +134,11 @@ namespace CodeGen.Phases
                 {
                     case TokenType.Integer:
                         variable.MemSize += multiplier * TypeConstants.IntTypeSize;
-                        functionTable.MemoryLayout.AddVariableEntry(variable.Name, variable.MemSize);
+                        functionTable.MemoryLayout.AddVariableEntry((TypeConstants.IntType, variable.ArrayDims), variable.Name, TypeConstants.IntTypeSize, variable.MemSize);
                         break;
                     case TokenType.Float:
                         variable.MemSize += multiplier * TypeConstants.FloatTypeSize;
-                        functionTable.MemoryLayout.AddVariableEntry(variable.Name, variable.MemSize);
+                        functionTable.MemoryLayout.AddVariableEntry((TypeConstants.FloatType, variable.ArrayDims), variable.Name, TypeConstants.IntTypeSize, variable.MemSize);
                         break;
                     case TokenType.Identifier:
                         {
@@ -149,6 +149,7 @@ namespace CodeGen.Phases
                             }
 
                             variable.MemSize += multiplier * varClassTable.MemoryLayout.TotalSize;
+                            functionTable.MemoryLayout.AddVariableEntry((varClassTable.ClassName, variable.ArrayDims), variable.Name, varClassTable.MemoryLayout.TotalSize, variable.MemSize);
 
                             break;
                         }

@@ -8,8 +8,6 @@ namespace CodeGen
     {
         private StreamWriter _codeStream;
 
-        public object WriteIns { get; internal set; }
-
         public CodeWriter(StreamWriter codeStream)
         {
             _codeStream = codeStream;
