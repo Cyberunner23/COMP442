@@ -33,7 +33,7 @@ main
 	integer arr[2];
   do
 
-    val[1][0] = 5;
+    val[1 + 0][0] = 5;
     //val = 5 - 3;
 	//val = 7 / 8 * 9;
 	//val = val * val;

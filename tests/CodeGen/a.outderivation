@@ -114,6 +114,12 @@ ArithExpr -> Term RightArithExpr
 Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Plus 
+Plus -> plus
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
 CloseSquareBrace -> closeSquareBrace
 Indices -> Index Indices 
 Index -> OpenSquareBrace ArithExpr CloseSquareBrace 

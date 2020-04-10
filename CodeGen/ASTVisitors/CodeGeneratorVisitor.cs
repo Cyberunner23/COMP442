@@ -287,6 +287,25 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
             }
+
+            _writer.WriteComment($"Assignment");
+
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+
+            var lhs = children[0].TemporaryVariableName; // Contains absolute address to write to
+            var rhs = children[1].TemporaryVariableName; // Contains address relative to FSP to read from.
+            var lhsOffset = table.MemoryLayout.GetOffset(lhs);
+            var rhsOffset = table.MemoryLayout.GetOffset(rhs);
+
+            var varAddressReg = PopRegister();
+            var valReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Lw, varAddressReg, $"{lhsOffset}({FSPReg})"); // Contains absolute address to write to
+            _writer.WriteInstruction(Instructions.Lw, valReg, $"{rhsOffset}({FSPReg})");        // Contains value to write in variable
+            _writer.WriteInstruction(Instructions.Sw, $"0({varAddressReg})", valReg);
+
+            PushRegister(varAddressReg);
+            PushRegister(valReg);
         }
 
         public void Visit(SubFuncCallNode n)
@@ -406,6 +425,7 @@ namespace CodeGen.ASTVisitors
             foreach (var child in children)
             {
                 child.Accept(this);
+                n.TemporaryVariableName = child.TemporaryVariableName;
             }
         }
 
