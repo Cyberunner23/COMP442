@@ -29,11 +29,22 @@ squared(integer a) : integer
 
 main
   local
-    integer val[3][2];
-	integer arr[2];
+    //integer val[3][2];
+	//integer arr[2];
+	integer a;
   do
 
-    val[1 + 0][0] = 5;
+    //val[1 + 0][0] = 5;
+	if (2 < 1)
+      then
+      do
+        a = 1;
+      end
+    else
+	  do
+	    a = 2;
+	  end;
+	
     //val = 5 - 3;
 	//val = 7 / 8 * 9;
 	//val = val * val;

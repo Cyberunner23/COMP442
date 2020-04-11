@@ -76,62 +76,62 @@ digraph G {
 112 -> 81
 111[label="111:MainFuncNode"]
 112 -> 111
-96[label="96:LocalScopeNode"]
-111 -> 96
-89[label="89:VarDeclNode"]
-96 -> 89
+86[label="86:LocalScopeNode"]
+111 -> 86
+85[label="85:VarDeclNode"]
+86 -> 85
 82[label="82:TypeNode\nInteger"]
-89 -> 82
-83[label="83:IdentifierNode\nval"]
-89 -> 83
-88[label="88:ArrayDimListNode"]
-89 -> 88
-85[label="85:ArrayDimNode"]
-88 -> 85
-84[label="84:IntNumNode\n3"]
+85 -> 82
+83[label="83:IdentifierNode\na"]
+85 -> 83
+84[label="84:ArrayDimListNode"]
 85 -> 84
-87[label="87:ArrayDimNode"]
-88 -> 87
-86[label="86:IntNumNode\n2"]
-87 -> 86
-95[label="95:VarDeclNode"]
-96 -> 95
-90[label="90:TypeNode\nInteger"]
-95 -> 90
-91[label="91:IdentifierNode\narr"]
-95 -> 91
-94[label="94:ArrayDimListNode"]
-95 -> 94
-93[label="93:ArrayDimNode"]
-94 -> 93
-92[label="92:IntNumNode\n2"]
-93 -> 92
 110[label="110:StatementsNode"]
 111 -> 110
-109[label="109:AssignmentNode"]
+109[label="109:IfNode"]
 110 -> 109
-105[label="105:SubVarCallNode"]
-109 -> 105
-97[label="97:IdentifierNode\nval"]
-105 -> 97
-104[label="104:IndicesNode"]
-105 -> 104
-101[label="101:ArithExprNode"]
-104 -> 101
-99[label="99:AddOpNode\nAdd"]
-101 -> 99
-100[label="100:IntNumNode\n0"]
-99 -> 100
-98[label="98:IntNumNode\n1"]
+92[label="92:BoolExpressionNode"]
+109 -> 92
+88[label="88:ArithExprNode"]
+92 -> 88
+87[label="87:IntNumNode\n2"]
+88 -> 87
+89[label="89:CompareOpNode\nLessThan"]
+92 -> 89
+91[label="91:ArithExprNode"]
+92 -> 91
+90[label="90:IntNumNode\n1"]
+91 -> 90
+100[label="100:StatementsNode"]
+109 -> 100
+99[label="99:AssignmentNode"]
+100 -> 99
+95[label="95:SubVarCallNode"]
+99 -> 95
+93[label="93:IdentifierNode\na"]
+95 -> 93
+94[label="94:IndicesNode"]
+95 -> 94
+98[label="98:ExpressionNode"]
 99 -> 98
-103[label="103:ArithExprNode"]
-104 -> 103
-102[label="102:IntNumNode\n0"]
-103 -> 102
-108[label="108:ExpressionNode"]
+97[label="97:ArithExprNode"]
+98 -> 97
+96[label="96:IntNumNode\n1"]
+97 -> 96
+108[label="108:StatementsNode"]
 109 -> 108
-107[label="107:ArithExprNode"]
+107[label="107:AssignmentNode"]
 108 -> 107
-106[label="106:IntNumNode\n5"]
+103[label="103:SubVarCallNode"]
+107 -> 103
+101[label="101:IdentifierNode\na"]
+103 -> 101
+102[label="102:IndicesNode"]
+103 -> 102
+106[label="106:ExpressionNode"]
 107 -> 106
+105[label="105:ArithExprNode"]
+106 -> 105
+104[label="104:IntNumNode\n2"]
+105 -> 104
 }

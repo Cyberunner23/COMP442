@@ -11,6 +11,7 @@ namespace CodeGen.ASTVisitors
     {
         private CodeWriter _writer;
         private Stack<string> _availableRegisters;
+        private int _branchCounter;
 
         private string FSPReg { get { return Registers.R14; } }
 
@@ -18,6 +19,7 @@ namespace CodeGen.ASTVisitors
         {
             _writer = writer;
             _availableRegisters = new Stack<string>();
+            _branchCounter = 0;
 
             _availableRegisters.Push(Registers.R12);
             _availableRegisters.Push(Registers.R11);
@@ -210,20 +212,98 @@ namespace CodeGen.ASTVisitors
 
         public void Visit(IfNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
             var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
+            _writer.WriteComment("If Statement");
+
+            var ifBranch = $"IfBranch_true_{_branchCounter}";
+            var elseBranch = $"IfBranch_false_{_branchCounter}";
+            var endBranch = $"IfBranch_end_{_branchCounter}";
+            ++_branchCounter;
+
+            // Write compare operations
+            children[0].Accept(this);
+
+            // Write Jump Logic
+            var compareResultVar = children[0].TemporaryVariableName;
+            var compareResultOffset = table.MemoryLayout.GetOffset(compareResultVar);
+            var compareResultReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Lw, compareResultReg, $"{compareResultOffset}({FSPReg})");
+            _writer.WriteInstruction(Instructions.Bz, compareResultReg, elseBranch);
+            PushRegister(compareResultReg);
+
+            // Write if statement block
+            _writer.WriteTag(ifBranch);
+            children[1].Accept(this);
+            _writer.WriteInstruction(Instructions.J, endBranch);
+
+            // Write else statement block
+            _writer.WriteTag(elseBranch);
+            children[2].Accept(this);
+
+            // Write end
+            _writer.WriteTag(endBranch);
+
         }
 
         public void Visit(BoolExpressionNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+
             var children = n.GetChildren();
             foreach (var child in children)
             {
                 child.Accept(this);
             }
+
+            var compareOp = ((CompareOpNode)children[1]).CompareOpType;
+            Instructions instruction;
+            switch (compareOp)
+            {
+                case CompareOpType.Equals:
+                    instruction = Instructions.Ceq;
+                    break;
+                case CompareOpType.NotEquals:
+                    instruction = Instructions.Cne;
+                    break;
+                case CompareOpType.GreaterThan:
+                    instruction = Instructions.Cgt;
+                    break;
+                case CompareOpType.LessThan:
+                    instruction = Instructions.Clt;
+                    break;
+                case CompareOpType.GreaterThanEqual:
+                    instruction = Instructions.Cge;
+                    break;
+                case CompareOpType.LessThanEqual:
+                    instruction = Instructions.Clt;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown boolexpr op");
+            }
+
+            var lhsVar = children[0].TemporaryVariableName;
+            var rhsVar = children[2].TemporaryVariableName;
+            var resultVar = n.TemporaryVariableName;
+
+            var lhsOffset = table.MemoryLayout.GetOffset(lhsVar);
+            var rhsOffset = table.MemoryLayout.GetOffset(rhsVar);
+            var resultOffset = table.MemoryLayout.GetOffset(resultVar);
+
+            _writer.WriteComment($"CompareOp ({compareOp})");
+            var lhsReg = PopRegister();
+            var rhsReg = PopRegister();
+            var resultReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Lw, lhsReg, $"{lhsOffset}({FSPReg})");
+            _writer.WriteInstruction(Instructions.Lw, rhsReg, $"{rhsOffset}({FSPReg})");
+            _writer.WriteInstruction(instruction, resultReg, lhsReg, rhsReg);
+            _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSPReg})", resultReg);
+
+            PushRegister(resultReg);
+            PushRegister(rhsReg);
+            PushRegister(lhsReg);
         }
 
         public void Visit(CompareOpNode n)

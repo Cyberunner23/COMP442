@@ -11,7 +11,8 @@ namespace Parser.AST.Nodes
         LessThan,
         GreaterThan,
         LessThanEqual,
-        GreaterThanEqual
+        GreaterThanEqual,
+        Unreachable
     }
 
     public class CompareOpNode : ASTNodeBase
@@ -47,7 +48,9 @@ namespace Parser.AST.Nodes
                     opType = CompareOpType.GreaterThanEqual;
                     break;
                 default:
-                    throw new InvalidOperationException("Invalid use of _CreateCompareOpNodeRule_");
+                    opType = CompareOpType.Unreachable;
+                    break;
+                    //throw new InvalidOperationException("Invalid use of _CreateCompareOpNodeRule_");
             }
 
             return new CompareOpNode() { Token = PreviousLookahead, CompareOpType = opType };

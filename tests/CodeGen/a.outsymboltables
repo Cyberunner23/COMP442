@@ -39,14 +39,12 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 76
+|    +    FrameSize: 40
 |    +
 |    +===========================================================
 |    + Local Table
-|    +    Local: integer val[3][2]
-|    +        MemSize: 24, MemOffset: 0
-|    +    Local: integer arr[2]
-|    +        MemSize: 8, MemOffset: 0
+|    +    Local: integer a
+|    +        MemSize: 4, MemOffset: 0
 |    +
 |    +===========================================================
 |    
@@ -75,22 +73,19 @@ Total: 32 bytes
 
 
 main()
-Total: 76 bytes
+Total: 40 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
       -4 |        4 |         4 | Return            | __returnaddr__ |
       -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
-     -32 |        4 |        24 | Variable          | val            | integer[3][2]
-     -40 |        4 |         8 | Variable          | arr            | integer[2]
-     -44 |        4 |         4 | TemporaryVariable | __temp_0__     |
-     -48 |        4 |         4 | TemporaryVariable | __temp_1__     |
-     -52 |        4 |         4 | TemporaryVariable | __temp_2__     |
-     -56 |        4 |         4 | TemporaryVariable | __temp_3__     |
-     -60 |        4 |         4 | TemporaryVariable | __temp_4__     |
-     -64 |        4 |         4 | TemporaryVariable | __temp_5__     |
-     -68 |        4 |         4 | TemporaryVariable | __temp_6__     |
-     -72 |        4 |         4 | TemporaryVariable | __temp_7__     |
-     -76 |        4 |         4 | TemporaryVariable | __temp_8__     |
+     -12 |        4 |         4 | Variable          | a              | integer
+     -16 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -20 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -24 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -28 |        4 |         4 | TemporaryVariable | __temp_3__     |
+     -32 |        4 |         4 | TemporaryVariable | __temp_4__     |
+     -36 |        4 |         4 | TemporaryVariable | __temp_5__     |
+     -40 |        4 |         4 | TemporaryVariable | __temp_6__     |
 -------------------------------------
 
 
