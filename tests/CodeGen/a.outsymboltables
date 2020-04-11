@@ -39,7 +39,7 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 40
+|    +    FrameSize: 24
 |    +
 |    +===========================================================
 |    + Local Table
@@ -73,7 +73,7 @@ Total: 32 bytes
 
 
 main()
-Total: 40 bytes
+Total: 24 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
       -4 |        4 |         4 | Return            | __returnaddr__ |
@@ -82,10 +82,6 @@ Total: 40 bytes
      -16 |        4 |         4 | TemporaryVariable | __temp_0__     |
      -20 |        4 |         4 | TemporaryVariable | __temp_1__     |
      -24 |        4 |         4 | TemporaryVariable | __temp_2__     |
-     -28 |        4 |         4 | TemporaryVariable | __temp_3__     |
-     -32 |        4 |         4 | TemporaryVariable | __temp_4__     |
-     -36 |        4 |         4 | TemporaryVariable | __temp_5__     |
-     -40 |        4 |         4 | TemporaryVariable | __temp_6__     |
 -------------------------------------
 
 

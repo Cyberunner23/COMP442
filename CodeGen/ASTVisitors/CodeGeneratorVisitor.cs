@@ -247,6 +247,38 @@ namespace CodeGen.ASTVisitors
 
         }
 
+        public void Visit(WhileNode n)
+        {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var children = n.GetChildren();
+            _writer.WriteComment("While Loop");
+
+            var beginBranch = $"WhileBranch_begin_{_branchCounter}";
+            var endBranch = $"WhileBranch_end_{_branchCounter}";
+            ++_branchCounter;
+
+            // Write begin branch
+            _writer.WriteTag(beginBranch);
+
+            // Write compare operations
+            children[0].Accept(this);
+
+            // Write jump logic
+            var compareResultVar = children[0].TemporaryVariableName;
+            var compareResultOffset = table.MemoryLayout.GetOffset(compareResultVar);
+            var compareResultReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Lw, compareResultReg, $"{compareResultOffset}({FSPReg})");
+            _writer.WriteInstruction(Instructions.Bz, compareResultReg, endBranch);
+            PushRegister(compareResultReg);
+
+            // Write statement block
+            children[1].Accept(this);
+            _writer.WriteInstruction(Instructions.J, beginBranch);
+
+            _writer.WriteTag(endBranch);
+        }
+
         public void Visit(BoolExpressionNode n)
         {
             var table = (FunctionSymbolTableEntry)n.SymTable;
@@ -307,15 +339,6 @@ namespace CodeGen.ASTVisitors
         }
 
         public void Visit(CompareOpNode n)
-        {
-            var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
-        }
-
-        public void Visit(WhileNode n)
         {
             var children = n.GetChildren();
             foreach (var child in children)

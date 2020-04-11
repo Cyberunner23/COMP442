@@ -78,54 +78,23 @@ Identifier -> identifier
 SemiColon -> semiColon
 Do -> do
 Statements -> Statement Statements 
-Statement -> If OpenBrace BoolExpr CloseBrace Then StatementBlock Else StatementBlock SemiColon 
-If -> if
+Statement -> While OpenBrace BoolExpr CloseBrace StatementBlock SemiColon 
+While -> while
 OpenBrace -> openBrace
 BoolExpr -> ArithExpr CompareOp ArithExpr 
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
-CompareOp -> Lesser 
-Lesser -> lesser
+CompareOp -> Greater 
+Greater -> greater
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
 CloseBrace -> closeBrace
-Then -> then
 StatementBlock -> Do Statements End 
 Do -> do
-Statements -> Statement Statements 
-Statement -> AssignStatementOrFuncCall 
-AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
-Identifier -> identifier
-VarOrFuncCallExt -> Indices VarExt 
-VarExt -> Equal Expression SemiColon 
-Equal -> equal
-Expression -> ArithExpr BoolExprOrNone 
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-SemiColon -> semiColon
-End -> end
-Else -> else
-StatementBlock -> Do Statements End 
-Do -> do
-Statements -> Statement Statements 
-Statement -> AssignStatementOrFuncCall 
-AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
-Identifier -> identifier
-VarOrFuncCallExt -> Indices VarExt 
-VarExt -> Equal Expression SemiColon 
-Equal -> equal
-Expression -> ArithExpr BoolExprOrNone 
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-SemiColon -> semiColon
 End -> end
 SemiColon -> semiColon
 End -> end

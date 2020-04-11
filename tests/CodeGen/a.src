@@ -35,15 +35,10 @@ main
   do
 
     //val[1 + 0][0] = 5;
-	if (2 < 1)
-      then
-      do
-        a = 1;
-      end
-    else
+	while (0 > 1)
 	  do
-	    a = 2;
 	  end;
+      
 	
     //val = 5 - 3;
 	//val = 7 / 8 * 9;
