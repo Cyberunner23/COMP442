@@ -75,26 +75,41 @@ TypeNoID -> Integer
 Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
+ArrayDims -> ArraySize ArrayDims 
+ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
+OpenSquareBrace -> openSquareBrace
+OptionalInt -> IntNum 
+IntNum -> intNum
+CloseSquareBrace -> closeSquareBrace
+SemiColon -> semiColon
+VarDecls -> Type VarDecl VarDecls 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+VarDecl -> Identifier ArrayDims SemiColon 
+Identifier -> identifier
 SemiColon -> semiColon
 Do -> do
 Statements -> Statement Statements 
-Statement -> While OpenBrace BoolExpr CloseBrace StatementBlock SemiColon 
-While -> while
+Statement -> Read OpenBrace Expression CloseBrace SemiColon 
+Read -> read
 OpenBrace -> openBrace
-BoolExpr -> ArithExpr CompareOp ArithExpr 
-ArithExpr -> Term RightArithExpr 
-Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
-CompareOp -> Greater 
-Greater -> greater
+Expression -> ArithExpr BoolExprOrNone 
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
 CloseBrace -> closeBrace
-StatementBlock -> Do Statements End 
-Do -> do
-End -> end
+SemiColon -> semiColon
+Statements -> Statement Statements 
+Statement -> Write OpenBrace Expression CloseBrace SemiColon 
+Write -> write
+OpenBrace -> openBrace
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+CloseBrace -> closeBrace
 SemiColon -> semiColon
 End -> end

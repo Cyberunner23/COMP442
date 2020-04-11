@@ -39,10 +39,12 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 24
+|    +    FrameSize: 32
 |    +
 |    +===========================================================
 |    + Local Table
+|    +    Local: integer arr[2]
+|    +        MemSize: 8, MemOffset: 0
 |    +    Local: integer a
 |    +        MemSize: 4, MemOffset: 0
 |    +
@@ -73,15 +75,16 @@ Total: 32 bytes
 
 
 main()
-Total: 24 bytes
+Total: 32 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
       -4 |        4 |         4 | Return            | __returnaddr__ |
       -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
-     -12 |        4 |         4 | Variable          | a              | integer
-     -16 |        4 |         4 | TemporaryVariable | __temp_0__     |
-     -20 |        4 |         4 | TemporaryVariable | __temp_1__     |
-     -24 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -16 |        4 |         8 | Variable          | arr            | integer[2]
+     -20 |        4 |         4 | Variable          | a              | integer
+     -24 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -28 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -32 |        4 |         4 | TemporaryVariable | __temp_2__     |
 -------------------------------------
 
 

@@ -1,7 +1,7 @@
 digraph G {
-97[label="97:ProgramNode"]
+103[label="103:ProgramNode"]
 80[label="80:ClassDeclsNode"]
-97 -> 80
+103 -> 80
 65[label="65:ClassDeclNode"]
 80 -> 65
 45[label="45:IdentifierNode\nC1"]
@@ -73,35 +73,47 @@ digraph G {
 76[label="76:ArrayDimListNode"]
 77 -> 76
 81[label="81:FuncDefsNode"]
-97 -> 81
-96[label="96:MainFuncNode"]
-97 -> 96
-86[label="86:LocalScopeNode"]
-96 -> 86
-85[label="85:VarDeclNode"]
-86 -> 85
+103 -> 81
+102[label="102:MainFuncNode"]
+103 -> 102
+92[label="92:LocalScopeNode"]
+102 -> 92
+87[label="87:VarDeclNode"]
+92 -> 87
 82[label="82:TypeNode\nInteger"]
-85 -> 82
-83[label="83:IdentifierNode\na"]
-85 -> 83
-84[label="84:ArrayDimListNode"]
+87 -> 82
+83[label="83:IdentifierNode\narr"]
+87 -> 83
+86[label="86:ArrayDimListNode"]
+87 -> 86
+85[label="85:ArrayDimNode"]
+86 -> 85
+84[label="84:IntNumNode\n2"]
 85 -> 84
-95[label="95:StatementsNode"]
-96 -> 95
-94[label="94:WhileNode"]
-95 -> 94
-92[label="92:BoolExpressionNode"]
-94 -> 92
-88[label="88:ArithExprNode"]
-92 -> 88
-87[label="87:IntNumNode\n0"]
-88 -> 87
-89[label="89:CompareOpNode\nGreaterThan"]
-92 -> 89
-91[label="91:ArithExprNode"]
+91[label="91:VarDeclNode"]
 92 -> 91
-90[label="90:IntNumNode\n1"]
+88[label="88:TypeNode\nInteger"]
+91 -> 88
+89[label="89:IdentifierNode\na"]
+91 -> 89
+90[label="90:ArrayDimListNode"]
 91 -> 90
-93[label="93:StatementsNode"]
+101[label="101:StatementsNode"]
+102 -> 101
+96[label="96:ReadNode"]
+101 -> 96
+95[label="95:ExpressionNode"]
+96 -> 95
+94[label="94:ArithExprNode"]
+95 -> 94
+93[label="93:IntNumNode\n5"]
 94 -> 93
+100[label="100:WriteNode"]
+101 -> 100
+99[label="99:ExpressionNode"]
+100 -> 99
+98[label="98:ArithExprNode"]
+99 -> 98
+97[label="97:IntNumNode\n5"]
+98 -> 97
 }

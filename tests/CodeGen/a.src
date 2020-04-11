@@ -30,14 +30,18 @@ squared(integer a) : integer
 main
   local
     //integer val[3][2];
-	//integer arr[2];
+	integer arr[2];
 	integer a;
   do
 
+	//write(1+1);
+	read(5);
+	write(5);
+
     //val[1 + 0][0] = 5;
-	while (0 > 1)
+	/*while (0 > 1)
 	  do
-	  end;
+	  end;*/
       
 	
     //val = 5 - 3;

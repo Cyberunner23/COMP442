@@ -12,6 +12,8 @@ namespace CodeGen.ASTVisitors
         private CodeWriter _writer;
         private Stack<string> _availableRegisters;
         private int _branchCounter;
+        private int _writeLabelCounter;
+        private int _readLabelCounter;
 
         private string FSPReg { get { return Registers.R14; } }
 
@@ -20,6 +22,8 @@ namespace CodeGen.ASTVisitors
             _writer = writer;
             _availableRegisters = new Stack<string>();
             _branchCounter = 0;
+            _writeLabelCounter = 0;
+            _readLabelCounter = 0;
 
             _availableRegisters.Push(Registers.R12);
             _availableRegisters.Push(Registers.R11);
@@ -349,20 +353,145 @@ namespace CodeGen.ASTVisitors
 
         public void Visit(ReadNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
             var children = n.GetChildren();
             foreach (var child in children)
             {
                 child.Accept(this);
             }
+
+            var valueVarVar = children[0].TemporaryVariableName;
+            var valueVarOffset = table.MemoryLayout.GetOffset(valueVarVar);
+
+            // NOTE(AFL): Code adapted from the util.m file. Maybe make it into a function.
+            var getint1 = $"getint1_{_readLabelCounter}";
+            var getint2 = $"getint2_{_readLabelCounter}";
+            var getint3 = $"getint3_{_readLabelCounter}";
+            var getint4 = $"getint4_{_readLabelCounter}";
+            var getint5 = $"getint5_{_readLabelCounter}";
+            var getint6 = $"getint6_{_readLabelCounter}";
+            var getint9 = $"getint9_{_readLabelCounter}";
+            var getintEnd = $"getint_end_{_readLabelCounter}";
+            ++_readLabelCounter;
+
+            _writer.WriteComment("Read Op");
+
+            var r0 = Registers.R0;
+            var r1 = PopRegister();
+            var r2 = PopRegister();
+            var r3 = PopRegister();
+            var r4 = PopRegister();
+
+            // getint
+            _writer.WriteTag(getint1);
+            _writer.WriteInstruction(Instructions.Getc, r1);
+            _writer.WriteInstruction(Instructions.Ceqi, r3, r1, "43");
+            _writer.WriteInstruction(Instructions.Bnz, r3, getint1);
+            _writer.WriteInstruction(Instructions.Ceqi, r3, r1, "45");
+            _writer.WriteInstruction(Instructions.Bz, r3, getint2);
+            _writer.WriteInstruction(Instructions.Addi, r4, r0, "1");
+            _writer.WriteInstruction(Instructions.J, getint1);
+            _writer.WriteTag(getint2);
+            _writer.WriteInstruction(Instructions.Clti, r3, r1, "48");
+            _writer.WriteInstruction(Instructions.Bnz, r3, getint3);
+            _writer.WriteInstruction(Instructions.Cgti, r3, r1, "57");
+            _writer.WriteInstruction(Instructions.Bnz, r3, getint3);
+            _writer.WriteInstruction(Instructions.Sb, $"{getint9}({r2})", r1);
+            _writer.WriteInstruction(Instructions.Addi, r2, r2, "1");
+            _writer.WriteInstruction(Instructions.J, getint1);
+            _writer.WriteTag(getint3);
+            _writer.WriteInstruction(Instructions.Sb, $"{getint9}({r2})", r0);
+            _writer.WriteInstruction(Instructions.Add, r1, r0, r0);
+            _writer.WriteInstruction(Instructions.Add, r2, r0, r0);
+            _writer.WriteInstruction(Instructions.Add, r3, r0, r0);
+            _writer.WriteTag(getint4);
+            _writer.WriteInstruction(Instructions.Lb, r3, $"{getint9}({r2})");
+            _writer.WriteInstruction(Instructions.Bz, r3, getint5);
+            _writer.WriteInstruction(Instructions.Subi, r3, r3, "48");
+            _writer.WriteInstruction(Instructions.Muli, r1, r1, "10");
+            _writer.WriteInstruction(Instructions.Add, r1, r1, r3);
+            _writer.WriteInstruction(Instructions.Addi, r2, r2, "1");
+            _writer.WriteInstruction(Instructions.J, getint4);
+            _writer.WriteTag(getint5);
+            _writer.WriteInstruction(Instructions.Bz, r4, getint6);
+            _writer.WriteInstruction(Instructions.Sub, r1, r0, r1);
+            _writer.WriteTag(getint6);
+            _writer.WriteInstruction(Instructions.J, getintEnd);
+            _writer.WriteTag(getint9);
+            _writer.WriteInstruction(Instructions.Res, "12");
+            _writer.WriteInstruction(Instructions.Align);
+            _writer.WriteTag(getintEnd);
+
+            // Store value we got
+            _writer.WriteInstruction(Instructions.Sw, $"{valueVarOffset}({FSPReg})", r1);
+
+            PushRegister(r4);
+            PushRegister(r3);
+            PushRegister(r2);
+            PushRegister(r1);
         }
 
         public void Visit(WriteNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
             var children = n.GetChildren();
             foreach (var child in children)
             {
                 child.Accept(this);
             }
+
+            var valueVar = children[0].TemporaryVariableName;
+            var valueOffset = table.MemoryLayout.GetOffset(valueVar);
+
+            // NOTE(AFL): Code adapted from the util.m file. Maybe make it into a function.
+            var putint1 = $"putint1_{_writeLabelCounter}";
+            var putint2 = $"putint2_{_writeLabelCounter}";
+            var putint9 = $"putint9_{_writeLabelCounter}";
+            var putintEnd = $"putint_end_{_writeLabelCounter}";
+            ++_writeLabelCounter;
+
+            _writer.WriteComment("Write Op");
+
+            var r0 = Registers.R0;
+            var r1 = PopRegister();
+            var r2 = PopRegister();
+            var r3 = PopRegister();
+            var r4 = PopRegister();
+
+            // Load value to write
+            _writer.WriteInstruction(Instructions.Lw, r1, $"{valueOffset}({FSPReg})");
+
+            // putint
+            _writer.WriteInstruction(Instructions.Cge, r3, r1, r0);
+            _writer.WriteInstruction(Instructions.Bnz, r3, putint1);
+            _writer.WriteInstruction(Instructions.Sub, r1, r0, r1);
+            _writer.WriteTag(putint1);
+            _writer.WriteInstruction(Instructions.Modi, r4, r1, "10");
+            _writer.WriteInstruction(Instructions.Addi, r4, r4, "48");
+            _writer.WriteInstruction(Instructions.Divi, r1, r1, "10");
+            _writer.WriteInstruction(Instructions.Sb, $"{putint9}({r2})", r4);
+            _writer.WriteInstruction(Instructions.Addi, r2, r2, "1");
+            _writer.WriteInstruction(Instructions.Bnz, r1, putint1);
+            _writer.WriteInstruction(Instructions.Bnz, r3, putint2);
+            _writer.WriteInstruction(Instructions.Addi, r3, r0, "45");
+            _writer.WriteInstruction(Instructions.Sb, $"{putint9}({r2})", r3);
+            _writer.WriteInstruction(Instructions.Addi, r2, r2, "1");
+            _writer.WriteInstruction(Instructions.Add, r1, r0, r0);
+            _writer.WriteTag(putint2);
+            _writer.WriteInstruction(Instructions.Subi, r2, r2, "1");
+            _writer.WriteInstruction(Instructions.Lb, r1, $"{putint9}({r2})");
+            _writer.WriteInstruction(Instructions.Putc, r1);
+            _writer.WriteInstruction(Instructions.Bnz, r2, putint2);
+            _writer.WriteInstruction(Instructions.J, putintEnd);
+            _writer.WriteTag(putint9);
+            _writer.WriteInstruction(Instructions.Res, "12");
+            _writer.WriteInstruction(Instructions.Align);
+            _writer.WriteTag(putintEnd);
+
+            PushRegister(r4);
+            PushRegister(r3);
+            PushRegister(r2);
+            PushRegister(r1);
         }
 
         public void Visit(ReturnNode n)

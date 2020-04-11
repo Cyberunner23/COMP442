@@ -6,9 +6,9 @@ namespace CodeGen
     public enum Instructions
     {
         Lw,     // Load Word
-        LB,     // Load Byte
+        Lb,     // Load Byte
         Sw,     // Store Word
-        SB,     // Store Byte
+        Sb,     // Store Byte
         Add,    // Add
         Sub,    // Subtract
         Mul,    // Mumtiply
@@ -61,9 +61,9 @@ namespace CodeGen
         public static readonly Dictionary<Instructions, int> ArgumentNumMap = new Dictionary<Instructions, int>()
         {
             {Instructions.Lw,    2},
-            {Instructions.LB,    2},
+            {Instructions.Lb,    2},
             {Instructions.Sw,    2},
-            {Instructions.SB,    2},
+            {Instructions.Sb,    2},
             {Instructions.Add,   3},
             {Instructions.Sub,   3},
             {Instructions.Mul,   3},
