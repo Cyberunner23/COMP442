@@ -22,6 +22,7 @@ namespace Parser.AST
         private static int _idCtr = 0;
 
         public ITable SymTable { get; set; }
+        public ITable SecondarySymTable { get; set; }
         public string ScopeSpec { get; set; }
         public (string Type, List<int> Dims) ExprType { get; set; }
 

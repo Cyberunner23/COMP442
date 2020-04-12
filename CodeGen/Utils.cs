@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Parser.SymbolTable.Function;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CodeGen
 {
@@ -10,6 +12,31 @@ namespace CodeGen
             {
                 yield return items[i];
             }
+        }
+
+        public static string GetTag(FunctionSymbolTableEntry entry)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(entry.ScopeSpec))
+            {
+                sb.Append($"{entry.ScopeSpec}_");
+            }
+
+            sb.Append($"{entry.Name}_");
+
+            foreach (var param in entry.Params)
+            {
+                sb.Append($"{param.Type.type}_");
+                foreach (var dim in param.Type.dims)
+                {
+                    sb.Append($"{dim}_");
+                }
+            }
+
+            sb.Append(entry.ReturnType.Lexeme);
+
+            return sb.ToString();
         }
     }
 }

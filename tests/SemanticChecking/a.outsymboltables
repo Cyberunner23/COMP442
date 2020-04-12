@@ -1,0 +1,79 @@
+|===========================================================
+| Global Table
+|===========================================================
+|
+|    *===========================================================
+|    * Class Table
+|    * Name: C1
+|    * Inherits:
+|    * MemSize = 0
+|    *===========================================================
+|    *
+|    *    Function: Public call(integer arg[0]) -> integer
+|    *
+|    *===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    C1::call(integer arg[0]) -> integer
+|    +
+|    +    Parameter: integer arg
+|    +        MemSize: 0, MemOffset:  0
+|    +
+|    +    FrameSize: 8
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: integer val
+|    +        MemSize: 0, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    main()
+|    +
+|    +
+|    +    FrameSize: 8
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: C1 c1
+|    +        MemSize: 0, MemOffset: 0
+|    +    Local: integer a[5]
+|    +        MemSize: 0, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|===========================================================
+
+
+MEMORY LAYOUTS
+C1
+Total: 0 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | VariableName | Type
+-------------------------------------
+
+
+
+C1::call(integer arg[0]) -> integer
+Total: 8 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+-------------------------------------
+
+main()
+Total: 8 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+-------------------------------------
+
+

@@ -124,6 +124,7 @@ namespace Parser.ASTVisitor.Visitors
             }
 
             n.Table.AddEntry(tableEntry);
+            n.SecondarySymTable = tableEntry;
         }
 
         public void Visit(MemberDeclNode n)

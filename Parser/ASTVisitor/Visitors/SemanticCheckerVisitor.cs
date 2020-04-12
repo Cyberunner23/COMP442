@@ -476,10 +476,27 @@ namespace Parser.ASTVisitor.Visitors
             {
                 case FunctionSymbolTableEntry f:
                     {
-                        varsInScope = f.GetVariablesInScope()
-                                                 .Concat(_globalTable.GetClassSymbolTableByName(f.ScopeSpec)
-                                                                     ?.GetVariablesInScope() ?? new Dictionary<string, (string, List<int>)>())
-                                                 .ToDictionary(x => x.Key, x => x.Value);
+                        var classTable = _globalTable.GetClassSymbolTableByName(f.ScopeSpec);
+                        Dictionary<string, (string, List<int>)> classVars = classTable?.GetVariablesInScope() ?? new Dictionary<string, (string, List<int>)>();
+                        var funcVars = f.GetVariablesInScope();
+                        varsInScope = new Dictionary<string, (string, List<int>)>();
+
+                        foreach (var v in classVars)
+                        {
+                            varsInScope.Add(v.Key, v.Value);
+                        }
+
+                        foreach (var v in funcVars)
+                        {
+                            if (!varsInScope.ContainsKey(v.Key))
+                            {
+                                varsInScope.Add(v.Key, v.Value);
+                            }
+                            else
+                            {
+                                _errorStream.WriteLine($"Variable '{v.Key}' used in {f.ToStringSignature()} is already defined in the class");
+                            }
+                        }
                     }
                     break;
                 case ClassSymbolTable s:
@@ -607,6 +624,7 @@ namespace Parser.ASTVisitor.Visitors
             }
             else
             {
+                n.SecondarySymTable = matchingFunc;
                 n.ScopeSpec = matchingFunc.ReturnType.Lexeme;
                 n.ExprType = (matchingFunc.ReturnType.Lexeme, new List<int>());
             }

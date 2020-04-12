@@ -2,14 +2,29 @@ class C1 {
 	public float a;
 	public integer b[5];
 	public integer c;
+	
+	public func(integer input) : C1;
 };
 
 class C2 {
-	public C1 a;
-	public integer b;
+	public C1 x;
+	public integer y;
 	
 	//public hello(integer c) : integer;
+	public func(integer a) : C1;
 };
+
+C1::func(integer input) : C1
+  local
+    integer yay;
+  do
+    yay = 1;
+  end;
+
+C2::func(integer a) : C1
+  local
+  do
+  end;
 
 /*C2::hello(integer c) : integer
   local
@@ -18,31 +33,31 @@ class C2 {
   do
     //hey = ((30 * -2) / not 2) / (5 + (5*5));
   end;
-
+*/
 squared(integer a) : integer
   local
     integer result;
   do
     //result = a * a;
-	return (a);
-  end;*/
+  end;
 
 main
   local
     //integer val[3][2];
 	integer arr[2];
-	integer a;
+	//integer a;
+	C2 k;
   do
 
 	//write(1+1);
-	read(5);
-	write(5);
-
+	squared(1);
+	k.func(1);
     //val[1 + 0][0] = 5;
 	/*while (0 > 1)
 	  do
 	  end;*/
-      
+    //k.x.b[1] = k.x.func(1).c;
+	// 
 	
     //val = 5 - 3;
 	//val = 7 / 8 * 9;

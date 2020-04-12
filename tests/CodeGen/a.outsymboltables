@@ -15,6 +15,7 @@
 |    *        MemSize: 20, MemOffset: 4
 |    *    Variable: Public integer c
 |    *        MemSize: 4, MemOffset: 24
+|    *    Function: Public func(integer input) -> C1
 |    *
 |    *===========================================================
 |    
@@ -26,12 +27,62 @@
 |    * MemSize = 32
 |    *===========================================================
 |    *
-|    *    Variable: Public C1 a
+|    *    Variable: Public C1 x
 |    *        MemSize: 28, MemOffset: 0
-|    *    Variable: Public integer b
+|    *    Variable: Public integer y
 |    *        MemSize: 4, MemOffset: 28
+|    *    Function: Public func(integer a) -> C1
 |    *
 |    *===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    C1::func(integer input) -> C1
+|    +
+|    +    Parameter: integer input
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 24
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: integer yay
+|    +        MemSize: 4, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    C2::func(integer a) -> C1
+|    +
+|    +    Parameter: integer a
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 12
+|    +
+|    +===========================================================
+|    + Local Table
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    squared(integer a) -> integer
+|    +
+|    +    Parameter: integer a
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 16
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: integer result
+|    +        MemSize: 4, MemOffset: 0
+|    +
+|    +===========================================================
 |    
 |
 |    +===========================================================
@@ -39,14 +90,14 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 32
+|    +    FrameSize: 64
 |    +
 |    +===========================================================
 |    + Local Table
 |    +    Local: integer arr[2]
 |    +        MemSize: 8, MemOffset: 0
-|    +    Local: integer a
-|    +        MemSize: 4, MemOffset: 0
+|    +    Local: C2 k
+|    +        MemSize: 32, MemOffset: 0
 |    +
 |    +===========================================================
 |    
@@ -68,23 +119,55 @@ C2
 Total: 32 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | VariableName | Type
-      28 |        4 |         4 |            b | integer
-       0 |       28 |        28 |            a | C1
+      28 |        4 |         4 |            y | integer
+       0 |       28 |        28 |            x | C1
 -------------------------------------
 
 
 
+C1::func(integer input) -> C1
+Total: 24 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -12 |        4 |         4 | Argument          | input          | integer
+     -16 |        4 |         4 | Variable          | yay            | integer
+     -20 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -24 |        4 |         4 | TemporaryVariable | __temp_1__     |
+-------------------------------------
+
+C2::func(integer a) -> C1
+Total: 12 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -12 |        4 |         4 | Argument          | a              | integer
+-------------------------------------
+
+squared(integer a) -> integer
+Total: 16 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -12 |        4 |         4 | Argument          | a              | integer
+     -16 |        4 |         4 | Variable          | result         | integer
+-------------------------------------
+
 main()
-Total: 32 bytes
+Total: 64 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
       -4 |        4 |         4 | Return            | __returnaddr__ |
       -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
      -16 |        4 |         8 | Variable          | arr            | integer[2]
-     -20 |        4 |         4 | Variable          | a              | integer
-     -24 |        4 |         4 | TemporaryVariable | __temp_0__     |
-     -28 |        4 |         4 | TemporaryVariable | __temp_1__     |
-     -32 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -48 |       32 |        32 | Variable          | k              | C2
+     -52 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -56 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -60 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -64 |        4 |         4 | TemporaryVariable | __temp_3__     |
 -------------------------------------
 
 

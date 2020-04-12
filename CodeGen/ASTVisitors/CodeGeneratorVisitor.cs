@@ -129,6 +129,25 @@ namespace CodeGen.ASTVisitors
             }
         }
 
+        public void Visit(FuncBodyNode n)
+        {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var tag = Utils.GetTag(table);
+            var r15 = Registers.R15;
+            
+            _writer.WriteTag(tag);
+            _writer.WriteInstruction(Instructions.Sw, $"-4({FSPReg})", r15);
+
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.Accept(this);
+            }
+
+            _writer.WriteInstruction(Instructions.Lw, r15, $"-4({FSPReg})");
+            _writer.WriteInstruction(Instructions.Jr, r15);
+        }
+
         public void Visit(TypeNode n)
         {
             var children = n.GetChildren();
@@ -176,15 +195,6 @@ namespace CodeGen.ASTVisitors
             _writer.WriteInstruction(Instructions.Addi, reg, reg, n.Value.ToString());
             _writer.WriteInstruction(Instructions.Sw, $"{offset}({FSPReg})", reg);
             PushRegister(reg);
-        }
-
-        public void Visit(FuncBodyNode n)
-        {
-            var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
         }
 
         public void Visit(LocalScopeNode n)
@@ -494,13 +504,31 @@ namespace CodeGen.ASTVisitors
             PushRegister(r1);
         }
 
+        // TODO(AFL): Redo this such that r13 contains absolute address of result.
+        // IDEA: put result in tempvar, pass on absolute address to it
         public void Visit(ReturnNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
             var children = n.GetChildren();
             foreach (var child in children)
             {
                 child.Accept(this);
             }
+
+            var valueVar = children[0].TemporaryVariableName;
+            var valueOffset = table.MemoryLayout.GetOffset(valueVar);
+
+            var r13 = Registers.R13;
+            var r15 = Registers.R15;
+
+            // Set return value register to absolute address of return value
+            _writer.WriteInstruction(Instructions.Sub, r13, r13, r13);
+            _writer.WriteInstruction(Instructions.Add, r13, r13, FSPReg);
+            _writer.WriteInstruction(Instructions.Add, r13, r13, $"{valueOffset}");
+
+            // Jump to return address
+            _writer.WriteInstruction(Instructions.Lw, r15, $"-4({FSPReg})");
+            _writer.WriteInstruction(Instructions.Jr, r15);
         }
 
         public void Visit(FuncCallNode n)
@@ -547,6 +575,9 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
             }
+
+            var secTable = (FunctionSymbolTableEntry)n.SecondarySymTable;
+            var tag = Utils.GetTag(secTable);
         }
 
         public void Visit(SubVarCallNode n)
