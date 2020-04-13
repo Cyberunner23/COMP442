@@ -1,11 +1,47 @@
-﻿using Parser.AST.Nodes;
+﻿using System;
+using System.Linq;
+using Lexer;
+using Parser.AST.Nodes;
 using Parser.ASTVisitor;
+using Parser.SymbolTable;
+using Parser.SymbolTable.Class;
 using Parser.SymbolTable.Function;
+using Parser.Utils;
 
 namespace CodeGen.ASTVisitors
 {
     class IntermediateSizeCalculatorVisitor : IVisitor
     {
+        private GlobalSymbolTable _globalSymbolTable;
+
+        public IntermediateSizeCalculatorVisitor(GlobalSymbolTable table)
+        {
+            _globalSymbolTable = table;
+        }
+
+        private int GetSize(Token token)
+        {
+            int size;
+            switch (token.TokenType)
+            {
+                case TokenType.Integer:
+                    size = TypeConstants.IntTypeSize;
+                    break;
+                case TokenType.Float:
+                    size = TypeConstants.FloatTypeSize;
+                    break;
+                case TokenType.Identifier:
+                    var table = _globalSymbolTable.GetClassSymbolTableByName(token.Lexeme);
+                    size = table.MemoryLayout.TotalSize;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown type.");
+            }
+
+            return size;
+        }
+
+
         public void Visit(ProgramNode n)
         {
             var children = n.GetChildren();
@@ -257,25 +293,34 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
             }
+
+            var returnValSize = Utils.GetTypeFullSize(_globalSymbolTable, n.ExprType);
+            var table = (FunctionSymbolTableEntry)n.CallerTable;
+            n.TemporaryVariableName = table.MemoryLayout.AddTemporaryVariable(returnValSize);
         }
 
         public void Visit(SubVarCallNode n)
         {
-            if (n.SymTable is FunctionSymbolTableEntry)
-            {
-                n.TemporaryVariableName = ((FunctionSymbolTableEntry)n.SymTable).MemoryLayout.AddTemporaryVariable();
-            }
-            else
-            {
-
-            }
-            
-
             var children = n.GetChildren();
             foreach (var child in children)
             {
                 child.Accept(this);
             }
+        }
+
+        public void Visit(VarFuncCallNode n)
+        {
+            var children = n.GetChildren();
+            foreach (var child in children)
+            {
+                child.Accept(this);
+            }
+
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var last = children.Last();
+            var size = Utils.GetTypeFullSize(_globalSymbolTable, last.ExprType);
+
+            n.TemporaryVariableName = table.MemoryLayout.AddTemporaryVariable(size);
         }
 
         public void Visit(IndicesNode n)
@@ -362,14 +407,7 @@ namespace CodeGen.ASTVisitors
             }
         }
 
-        public void Visit(VarFuncCallNode n)
-        {
-            var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
-        }
+        
 
         public void Visit(VisibilityNode n)
         {

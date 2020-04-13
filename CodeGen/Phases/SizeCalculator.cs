@@ -89,6 +89,39 @@ namespace CodeGen.Phases
 
         private void CalculateFunctionFrameSize(FunctionSymbolTableEntry functionTable)
         {
+            var returnType = functionTable.ReturnType;
+            var varType = "";
+            var size = 0;
+            if (returnType != null)
+            {
+                switch (returnType.TokenType)
+                {
+                    case TokenType.Integer:
+                        varType = TypeConstants.IntType;
+                        size = TypeConstants.IntTypeSize;
+                        break;
+                    case TokenType.Float:
+                        varType = TypeConstants.FloatType;
+                        size = TypeConstants.FloatTypeSize;
+                        break;
+                    case TokenType.Identifier:
+                        {
+                            var varClassTable = _globalSymbolTable.GetClassSymbolTableByName(returnType.Lexeme);
+                            if (varClassTable.MemoryLayout.TotalSize == 0)
+                            {
+                                CalculateClassSize(varClassTable);
+                            }
+
+                            varType = varClassTable.ClassName;
+                            size = varClassTable.MemoryLayout.TotalSize;
+
+                            break;
+                        }
+                }
+            }
+
+            functionTable.MemoryLayout.AddReturnValueEntry((varType, new List<int>()), size, size);
+
             foreach (var parameter in functionTable.Params)
             {
                 var type = parameter.Type;
@@ -159,7 +192,7 @@ namespace CodeGen.Phases
 
         private void CalculateFunctionFrameSizesWithIntermediates()
         {
-            var visitor = new IntermediateSizeCalculatorVisitor();
+            var visitor = new IntermediateSizeCalculatorVisitor(_globalSymbolTable);
             _astTree.Accept(visitor);
         }
     }

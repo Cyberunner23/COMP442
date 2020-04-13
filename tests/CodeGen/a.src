@@ -7,8 +7,8 @@ class C1 {
 };
 
 class C2 {
-	public C1 x;
-	public integer y;
+	public integer x;
+	public integer y[5];
 	
 	//public hello(integer c) : integer;
 	public func(integer a) : C1;
@@ -18,7 +18,7 @@ C1::func(integer input) : C1
   local
     integer yay;
   do
-    yay = 1;
+    //yay = 1;
   end;
 
 C2::func(integer a) : C1
@@ -26,6 +26,39 @@ C2::func(integer a) : C1
   do
   end;
 
+squared(integer a) : integer
+  local
+    integer result;
+  do
+    result = a * a;
+	return (result);
+  end;
+
+main
+  local
+	C2 k;
+	C1 j;
+	integer asdf;
+  do
+
+    squared(2);
+	//k.y[3] = j.func(1).c;
+
+  end
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 /*C2::hello(integer c) : integer
   local
     C1 c1;
@@ -34,24 +67,26 @@ C2::func(integer a) : C1
     //hey = ((30 * -2) / not 2) / (5 + (5*5));
   end;
 */
-squared(integer a) : integer
+/*squared(integer a) : integer
   local
     integer result;
   do
-    //result = a * a;
-  end;
-
-main
-  local
-    //integer val[3][2];
-	integer arr[2];
-	//integer a;
-	C2 k;
-  do
-
-	//write(1+1);
-	squared(1);
-	k.func(1);
+    result = a * a;
+	//return (result);
+  end;*/
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  	//write(1+1);
+	/*squared(1);
+	k.func(1);*/
     //val[1 + 0][0] = 5;
 	/*while (0 > 1)
 	  do
@@ -64,4 +99,3 @@ main
 	//val = val * val;
 	//result = squared(val);
 	//write (result);
-  end

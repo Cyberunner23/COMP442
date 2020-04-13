@@ -36,11 +36,7 @@ namespace CodeGen
 
         private void GenerateHeader()
         {
-            _writer.WriteComment("Start of the program");
-            _writer.WriteInstruction(Instructions.Align);
-            _writer.WriteInstruction(Instructions.Entry);
-            _writer.WriteComment("Set stack pointer to initial value (baseaddr)");
-            _writer.WriteInstruction(Instructions.Addi, Registers.R14, Registers.R14, Tags.BaseAddr);
+
         }
 
         private void GenerateFooter()
@@ -52,7 +48,7 @@ namespace CodeGen
 
         private void Generate()
         {
-            var visitor = new CodeGeneratorVisitor(_writer);
+            var visitor = new CodeGeneratorVisitor(_writer, _globalSymbolTable);
             _astTree.Accept(visitor);
         }
     }

@@ -355,6 +355,8 @@ namespace Parser.ASTVisitor.Visitors
 
             var first = children.First();
             first.SymTable = n.SymTable;
+            first.SecondarySymTable = n.SymTable;
+            first.CallerTable = n.SymTable;
             first.Accept(this);
 
             var currentScopeSpec = first.ScopeSpec;
@@ -374,6 +376,7 @@ namespace Parser.ASTVisitor.Visitors
                 }
 
                 node.SymTable = classTable;
+                node.CallerTable = n.SymTable;
                 node.Accept(this);
                 currentScopeSpec = node.ScopeSpec;
             }
@@ -385,6 +388,8 @@ namespace Parser.ASTVisitor.Visitors
 
             var first = children.First();
             first.SymTable = n.SymTable;
+            first.SecondarySymTable = n.SymTable;
+            first.CallerTable = n.SymTable;
             first.Accept(this);
 
             var currentScopeSpec = first.ScopeSpec;
@@ -400,10 +405,12 @@ namespace Parser.ASTVisitor.Visitors
                     }
 
                     node.SymTable = classTable;
+                    node.SecondarySymTable = n.SymTable;
                 }
                 else
                 {
                     node.SymTable = first.SymTable;
+                    node.SecondarySymTable = n.SymTable;
                 }
                 
                 node.Accept(this);
@@ -413,59 +420,13 @@ namespace Parser.ASTVisitor.Visitors
             n.ExprType = children.Last().ExprType;
         }
 
-        public void Visit(AssignmentNode n)
-        {
-            var children = n.GetChildren();
-
-            var rhs = children.Last();
-            rhs.SymTable = n.SymTable;
-            rhs.Accept(this);
-            var rhsType = rhs.ExprType;
-
-            var first = children.First();
-            first.SymTable = n.SymTable;
-            first.Accept(this);
-            var currentScopeSpec = first.ScopeSpec;
-
-            var line = ((IdentifierNode)first.LeftmostChildNode).Token.StartLine;
-
-            for (int i = 1; i < children.Count - 1; ++i)
-            {
-                if (string.IsNullOrEmpty(currentScopeSpec))
-                {
-                    _errorStream.WriteLine($"Use of variable with no scopespec.");
-                    break;
-                }
-
-                var classTable = _globalTable.GetClassSymbolTableByName(currentScopeSpec);
-                if (classTable == null)
-                {
-                    _errorStream.WriteLine($"ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
-                    break;
-                }
-
-                children[i].SymTable = classTable;
-                children[i].Accept(this);
-                currentScopeSpec = children[i].ScopeSpec;
-            }
-
-            var lhsType = children[children.Count - 2].ExprType;
-
-            if (!string.Equals(lhsType.Type, rhsType.Type) || !rhsType.Dims.SequenceEqual(lhsType.Dims))
-            {
-                _errorStream.WriteLine($"Assignment type missmatch! {lhsType.Type} <-> {rhsType.Type} (line: {line})");
-            }
-        }
-
-
         public void Visit(SubVarCallNode n)
         {
             var children = n.GetChildren();
-            foreach (var node in children)
-            {
-                node.SymTable = n.SymTable;
-                node.Accept(this);
-            }
+            children[0].SymTable = n.SymTable;
+            children[0].Accept(this);
+            children[1].SymTable = n.SecondarySymTable;
+            children[1].Accept(this);
 
             var varNameToken = ((IdentifierNode)children[0]).Token;
             n.VarName = varNameToken.Lexeme;
@@ -505,7 +466,7 @@ namespace Parser.ASTVisitor.Visitors
                     }
                     break;
                 default:
-                    throw new InvalidOperationException("Unknown table entry type found");       
+                    throw new InvalidOperationException("Unknown table entry type found");
             }
 
             (string Type, List<int> Dims) typeDims;
@@ -576,6 +537,7 @@ namespace Parser.ASTVisitor.Visitors
 
             // Visit FuncCallParamsNode to get parameter types used
             var funcParams = (FuncCallParamsNode)children[1];
+            funcParams.CallerTable = n.CallerTable;
             funcParams.Accept(this);
             var funcParamTypes = funcParams.ParamsTypes;
 
@@ -624,11 +586,68 @@ namespace Parser.ASTVisitor.Visitors
             }
             else
             {
+                n.CallerTable = n.SecondarySymTable;
                 n.SecondarySymTable = matchingFunc;
                 n.ScopeSpec = matchingFunc.ReturnType.Lexeme;
                 n.ExprType = (matchingFunc.ReturnType.Lexeme, new List<int>());
             }
         }
+
+
+
+
+
+        public void Visit(AssignmentNode n)
+        {
+            var children = n.GetChildren();
+
+            var rhs = children.Last();
+            rhs.SymTable = n.SymTable;
+            rhs.SecondarySymTable = n.SymTable;
+            rhs.Accept(this);
+            var rhsType = rhs.ExprType;
+
+            var first = children.First();
+            first.SymTable = n.SymTable;
+            first.SecondarySymTable = n.SymTable;
+            first.Accept(this);
+            var currentScopeSpec = first.ScopeSpec;
+
+            var line = ((IdentifierNode)first.LeftmostChildNode).Token.StartLine;
+
+            for (int i = 1; i < children.Count - 1; ++i)
+            {
+                if (string.IsNullOrEmpty(currentScopeSpec))
+                {
+                    _errorStream.WriteLine($"Use of variable with no scopespec.");
+                    break;
+                }
+
+                var classTable = _globalTable.GetClassSymbolTableByName(currentScopeSpec);
+                if (classTable == null)
+                {
+                    _errorStream.WriteLine($"ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
+                    break;
+                }
+
+                children[i].SymTable = classTable;
+                children[i].SecondarySymTable = n.SymTable;
+                children[i].Accept(this);
+                currentScopeSpec = children[i].ScopeSpec;
+            }
+
+            var lhsType = children[children.Count - 2].ExprType;
+
+            if (!string.Equals(lhsType.Type, rhsType.Type) || !rhsType.Dims.SequenceEqual(lhsType.Dims))
+            {
+                _errorStream.WriteLine($"Assignment type missmatch! {lhsType.Type} <-> {rhsType.Type} (line: {line})");
+            }
+        }
+
+
+        
+
+
 
         public void Visit(FuncCallParamsNode n)
         {

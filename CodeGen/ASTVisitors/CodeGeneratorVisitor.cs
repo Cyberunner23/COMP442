@@ -1,6 +1,10 @@
-﻿using Parser.AST.Nodes;
+﻿using Parser.AST;
+using Parser.AST.Nodes;
 using Parser.ASTVisitor;
+using Parser.SymbolTable;
+using Parser.SymbolTable.Class;
 using Parser.SymbolTable.Function;
+using Parser.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +18,22 @@ namespace CodeGen.ASTVisitors
         private int _branchCounter;
         private int _writeLabelCounter;
         private int _readLabelCounter;
+        private int _copyLabelCounter;
+
+        private GlobalSymbolTable _globalSymbolTable;
 
         private string FSPReg { get { return Registers.R14; } }
 
-        public CodeGeneratorVisitor(CodeWriter writer)
+        public CodeGeneratorVisitor(CodeWriter writer, GlobalSymbolTable table)
         {
             _writer = writer;
+            _globalSymbolTable = table;
+
             _availableRegisters = new Stack<string>();
             _branchCounter = 0;
             _writeLabelCounter = 0;
             _readLabelCounter = 0;
 
-            _availableRegisters.Push(Registers.R12);
             _availableRegisters.Push(Registers.R11);
             _availableRegisters.Push(Registers.R10);
             _availableRegisters.Push(Registers.R9);
@@ -540,22 +548,55 @@ namespace CodeGen.ASTVisitors
             }
         }
 
+        // Goes through the call chain and writes the code for it
+        // Sets the initial value for the callchain pointer (r12)
+        // Writes the code for the subcalls
+        private void WriteCallchainCode(IEnumerable<ASTNodeBase> subCallNodes, string initAddressReg)
+        {
+            var r12 = Registers.R12;
+
+            _writer.WriteComment("%% Callchain");
+            _writer.WriteInstruction(Instructions.Sub, r12, r12, r12);
+            _writer.WriteInstruction(Instructions.Add, r12, r12, initAddressReg);
+
+            foreach (var subCallNode in subCallNodes)
+            {
+                subCallNode.Accept(this);
+            }
+        }
+
+        
+
         public void Visit(AssignmentNode n)
         {
             var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
+            var subCalls = children.SkipLast().ToList();
 
             _writer.WriteComment($"Assignment");
 
-            var table = (FunctionSymbolTableEntry)n.SymTable;
+            WriteCallchainCode(subCalls, FSPReg); // r12 has absolute address of variable to write to.
+            var finalValSize = Utils.GetTypeFullSize(_globalSymbolTable, subCalls.Last().ExprType);
 
-            var lhs = children[0].TemporaryVariableName; // Contains absolute address to write to
+
+
+
+            // R12 has absolute address to location to write to
+            // Need to figure out size of variable
+            // Need to copy data over
+
+            children.Last().Accept(this);
+
+
+
+
+
+
+
+
+            /*var lhs = children[0].TemporaryVariableName; // Contains absolute address to write to
             var rhs = children[1].TemporaryVariableName; // Contains address relative to FSP to read from.
-            var lhsOffset = table.MemoryLayout.GetOffset(lhs);
-            var rhsOffset = table.MemoryLayout.GetOffset(rhs);
+            var lhsOffset = 0; //table.MemoryLayout.GetOffset(lhs);
+            var rhsOffset = 0; //table.MemoryLayout.GetOffset(rhs);
 
             var varAddressReg = PopRegister();
             var valReg = PopRegister();
@@ -565,7 +606,57 @@ namespace CodeGen.ASTVisitors
             _writer.WriteInstruction(Instructions.Sw, $"0({varAddressReg})", valReg);
 
             PushRegister(varAddressReg);
-            PushRegister(valReg);
+            PushRegister(valReg);*/
+        }
+
+        public void Visit(VarFuncCallNode n)
+        {
+            var children = n.GetChildren();
+            var finalValSize = Utils.GetTypeFullSize(_globalSymbolTable, children.Last().ExprType);
+
+            _writer.WriteComment("Var Func Call");
+            WriteCallchainCode(children, FSPReg);
+
+            
+        }
+
+        private void WriteMultiByteCopy(string srcReg, string dstReg, string sizeReg)
+        {
+            _writer.WriteComment("- MultiByteCopy");
+            var copyTag = $"multi_byte_copy_{_copyLabelCounter}";
+            var copyEndTag = $"multi_byte_copy_end_{_copyLabelCounter++}";
+
+            var counterReg = PopRegister();
+            var currentValReg = PopRegister();
+            var evalResultReg = PopRegister();
+            var currentSrcPtrReg = PopRegister();
+            var currentDstPtrReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Add, currentDstPtrReg, currentDstPtrReg, dstReg); // set dst[0] addr = dstReg 
+            _writer.WriteInstruction(Instructions.Add, currentSrcPtrReg, currentSrcPtrReg, srcReg); // set src[0] addr = srcReg 
+
+            _writer.WriteTag(copyTag);
+            _writer.WriteComment("-- while (i < valSizeReg)");
+            _writer.WriteInstruction(Instructions.Clt, evalResultReg, counterReg, sizeReg); // while (i < valSizeReg)
+            _writer.WriteInstruction(Instructions.Bz, evalResultReg, copyEndTag);           // {
+
+            _writer.WriteComment("-- {\n% --- dst[i] = src[i]");
+            _writer.WriteInstruction(Instructions.Lw, currentValReg, $"0({currentSrcPtrReg})"); //
+            _writer.WriteInstruction(Instructions.Sw, $"0({currentDstPtrReg})", currentValReg); // dst[i] = src[i]
+            _writer.WriteComment("--- i++");
+            _writer.WriteInstruction(Instructions.Addi, currentSrcPtrReg, currentSrcPtrReg, "4"); //
+            _writer.WriteInstruction(Instructions.Addi, currentDstPtrReg, currentDstPtrReg, "4"); // i++
+
+            _writer.WriteComment("-- }");
+            _writer.WriteInstruction(Instructions.Addi, counterReg, counterReg, "4");         
+            _writer.WriteInstruction(Instructions.J, copyTag); // }
+            _writer.WriteTag(copyEndTag);
+
+            PushRegister(currentSrcPtrReg);
+            PushRegister(currentDstPtrReg);
+            PushRegister(evalResultReg);
+            PushRegister(currentValReg);
+            PushRegister(counterReg);
         }
 
         public void Visit(SubFuncCallNode n)
@@ -576,8 +667,68 @@ namespace CodeGen.ASTVisitors
                 child.Accept(this);
             }
 
-            var secTable = (FunctionSymbolTableEntry)n.SecondarySymTable;
-            var tag = Utils.GetTag(secTable);
+            var callerTable = (FunctionSymbolTableEntry)n.CallerTable;
+            var funcTable = (FunctionSymbolTableEntry)n.SecondarySymTable;
+            var funcReturnValSize = Utils.GetTypeFullSize(_globalSymbolTable, (funcTable.ReturnType.Lexeme, new List<int>()));
+            var tag = Utils.GetTag(funcTable);
+
+            var frameSize = funcTable.MemoryLayout.TotalSize;
+            var oldFSPReg = PopRegister();
+
+            var localReturnValVar = n.TemporaryVariableName;
+            var localReturnValOffset = callerTable.MemoryLayout.GetOffset(localReturnValVar);
+
+            var r0 = Registers.R0;
+            var r12 = Registers.R12;
+            var r13 = Registers.R13;
+            var r15 = Registers.R15;
+            _writer.WriteComment("SUB FUNC CALL");
+
+            // Set the new FSP reg and set self addr
+            _writer.WriteComment("- create frame");
+            _writer.WriteInstruction(Instructions.Add, oldFSPReg, r0, FSPReg);
+            _writer.WriteInstruction(Instructions.Addi, FSPReg, FSPReg, $"{frameSize}");
+
+            // Copy arguments
+            _writer.WriteComment("- copy args");
+
+            var givenParamTempVarNames = ((FuncCallParamsNode)children.Last()).ParamTempVarNames; // Params given
+            var funcParamNames = funcTable.Params.Select(x => x.Name).ToList(); // variables used in the function
+            for (int i = 0; i < funcParamNames.Count; ++i)
+            {
+                var givenParamAddrReg = PopRegister();
+                var funcParamAddrReg = PopRegister();
+
+                _writer.WriteInstruction(Instructions.Add, givenParamAddrReg, FSPReg);
+
+                PushRegister(funcParamAddrReg);
+                PushRegister(givenParamAddrReg);
+            }
+
+
+            // JUMP!
+            _writer.WriteComment("- jump to func");
+            _writer.WriteInstruction(Instructions.Jl, r15, tag);
+
+            // Ok we're back, unset FSP
+            _writer.WriteComment("- unset FSP");
+            _writer.WriteInstruction(Instructions.Subi, FSPReg, FSPReg, $"{frameSize}");
+
+            // set r12 to absolute address of result
+            _writer.WriteComment("- set r12 (callchain ptr)");
+            _writer.WriteInstruction(Instructions.Sub, r12, r12, r12);
+            _writer.WriteInstruction(Instructions.Add, r12, r0, FSPReg);
+            _writer.WriteInstruction(Instructions.Addi, r12, r12, $"{localReturnValOffset}");
+
+            // Copy result from other frame to this frame
+            var valSizeReg = PopRegister();
+
+            _writer.WriteComment("- copy result");
+            _writer.WriteInstruction(Instructions.Addi, valSizeReg, r0, $"{funcReturnValSize}");
+            WriteMultiByteCopy(r13, r12, valSizeReg);
+
+            PushRegister(valSizeReg);
+            PushRegister(oldFSPReg);
         }
 
         public void Visit(SubVarCallNode n)
@@ -588,16 +739,37 @@ namespace CodeGen.ASTVisitors
                 child.Accept(this);
             }
 
-            var identifierNode = (IdentifierNode)children[0];
-            var table = (FunctionSymbolTableEntry)n.SymTable;
-            var varOffset = table.MemoryLayout.GetOffset(identifierNode.Name);
+            var callChainPointerReg = Registers.R12;
+            var varName = n.VarName;
+            int varOffset;
+            (string type, List<int> dims) varType;
+            int typeSize;
+            FunctionSymbolTableEntry tableForIndexing;
+
+            switch (n.SymTable)
+            {
+                case FunctionSymbolTableEntry f:
+                    varOffset = f.MemoryLayout.GetOffset(varName);
+                    varType = f.MemoryLayout.GetVarType(varName);
+                    typeSize = f.MemoryLayout.GetTypeSize(varName);
+                    tableForIndexing = f;
+                    break;
+                case ClassSymbolTable c:
+                    varOffset = c.MemoryLayout.GetOffset(varName);
+                    varType = c.MemoryLayout.GetVarType(varName);
+                    typeSize = c.MemoryLayout.GetTypeSize(varName);
+                    tableForIndexing = (FunctionSymbolTableEntry)n.SecondarySymTable;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown table type");
+            }
             
             _writer.WriteComment("SUB VAR CALL");
 
             // Get variable address
             _writer.WriteComment("Compute absolute address of variable, (we don't have lea...)");
             var absoluteAddressReg = PopRegister();
-            _writer.WriteInstruction(Instructions.Add, absoluteAddressReg, absoluteAddressReg, FSPReg); // grab FSP
+            _writer.WriteInstruction(Instructions.Add, absoluteAddressReg, absoluteAddressReg, callChainPointerReg); // grab callchain address
             _writer.WriteInstruction(Instructions.Addi, absoluteAddressReg, absoluteAddressReg, $"{varOffset}"); // Add offset, we have absolute address now
             
             // Get variable address with indexing, if used
@@ -611,9 +783,6 @@ namespace CodeGen.ASTVisitors
             if (indices.Count > 0)
             {
                 _writer.WriteComment("Computing address from array index");
-
-                var varType = table.MemoryLayout.GetVarType(identifierNode.Name);
-                var typeSize = table.MemoryLayout.GetTypeSize(identifierNode.Name);
 
                 // Set type size register
                 var typeSizeReg = PopRegister();
@@ -641,7 +810,7 @@ namespace CodeGen.ASTVisitors
                     _writer.WriteInstruction(Instructions.Addi, indexingElementOffsetReg, indexingElementOffsetReg, "1"); // set initial multiplier value
 
                     // Load index value
-                    var indexOffset = table.MemoryLayout.GetOffset(indices.FastReverse().ToList()[i]);
+                    var indexOffset = tableForIndexing.MemoryLayout.GetOffset(indices.FastReverse().ToList()[i]);
                     _writer.WriteInstruction(Instructions.Lw, indexValueReg, $"{indexOffset}({FSPReg})");
 
                     _writer.WriteInstruction(Instructions.Mul, indexingElementOffsetReg, indexValueReg, typeSizeReg); // 1*sizeof(integer)
@@ -656,10 +825,12 @@ namespace CodeGen.ASTVisitors
                 PushRegister(typeSizeReg);
             }
 
+            //NOTE: R12 has address now
             // Store absolute address into temp var associated to this SubVarCall
-            _writer.WriteComment("Storing final address");
-            var tempVarOffset = table.MemoryLayout.GetOffset(n.TemporaryVariableName);
-            _writer.WriteInstruction(Instructions.Sw, $"{tempVarOffset}({FSPReg})", absoluteAddressReg);
+            //_writer.WriteComment("Storing final address");
+            //var tempVarOffset = table.MemoryLayout.GetOffset(n.TemporaryVariableName);
+            //_writer.WriteInstruction(Instructions.Sw, $"{tempVarOffset}({FSPReg})", absoluteAddressReg);
+            _writer.WriteInstruction(Instructions.Add, callChainPointerReg, Registers.R0, absoluteAddressReg);
             PushRegister(absoluteAddressReg);
         }
 
@@ -679,6 +850,7 @@ namespace CodeGen.ASTVisitors
             foreach (var child in children)
             {
                 child.Accept(this);
+                n.ParamTempVarNames.Add(child.TemporaryVariableName);
             }
         }
 
@@ -861,14 +1033,33 @@ namespace CodeGen.ASTVisitors
             }
         }
 
-        public void Visit(VarFuncCallNode n)
+        
+
+        public void Visit(MainFuncNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var frameSize = table.MemoryLayout.TotalSize;
+
+            _writer.WriteComment("----------------------------------------\n% Start of the program\n% ----------------------------------------");
+            _writer.WriteInstruction(Instructions.Align);
+            _writer.WriteInstruction(Instructions.Entry);
+            _writer.WriteComment("Set stack pointer to initial value (baseaddr)");
+            _writer.WriteInstruction(Instructions.Addi, Registers.R14, Registers.R14, Tags.BaseAddr);
+
+            _writer.WriteComment("Set FSP for main function");
+            _writer.WriteInstruction(Instructions.Addi, FSPReg, FSPReg, frameSize.ToString());
+            _writer.WriteTag("main");
+
             var children = n.GetChildren();
             foreach (var child in children)
             {
                 child.Accept(this);
             }
         }
+
+
+
+
 
         public void Visit(VisibilityNode n)
         {
@@ -881,22 +1072,6 @@ namespace CodeGen.ASTVisitors
 
         public void Visit(MemberDeclNode n)
         {
-            var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
-        }
-
-        public void Visit(MainFuncNode n)
-        {
-            var table = (FunctionSymbolTableEntry)n.SymTable;
-            var frameSize = table.MemoryLayout.TotalSize;
-
-            _writer.WriteComment("Set FSP for main function");
-            _writer.WriteInstruction(Instructions.Addi, FSPReg, FSPReg, frameSize.ToString());
-            _writer.WriteTag("main");
-
             var children = n.GetChildren();
             foreach (var child in children)
             {

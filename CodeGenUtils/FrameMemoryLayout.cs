@@ -10,7 +10,8 @@ namespace CodeGenUtils
         SelfAddr,
         Argument,
         Variable,
-        TemporaryVariable
+        TemporaryVariable,
+        ReturnVal
     }
 
     public class FrameMemoryLayoutEntry
@@ -62,6 +63,11 @@ namespace CodeGenUtils
             return OffsetMap[name].VarType;
         }
 
+        public void AddReturnValueEntry((string type, List<int> dims) varType, int typeSize, int size)
+        {
+            AddEntry(varType, "__returnval__", LayoutEntryType.ReturnVal, typeSize, size);
+        }
+
         public void AddArgumentEntry((string type, List<int> dims) varType, string name, int typeSize, int size)
         {
             AddEntry(varType, name, LayoutEntryType.Argument, typeSize, size);
@@ -72,10 +78,10 @@ namespace CodeGenUtils
             AddEntry(varType, name, LayoutEntryType.Variable, typeSize, size);
         }
 
-        public string AddTemporaryVariable()
+        public string AddTemporaryVariable(int size = 4)
         {
             string name = $"__temp_{_currentTempVarID}__";
-            AddEntry((null, null), name, LayoutEntryType.TemporaryVariable, 4, 4);
+            AddEntry((null, null), name, LayoutEntryType.TemporaryVariable, size, size);
             _currentTempVarID++;
 
             return name;

@@ -7,9 +7,12 @@ namespace Parser.AST.Nodes
     {
         public List<(string, List<int>)> ParamsTypes { get; set; }
 
+        public List<string> ParamTempVarNames { get; set; }
+
         public FuncCallParamsNode()
         {
             ParamsTypes = new List<(string, List<int>)>();
+            ParamTempVarNames = new List<string>();
         }
 
         public override void Accept(IVisitor v)

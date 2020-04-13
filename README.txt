@@ -26,7 +26,7 @@ Register Layout
 
 NOTE: GPR => General Purpose Register 
 
-R0: GPR,  R4: GPR,  R8:  GPR,  R12: GPR
+R0: GPR,  R4: GPR,  R8:  GPR,  R12: CallChainPointer
 R1: GPR,  R5: GPR,  R9:  GPR,  R13: Return Value
 R2: GPR,  R6: GPR,  R10: GPR,  R14: Stack Pointer
 R3: GPR,  R7: GPR,  R11: GPR,  R15: Return Address
