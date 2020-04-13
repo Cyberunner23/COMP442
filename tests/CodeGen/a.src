@@ -3,7 +3,7 @@ class C1 {
 	public integer b[5];
 	public integer c;
 	
-	public func(integer input) : C1;
+	public func(integer input) : integer;
 };
 
 class C2 {
@@ -14,11 +14,10 @@ class C2 {
 	public func(integer a) : C1;
 };
 
-C1::func(integer input) : C1
+C1::func(integer input) : integer
   local
-    integer yay;
   do
-    //yay = 1;
+    return (input + 10);
   end;
 
 C2::func(integer a) : C1
@@ -35,9 +34,12 @@ squared(integer a) : integer
 main
   local
     integer k;
+	C1 j;
   do
-
-    k = squared(9);
+  
+	write(j.func(6));
+	
+    k = squared(squared(9));
 	write(k);
 	//k.y[3] = j.func(1).c;
 

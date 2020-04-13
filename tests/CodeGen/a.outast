@@ -1,7 +1,7 @@
 digraph G {
-175[label="175:ProgramNode"]
+203[label="203:ProgramNode"]
 98[label="98:ClassDeclsNode"]
-175 -> 98
+203 -> 98
 73[label="73:ClassDeclNode"]
 98 -> 73
 45[label="45:IdentifierNode\nC1"]
@@ -58,7 +58,7 @@ digraph G {
 69 -> 67
 68[label="68:ArrayDimListNode"]
 69 -> 68
-70[label="70:IdentifierNode\nC1"]
+70[label="70:TypeNode\nInteger"]
 71 -> 70
 97[label="97:ClassDeclNode"]
 98 -> 97
@@ -108,156 +108,212 @@ digraph G {
 93 -> 92
 94[label="94:IdentifierNode\nC1"]
 95 -> 94
-147[label="147:FuncDefsNode"]
-175 -> 147
-113[label="113:FuncDefNode"]
-147 -> 113
+152[label="152:FuncDefsNode"]
+203 -> 152
+118[label="118:FuncDefNode"]
+152 -> 118
 99[label="99:IdentifierNode\nC1"]
-113 -> 99
+118 -> 99
 100[label="100:IdentifierNode\nfunc"]
-113 -> 100
+118 -> 100
 104[label="104:FuncParamListNode"]
-113 -> 104
+118 -> 104
 101[label="101:TypeNode\nInteger"]
 104 -> 101
 102[label="102:IdentifierNode\ninput"]
 104 -> 102
 103[label="103:ArrayDimListNode"]
 104 -> 103
-105[label="105:IdentifierNode\nC1"]
-113 -> 105
-112[label="112:FuncBodyNode"]
-113 -> 112
-110[label="110:LocalScopeNode"]
-112 -> 110
-109[label="109:VarDeclNode"]
-110 -> 109
-106[label="106:TypeNode\nInteger"]
-109 -> 106
-107[label="107:IdentifierNode\nyay"]
-109 -> 107
-108[label="108:ArrayDimListNode"]
-109 -> 108
-111[label="111:StatementsNode"]
-112 -> 111
-124[label="124:FuncDefNode"]
-147 -> 124
-114[label="114:IdentifierNode\nC2"]
-124 -> 114
-115[label="115:IdentifierNode\nfunc"]
-124 -> 115
-119[label="119:FuncParamListNode"]
-124 -> 119
-116[label="116:TypeNode\nInteger"]
-119 -> 116
-117[label="117:IdentifierNode\na"]
-119 -> 117
-118[label="118:ArrayDimListNode"]
-119 -> 118
-120[label="120:IdentifierNode\nC1"]
-124 -> 120
-123[label="123:FuncBodyNode"]
+105[label="105:TypeNode\nInteger"]
+118 -> 105
+117[label="117:FuncBodyNode"]
+118 -> 117
+106[label="106:LocalScopeNode"]
+117 -> 106
+116[label="116:StatementsNode"]
+117 -> 116
+115[label="115:ReturnNode"]
+116 -> 115
+114[label="114:ExpressionNode"]
+115 -> 114
+113[label="113:ArithExprNode"]
+114 -> 113
+111[label="111:AddOpNode\nAdd"]
+113 -> 111
+112[label="112:IntNumNode\n10"]
+111 -> 112
+110[label="110:VarFuncCallNode\nVarCall"]
+111 -> 110
+108[label="108:SubVarCallNode"]
+110 -> 108
+107[label="107:IdentifierNode\ninput"]
+108 -> 107
+109[label="109:IndicesNode"]
+108 -> 109
+129[label="129:FuncDefNode"]
+152 -> 129
+119[label="119:IdentifierNode\nC2"]
+129 -> 119
+120[label="120:IdentifierNode\nfunc"]
+129 -> 120
+124[label="124:FuncParamListNode"]
+129 -> 124
+121[label="121:TypeNode\nInteger"]
+124 -> 121
+122[label="122:IdentifierNode\na"]
+124 -> 122
+123[label="123:ArrayDimListNode"]
 124 -> 123
-121[label="121:LocalScopeNode"]
-123 -> 121
-122[label="122:StatementsNode"]
-123 -> 122
-146[label="146:FuncDefNode"]
-147 -> 146
-125[label="125:IdentifierNode\nsquared"]
-146 -> 125
-129[label="129:FuncParamListNode"]
-146 -> 129
-126[label="126:TypeNode\nInteger"]
-129 -> 126
-127[label="127:IdentifierNode\na"]
-129 -> 127
-128[label="128:ArrayDimListNode"]
+125[label="125:IdentifierNode\nC1"]
+129 -> 125
+128[label="128:FuncBodyNode"]
 129 -> 128
-130[label="130:TypeNode\nInteger"]
-146 -> 130
-145[label="145:FuncBodyNode"]
-146 -> 145
-131[label="131:LocalScopeNode"]
-145 -> 131
-144[label="144:StatementsNode"]
-145 -> 144
-143[label="143:ReturnNode"]
-144 -> 143
-142[label="142:ExpressionNode"]
+126[label="126:LocalScopeNode"]
+128 -> 126
+127[label="127:StatementsNode"]
+128 -> 127
+151[label="151:FuncDefNode"]
+152 -> 151
+130[label="130:IdentifierNode\nsquared"]
+151 -> 130
+134[label="134:FuncParamListNode"]
+151 -> 134
+131[label="131:TypeNode\nInteger"]
+134 -> 131
+132[label="132:IdentifierNode\na"]
+134 -> 132
+133[label="133:ArrayDimListNode"]
+134 -> 133
+135[label="135:TypeNode\nInteger"]
+151 -> 135
+150[label="150:FuncBodyNode"]
+151 -> 150
+136[label="136:LocalScopeNode"]
+150 -> 136
+149[label="149:StatementsNode"]
+150 -> 149
+148[label="148:ReturnNode"]
+149 -> 148
+147[label="147:ExpressionNode"]
+148 -> 147
+146[label="146:ArithExprNode"]
+147 -> 146
+141[label="141:MultOpNode\nMultiply"]
+146 -> 141
+145[label="145:VarFuncCallNode\nVarCall"]
+141 -> 145
+143[label="143:SubVarCallNode"]
+145 -> 143
+142[label="142:IdentifierNode\na"]
 143 -> 142
-141[label="141:ArithExprNode"]
-142 -> 141
-136[label="136:MultOpNode\nMultiply"]
-141 -> 136
+144[label="144:IndicesNode"]
+143 -> 144
 140[label="140:VarFuncCallNode\nVarCall"]
-136 -> 140
+141 -> 140
 138[label="138:SubVarCallNode"]
 140 -> 138
 137[label="137:IdentifierNode\na"]
 138 -> 137
 139[label="139:IndicesNode"]
 138 -> 139
-135[label="135:VarFuncCallNode\nVarCall"]
-136 -> 135
-133[label="133:SubVarCallNode"]
-135 -> 133
-132[label="132:IdentifierNode\na"]
-133 -> 132
-134[label="134:IndicesNode"]
-133 -> 134
-174[label="174:MainFuncNode"]
-175 -> 174
-152[label="152:LocalScopeNode"]
-174 -> 152
-151[label="151:VarDeclNode"]
-152 -> 151
-148[label="148:TypeNode\nInteger"]
-151 -> 148
-149[label="149:IdentifierNode\nk"]
-151 -> 149
-150[label="150:ArrayDimListNode"]
-151 -> 150
-173[label="173:StatementsNode"]
-174 -> 173
-165[label="165:AssignmentNode"]
-173 -> 165
-155[label="155:SubVarCallNode"]
-165 -> 155
-153[label="153:IdentifierNode\nk"]
-155 -> 153
-154[label="154:IndicesNode"]
-155 -> 154
-164[label="164:ExpressionNode"]
-165 -> 164
-163[label="163:ArithExprNode"]
-164 -> 163
-162[label="162:VarFuncCallNode\nFuncCall"]
-163 -> 162
-161[label="161:SubFuncCallNode"]
-162 -> 161
-156[label="156:IdentifierNode\nsquared"]
+202[label="202:MainFuncNode"]
+203 -> 202
+161[label="161:LocalScopeNode"]
+202 -> 161
+156[label="156:VarDeclNode"]
 161 -> 156
-160[label="160:FuncCallParamsNode"]
+153[label="153:TypeNode\nInteger"]
+156 -> 153
+154[label="154:IdentifierNode\nk"]
+156 -> 154
+155[label="155:ArrayDimListNode"]
+156 -> 155
+160[label="160:VarDeclNode"]
 161 -> 160
-159[label="159:ExpressionNode"]
+157[label="157:IdentifierNode\nC1"]
+160 -> 157
+158[label="158:IdentifierNode\nj"]
+160 -> 158
+159[label="159:ArrayDimListNode"]
 160 -> 159
-158[label="158:ArithExprNode"]
-159 -> 158
-157[label="157:IntNumNode\n9"]
-158 -> 157
-172[label="172:WriteNode"]
+201[label="201:StatementsNode"]
+202 -> 201
+174[label="174:WriteNode"]
+201 -> 174
+173[label="173:ExpressionNode"]
+174 -> 173
+172[label="172:ArithExprNode"]
 173 -> 172
-171[label="171:ExpressionNode"]
+171[label="171:VarFuncCallNode\nFuncCall"]
 172 -> 171
-170[label="170:ArithExprNode"]
+164[label="164:SubVarCallNode"]
+171 -> 164
+162[label="162:IdentifierNode\nj"]
+164 -> 162
+163[label="163:IndicesNode"]
+164 -> 163
+170[label="170:SubFuncCallNode"]
 171 -> 170
-169[label="169:VarFuncCallNode\nVarCall"]
+165[label="165:IdentifierNode\nfunc"]
+170 -> 165
+169[label="169:FuncCallParamsNode"]
 170 -> 169
-167[label="167:SubVarCallNode"]
-169 -> 167
-166[label="166:IdentifierNode\nk"]
+168[label="168:ExpressionNode"]
+169 -> 168
+167[label="167:ArithExprNode"]
+168 -> 167
+166[label="166:IntNumNode\n6"]
 167 -> 166
-168[label="168:IndicesNode"]
-167 -> 168
+193[label="193:AssignmentNode"]
+201 -> 193
+177[label="177:SubVarCallNode"]
+193 -> 177
+175[label="175:IdentifierNode\nk"]
+177 -> 175
+176[label="176:IndicesNode"]
+177 -> 176
+192[label="192:ExpressionNode"]
+193 -> 192
+191[label="191:ArithExprNode"]
+192 -> 191
+190[label="190:VarFuncCallNode\nFuncCall"]
+191 -> 190
+189[label="189:SubFuncCallNode"]
+190 -> 189
+178[label="178:IdentifierNode\nsquared"]
+189 -> 178
+188[label="188:FuncCallParamsNode"]
+189 -> 188
+187[label="187:ExpressionNode"]
+188 -> 187
+186[label="186:ArithExprNode"]
+187 -> 186
+185[label="185:VarFuncCallNode\nFuncCall"]
+186 -> 185
+184[label="184:SubFuncCallNode"]
+185 -> 184
+179[label="179:IdentifierNode\nsquared"]
+184 -> 179
+183[label="183:FuncCallParamsNode"]
+184 -> 183
+182[label="182:ExpressionNode"]
+183 -> 182
+181[label="181:ArithExprNode"]
+182 -> 181
+180[label="180:IntNumNode\n9"]
+181 -> 180
+200[label="200:WriteNode"]
+201 -> 200
+199[label="199:ExpressionNode"]
+200 -> 199
+198[label="198:ArithExprNode"]
+199 -> 198
+197[label="197:VarFuncCallNode\nVarCall"]
+198 -> 197
+195[label="195:SubVarCallNode"]
+197 -> 195
+194[label="194:IdentifierNode\nk"]
+195 -> 194
+196[label="196:IndicesNode"]
+195 -> 196
 }

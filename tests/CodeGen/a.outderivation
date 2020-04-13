@@ -54,8 +54,9 @@ Identifier -> identifier
 CloseBrace -> closeBrace
 Colon -> colon
 TypeOrVoid -> Type 
-Type -> Identifier 
-Identifier -> identifier
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
 SemiColon -> semiColon
 CloseCurlyBrace -> closeCurlyBrace
 SemiColon -> semiColon
@@ -126,19 +127,31 @@ Identifier -> identifier
 CloseBrace -> closeBrace
 Colon -> colon
 TypeOrVoid -> Type 
-Type -> Identifier 
-Identifier -> identifier
-FuncBody -> LocalScope Do Statements End 
-LocalScope -> Local VarDecls 
-Local -> local
-VarDecls -> Type VarDecl VarDecls 
 Type -> TypeNoID 
 TypeNoID -> Integer 
 Integer -> integer
-VarDecl -> Identifier ArrayDims SemiColon 
-Identifier -> identifier
-SemiColon -> semiColon
+FuncBody -> LocalScope Do Statements End 
+LocalScope -> Local VarDecls 
+Local -> local
 Do -> do
+Statements -> Statement Statements 
+Statement -> Return OpenBrace Expression CloseBrace SemiColon 
+Return -> return
+OpenBrace -> openBrace
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Plus 
+Plus -> plus
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+CloseBrace -> closeBrace
+SemiColon -> semiColon
 End -> end
 SemiColon -> semiColon
 FuncDefs -> FuncDef FuncDefs 
@@ -219,7 +232,39 @@ Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
 SemiColon -> semiColon
+VarDecls -> Type VarDecl VarDecls 
+Type -> Identifier 
+Identifier -> identifier
+VarDecl -> Identifier ArrayDims SemiColon 
+Identifier -> identifier
+SemiColon -> semiColon
 Do -> do
+Statements -> Statement Statements 
+Statement -> Write OpenBrace Expression CloseBrace SemiColon 
+Write -> write
+OpenBrace -> openBrace
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+VarOrFuncCall -> Indices FactorVar 
+FactorVar -> Period VarFuncCall 
+Period -> period
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+VarOrFuncCall -> OpenBrace FuncCallParams CloseBrace FactorFuncCall 
+OpenBrace -> openBrace
+FuncCallParams -> Expression FuncCallParamsRests 
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+CloseBrace -> closeBrace
+CloseBrace -> closeBrace
+SemiColon -> semiColon
 Statements -> Statement Statements 
 Statement -> AssignStatementOrFuncCall 
 AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
@@ -239,8 +284,18 @@ FuncCallParams -> Expression FuncCallParamsRests
 Expression -> ArithExpr BoolExprOrNone 
 ArithExpr -> Term RightArithExpr 
 Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+VarOrFuncCall -> OpenBrace FuncCallParams CloseBrace FactorFuncCall 
+OpenBrace -> openBrace
+FuncCallParams -> Expression FuncCallParamsRests 
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
 Factor -> IntNum 
 IntNum -> intNum
+CloseBrace -> closeBrace
 CloseBrace -> closeBrace
 SemiColon -> semiColon
 Statements -> Statement Statements 

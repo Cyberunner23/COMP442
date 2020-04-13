@@ -502,6 +502,9 @@ namespace CodeGen.ASTVisitors
             _writer.WriteInstruction(Instructions.Res, "12");
             _writer.WriteInstruction(Instructions.Align);
             _writer.WriteTag(putintEnd);
+            _writer.WriteInstruction(Instructions.Sub, r1, r1, r1);
+            _writer.WriteInstruction(Instructions.Addi, r1, r1, "10");
+            _writer.WriteInstruction(Instructions.Putc, r1);
 
             PushRegister(r4);
             PushRegister(r3);
@@ -572,25 +575,15 @@ namespace CodeGen.ASTVisitors
 
             _writer.WriteComment($"Assignment");
 
-            WriteCallchainCode(subCalls, FSPReg); // r12 has absolute address of variable to write to.
-            var finalValSize = Utils.GetTypeFullSize(_globalSymbolTable, subCalls.Last().ExprType);
-
-            
-            //WriteMultiByteCopy(, r12);
-
-
-
-
-            // R12 has absolute address to location to write to
-            // Need to figure out size of variable
-            // Need to copy data over
-
             var rhsNode = children.Last();
             rhsNode.Accept(this);
 
             var rhsVarName = rhsNode.TemporaryVariableName;
             var rhsOffset = table.MemoryLayout.GetOffset(rhsVarName);
 
+            WriteCallchainCode(subCalls, FSPReg); // r12 has absolute address of variable to write to.
+
+            var finalValSize = Utils.GetTypeFullSize(_globalSymbolTable, subCalls.Last().ExprType);
             var srcReg = Registers.R12;
             var dstReg = PopRegister();
             var sizeReg = PopRegister();
@@ -599,29 +592,11 @@ namespace CodeGen.ASTVisitors
             _writer.WriteInstruction(Instructions.Add, dstReg, dstReg, FSPReg);
             _writer.WriteInstruction(Instructions.Addi, dstReg, dstReg, $"{rhsOffset}");
 
-            WriteMultiByteCopy(srcReg, dstReg, sizeReg);
+            // src dst inverted, because bugs
+            WriteMultiByteCopy(dstReg, srcReg, sizeReg);
 
             PushRegister(sizeReg);
             PushRegister(dstReg);
-
-
-
-
-
-            /*var lhs = children[0].TemporaryVariableName; // Contains absolute address to write to
-            var rhs = children[1].TemporaryVariableName; // Contains address relative to FSP to read from.
-            var lhsOffset = 0; //table.MemoryLayout.GetOffset(lhs);
-            var rhsOffset = 0; //table.MemoryLayout.GetOffset(rhs);
-
-            var varAddressReg = PopRegister();
-            var valReg = PopRegister();
-
-            _writer.WriteInstruction(Instructions.Lw, varAddressReg, $"{lhsOffset}({FSPReg})"); // Contains absolute address to write to
-            _writer.WriteInstruction(Instructions.Lw, valReg, $"{rhsOffset}({FSPReg})");        // Contains value to write in variable
-            _writer.WriteInstruction(Instructions.Sw, $"0({varAddressReg})", valReg);
-
-            PushRegister(varAddressReg);
-            PushRegister(valReg);*/
         }
 
         public void Visit(VarFuncCallNode n)
