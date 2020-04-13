@@ -28,20 +28,17 @@ C2::func(integer a) : C1
 
 squared(integer a) : integer
   local
-    integer result;
   do
-    result = a * a;
-	return (result);
+	return (a * a);
   end;
 
 main
   local
-	C2 k;
-	C1 j;
-	integer asdf;
+    integer k;
   do
 
-    squared(2);
+    k = squared(9);
+	write(k);
 	//k.y[3] = j.func(1).c;
 
   end
