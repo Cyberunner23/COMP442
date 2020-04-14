@@ -167,4 +167,5 @@
 [Do : (45,3) : "do"]
 [End : (46,3) : "end"]
 [Comment : (48,1) : "// 1.1, 1.2, 1.2, 1.4"]
-[EOF : (49,1) : ""]
+[Comment : (49,1) : "// View Memory Layouts in the symbol table file"]
+[EOF : (50,1) : ""]

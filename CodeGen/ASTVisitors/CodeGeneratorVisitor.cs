@@ -379,6 +379,7 @@ namespace CodeGen.ASTVisitors
             var children = n.GetChildren();
             foreach (var child in children)
             {
+                child._ReturnRawAddress = true;
                 child.Accept(this);
             }
 
@@ -445,7 +446,9 @@ namespace CodeGen.ASTVisitors
             _writer.WriteTag(getintEnd);
 
             // Store value we got
-            _writer.WriteInstruction(Instructions.Sw, $"{valueVarOffset}({FSPReg})", r1);
+            // r12 has address to value to store in
+
+            _writer.WriteInstruction(Instructions.Sw, $"0({Registers.R12})", r1);
 
             PushRegister(r4);
             PushRegister(r3);
@@ -617,7 +620,10 @@ namespace CodeGen.ASTVisitors
             _writer.WriteInstruction(Instructions.Add, destAddrReg, destAddrReg, FSPReg);
             _writer.WriteInstruction(Instructions.Addi, destAddrReg, destAddrReg, $"{destVarOffset}");
 
-            WriteMultiByteCopy(srcAddrReg, destAddrReg, valSizeReg);
+            if (!n._ReturnRawAddress)
+            {
+                WriteMultiByteCopy(srcAddrReg, destAddrReg, valSizeReg);
+            }
 
             PushRegister(valSizeReg);
             PushRegister(destAddrReg);
@@ -774,9 +780,24 @@ namespace CodeGen.ASTVisitors
             switch (n.SymTable)
             {
                 case FunctionSymbolTableEntry f:
-                    varOffset = f.MemoryLayout.GetOffset(varName);
-                    varType = f.MemoryLayout.GetVarType(varName);
-                    typeSize = f.MemoryLayout.GetTypeSize(varName);
+                    {
+                        if (f.MemoryLayout.Contains(varName))
+                        {
+                            varOffset = f.MemoryLayout.GetOffset(varName);
+                            varType = f.MemoryLayout.GetVarType(varName);
+                            typeSize = f.MemoryLayout.GetTypeSize(varName);
+                        }
+                        else
+                        {
+                            var classTable = _globalSymbolTable.GetClassSymbolTableByName(f.ScopeSpec);
+                            varOffset = classTable.MemoryLayout.GetOffset(varName);
+                            varType = classTable.MemoryLayout.GetVarType(varName);
+                            typeSize = classTable.MemoryLayout.GetTypeSize(varName);
+
+                            _writer.WriteInstruction(Instructions.Lw, callChainPointerReg, $"-8({FSPReg})");
+                        }
+                        
+                    }
                     tableForIndexing = f;
                     break;
                 case ClassSymbolTable c:
@@ -886,6 +907,7 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
                 n.TemporaryVariableName = child.TemporaryVariableName;
+                child._ReturnRawAddress = n._ReturnRawAddress;
             }
         }
 
@@ -1055,6 +1077,7 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
                 n.TemporaryVariableName = child.TemporaryVariableName;
+                child._ReturnRawAddress = n._ReturnRawAddress;
             }
         }
 

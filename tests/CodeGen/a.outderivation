@@ -1,0 +1,33 @@
+Start -> Program 
+Program -> ClassDecls FuncDefs Main FuncBody 
+Main -> main
+FuncBody -> LocalScope Do Statements End 
+LocalScope -> Local VarDecls 
+Local -> local
+VarDecls -> Type VarDecl VarDecls 
+Type -> TypeNoID 
+TypeNoID -> Integer 
+Integer -> integer
+VarDecl -> Identifier ArrayDims SemiColon 
+Identifier -> identifier
+SemiColon -> semiColon
+Do -> do
+Statements -> Statement Statements 
+Statement -> AssignStatementOrFuncCall 
+AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
+Identifier -> identifier
+VarOrFuncCallExt -> Indices VarExt 
+VarExt -> Equal Expression SemiColon 
+Equal -> equal
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+SemiColon -> semiColon
+Statements -> Statement Statements 
+Statement -> If OpenBrace BoolExpr CloseBrace Then StatementBlock Else StatementBlock SemiColon 
+If -> if
+OpenBrace -> openBrace
+BoolExpr -> ArithExpr CompareOp ArithExpr 
+ArithExpr -> Term Rig

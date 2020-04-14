@@ -1,10 +1,31 @@
-class C1 {
-	public float a;
-	public integer b[5];
-	public integer c;
+
+  
+  
+  
+  
+  
+  
+main
+  local
+	integer j;
+  do
+	j = 5;
 	
-	public func(integer input) : integer;
-};
+	if (j < 10)
+	  then
+	  do
+	  
+	  end
+	else
+	  do
+	  end;
+	
+  end
+  
+  
+  
+/*
+
 
 class C2 {
 	public integer x;
@@ -14,45 +35,23 @@ class C2 {
 	public func(integer a) : C1;
 };
 
-C1::func(integer input) : integer
-  local
-  do
-    return (input + 10);
-  end;
 
-C2::func(integer a) : C1
+C2::func(integer a) : void
   local
   do
-  end;
-
-squared(integer a) : integer
-  local
-  do
-	return (a * a);
+    y[2] = a + 2;
   end;
 
 main
   local
-	integer i[5];
+	C2 j;
   do
- 
-    i[squared(2)] = 900;
-	//k.y[3] = j.func(1).c;
-
+    j.func(9);
+	write(j.y[2]);
   end
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+*/
   
 /*C2::hello(integer c) : integer
   local

@@ -1,0 +1,82 @@
+[Main : (8,1) : "main"]
+[Local : (9,3) : "local"]
+[Integer : (10,2) : "integer"]
+[Identifier : (10,10) : "j"]
+[SemiColon : (10,11) : ";"]
+[Do : (11,3) : "do"]
+[Identifier : (12,2) : "jk"]
+[Equal : (12,5) : "="]
+[IntNum : (12,7) : "5"]
+[SemiColon : (12,8) : ";"]
+[If : (14,2) : "if"]
+[OpenBrace : (14,5) : "("]
+[Identifier : (14,6) : "jk"]
+[Lesser : (14,9) : "<"]
+[IntNum : (14,11) : "10"]
+[CloseBrace : (14,13) : ")"]
+[Then : (15,4) : "then"]
+[Do : (16,4) : "do"]
+[End : (18,4) : "end"]
+[Else : (19,2) : "else"]
+[Do : (20,4) : "do"]
+[End : (21,4) : "end"]
+[SemiColon : (21,7) : ";"]
+[End : (23,3) : "end"]
+[BlockComment : (27,1) : "/*
+
+
+class C2 {
+	public integer x;
+	public integer y[5];
+	
+	//public hello(integer c) : integer;
+	public func(integer a) : C1;
+};
+
+
+C2::func(integer a) : void
+  local
+  do
+    y[2] = a + 2;
+  end;
+
+main
+  local
+	C2 j;
+  do
+    j.func(9);
+	write(j.y[2]);
+  end
+  
+  
+*/"]
+[BlockComment : (56,1) : "/*C2::hello(integer c) : integer
+  local
+    C1 c1;
+    integer hey;
+  do
+    //hey = ((30 * -2) / not 2) / (5 + (5*5));
+  end;
+*/"]
+[BlockComment : (64,1) : "/*squared(integer a) : integer
+  local
+    integer result;
+  do
+    result = a * a;
+	//return (result);
+  end;*/"]
+[Comment : (81,4) : "//write(1+1);"]
+[BlockComment : (82,2) : "/*squared(1);
+	k.func(1);*/"]
+[Comment : (84,5) : "//val[1 + 0][0] = 5;"]
+[BlockComment : (85,2) : "/*while (0 > 1)
+	  do
+	  end;*/"]
+[Comment : (88,5) : "//k.x.b[1] = k.x.func(1).c;"]
+[Comment : (89,2) : "//"]
+[Comment : (91,5) : "//val = 5 - 3;"]
+[Comment : (92,2) : "//val = 7 / 8 * 9;"]
+[Comment : (93,2) : "//val = val * val;"]
+[Comment : (94,2) : "//result = squared(val);"]
+[Comment : (95,2) : "//write (result);"]
+[EOF : (95,20) : ""]

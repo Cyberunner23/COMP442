@@ -43,6 +43,11 @@ namespace CodeGenUtils
             AddSelfAddrEntry();
         }
 
+        public bool Contains(string name)
+        {
+            return OffsetMap.ContainsKey(name);
+        }
+
         public int GetOffset(string name)
         {
             return OffsetMap[name].Offset;

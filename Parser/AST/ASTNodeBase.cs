@@ -24,6 +24,8 @@ namespace Parser.AST
         public ITable SymTable { get; set; }
         public ITable SecondarySymTable { get; set; }
         public ITable CallerTable { get; set; }
+        public bool _ReturnRawAddress { get; set; } = false;
+
         public string ScopeSpec { get; set; }
         public (string Type, List<int> Dims) ExprType { get; set; }
 
