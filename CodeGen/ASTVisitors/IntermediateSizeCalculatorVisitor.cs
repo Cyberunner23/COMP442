@@ -270,6 +270,9 @@ namespace CodeGen.ASTVisitors
 
         public void Visit(FuncCallNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            n._CallchainAddressVarName = table.MemoryLayout.AddTemporaryVariable();
+
             var children = n.GetChildren();
             foreach (var child in children)
             {
@@ -279,6 +282,9 @@ namespace CodeGen.ASTVisitors
 
         public void Visit(AssignmentNode n)
         {
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            n._CallchainAddressVarName = table.MemoryLayout.AddTemporaryVariable();
+
             var children = n.GetChildren();
             foreach (var child in children)
             {
@@ -321,6 +327,7 @@ namespace CodeGen.ASTVisitors
             var size = Utils.GetTypeFullSize(_globalSymbolTable, last.ExprType);
 
             n.TemporaryVariableName = table.MemoryLayout.AddTemporaryVariable(size);
+            n._CallchainAddressVarName = table.MemoryLayout.AddTemporaryVariable();
         }
 
         public void Visit(IndicesNode n)

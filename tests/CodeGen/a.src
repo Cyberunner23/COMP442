@@ -1,24 +1,25 @@
 
+class C2 {
+	public integer x;
+	public integer y[5];
+	
+	//public hello(integer c) : integer;
+};
   
   
-  
-  
+funky(integer a) : integer
+  local
+  do
+    return (a + 1);
+  end;
   
   
 main
   local
-	integer j;
-  do
-	j = 5;
-	
-	if (j < 10)
-	  then
-	  do
-	  
-	  end
-	else
-	  do
-	  end;
+	integer arr[10];
+  do	
+	read(arr[funky(4)]);
+	write(arr[funky(4)]);
 	
   end
   

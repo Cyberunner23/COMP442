@@ -446,9 +446,7 @@ namespace CodeGen.ASTVisitors
             _writer.WriteTag(getintEnd);
 
             // Store value we got
-            // r12 has address to value to store in
-
-            _writer.WriteInstruction(Instructions.Sw, $"0({Registers.R12})", r1);
+            _writer.WriteInstruction(Instructions.Sw, $"{valueVarOffset}({FSPReg})", r1);
 
             PushRegister(r4);
             PushRegister(r3);
@@ -606,6 +604,9 @@ namespace CodeGen.ASTVisitors
             var table = (FunctionSymbolTableEntry)n.SymTable;
 
             _writer.WriteComment("Var Func Call");
+
+            var callchainAddrOffset = table.MemoryLayout.GetOffset(n._CallchainAddressVarName);
+            _writer.WriteInstruction(Instructions.Sw, $"{callchainAddrOffset}({FSPReg})", Registers.R12);
             WriteCallchainCode(children, FSPReg);
 
             // r12 points to value, crate local copy
@@ -624,6 +625,8 @@ namespace CodeGen.ASTVisitors
             {
                 WriteMultiByteCopy(srcAddrReg, destAddrReg, valSizeReg);
             }
+
+            _writer.WriteInstruction(Instructions.Lw, Registers.R12, $"{callchainAddrOffset}({FSPReg})");
 
             PushRegister(valSizeReg);
             PushRegister(destAddrReg);

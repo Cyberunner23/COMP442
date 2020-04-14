@@ -1,0 +1,99 @@
+|===========================================================
+| Global Table
+|===========================================================
+|
+|    *===========================================================
+|    * Class Table
+|    * Name: C2
+|    * Inherits:
+|    * MemSize = 24
+|    *===========================================================
+|    *
+|    *    Variable: Public integer x
+|    *    Variable: Public integer y[5]
+|    *
+|    *===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    funky(integer a) -> integer
+|    +
+|    +    Parameter: integer a
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 32
+|    +
+|    +===========================================================
+|    + Local Table
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    main()
+|    +
+|    +
+|    +    FrameSize: 100
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: integer arr[10]
+|    +        MemSize: 40, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|===========================================================
+
+
+MEMORY LAYOUTS
+C2
+Total: 24 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | VariableName | Type
+       4 |        4 |        20 |            y | integer[5]
+       0 |        4 |         4 |            x | integer
+-------------------------------------
+
+
+
+funky(integer a) -> integer
+Total: 32 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -12 |        4 |         4 | ReturnVal         | __returnval__  | integer
+     -16 |        4 |         4 | Argument          | a              | integer
+     -20 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -24 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -28 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -32 |        4 |         4 | TemporaryVariable | __temp_3__     |
+-------------------------------------
+
+main()
+Total: 100 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+      -8 |        0 |         0 | ReturnVal         | __returnval__  | 
+     -48 |        4 |        40 | Variable          | arr            | integer[10]
+     -52 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -56 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -60 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -64 |        4 |         4 | TemporaryVariable | __temp_3__     |
+     -68 |        4 |         4 | TemporaryVariable | __temp_4__     |
+     -72 |        4 |         4 | TemporaryVariable | __temp_5__     |
+     -76 |        4 |         4 | TemporaryVariable | __temp_6__     |
+     -80 |        4 |         4 | TemporaryVariable | __temp_7__     |
+     -84 |        4 |         4 | TemporaryVariable | __temp_8__     |
+     -88 |        4 |         4 | TemporaryVariable | __temp_9__     |
+     -92 |        4 |         4 | TemporaryVariable | __temp_10__    |
+     -96 |        4 |         4 | TemporaryVariable | __temp_11__    |
+    -100 |        4 |         4 | TemporaryVariable | __temp_12__    |
+-------------------------------------
+
+
