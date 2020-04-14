@@ -267,36 +267,7 @@ multi_byte_copy_end_3
     addi r2,r2,4
     add r1,r1,r14
     addi r1,r1,-72
-
-% - MultiByteCopy
-    sub r3,r3,r3
-    sub r4,r4,r4
-    sub r7,r7,r7
-    sub r6,r6,r6
-    sub r9,r9,r9
-    add r9,r9,r1
-    add r6,r6,r12
-
-multi_byte_copy_4
-
-% -- while (i < valSizeReg)
-    clt r7,r3,r2
-    bz r7,multi_byte_copy_end_4
-
-% -- {
-% --- dst[i] = src[i]
-    lw r4,0(r6)
-    sw 0(r9),r4
-
-% --- i++
-    addi r6,r6,4
-    addi r9,r9,4
-
-% -- }
-    addi r3,r3,4
-    j multi_byte_copy_4
-
-multi_byte_copy_end_4
+    sw 0(r1),r12
     lw r12,-76(r14)
 
 % Read Op
@@ -350,7 +321,9 @@ getint9_0
     align 
 
 getint_end_0
-    sw -72(r14),r1
+    sub r7,r7,r7
+    lw r7,-72(r14)
+    sw 0(r7),r1
 
 % Var Func Call
     sw -100(r14),r12
@@ -391,23 +364,23 @@ getint_end_0
 
 % - MultiByteCopy
     sub r7,r7,r7
-    sub r9,r9,r9
     sub r6,r6,r6
+    sub r9,r9,r9
     sub r8,r8,r8
     sub r10,r10,r10
     add r10,r10,r3
     add r8,r8,r2
 
-multi_byte_copy_5
+multi_byte_copy_4
 
 % -- while (i < valSizeReg)
-    clt r6,r7,r4
-    bz r6,multi_byte_copy_end_5
+    clt r9,r7,r4
+    bz r9,multi_byte_copy_end_4
 
 % -- {
 % --- dst[i] = src[i]
-    lw r9,0(r8)
-    sw 0(r10),r9
+    lw r6,0(r8)
+    sw 0(r10),r6
 
 % --- i++
     addi r8,r8,4
@@ -415,9 +388,9 @@ multi_byte_copy_5
 
 % -- }
     addi r7,r7,4
-    j multi_byte_copy_5
+    j multi_byte_copy_4
 
-multi_byte_copy_end_5
+multi_byte_copy_end_4
 
 % - jump to func
     jl r15,funky_integer_integer
@@ -438,10 +411,45 @@ multi_byte_copy_end_5
     sub r3,r3,r3
     sub r4,r4,r4
     sub r7,r7,r7
+    sub r6,r6,r6
+    sub r9,r9,r9
+    add r9,r9,r12
+    add r6,r6,r13
+
+multi_byte_copy_5
+
+% -- while (i < valSizeReg)
+    clt r7,r3,r2
+    bz r7,multi_byte_copy_end_5
+
+% -- {
+% --- dst[i] = src[i]
+    lw r4,0(r6)
+    sw 0(r9),r4
+
+% --- i++
+    addi r6,r6,4
+    addi r9,r9,4
+
+% -- }
+    addi r3,r3,4
+    j multi_byte_copy_5
+
+multi_byte_copy_end_5
+    sub r1,r1,r1
+    sub r2,r2,r2
+    addi r2,r2,4
+    add r1,r1,r14
+    addi r1,r1,-88
+
+% - MultiByteCopy
+    sub r3,r3,r3
+    sub r4,r4,r4
+    sub r7,r7,r7
     sub r9,r9,r9
     sub r6,r6,r6
-    add r6,r6,r12
-    add r9,r9,r13
+    add r6,r6,r1
+    add r9,r9,r12
 
 multi_byte_copy_6
 
@@ -463,41 +471,6 @@ multi_byte_copy_6
     j multi_byte_copy_6
 
 multi_byte_copy_end_6
-    sub r1,r1,r1
-    sub r2,r2,r2
-    addi r2,r2,4
-    add r1,r1,r14
-    addi r1,r1,-88
-
-% - MultiByteCopy
-    sub r3,r3,r3
-    sub r4,r4,r4
-    sub r7,r7,r7
-    sub r6,r6,r6
-    sub r9,r9,r9
-    add r9,r9,r1
-    add r6,r6,r12
-
-multi_byte_copy_7
-
-% -- while (i < valSizeReg)
-    clt r7,r3,r2
-    bz r7,multi_byte_copy_end_7
-
-% -- {
-% --- dst[i] = src[i]
-    lw r4,0(r6)
-    sw 0(r9),r4
-
-% --- i++
-    addi r6,r6,4
-    addi r9,r9,4
-
-% -- }
-    addi r3,r3,4
-    j multi_byte_copy_7
-
-multi_byte_copy_end_7
     lw r12,-92(r14)
 
 % SUB VAR CALL
@@ -532,32 +505,32 @@ multi_byte_copy_end_7
 % - MultiByteCopy
     sub r3,r3,r3
     sub r4,r4,r4
-    sub r9,r9,r9
     sub r6,r6,r6
+    sub r9,r9,r9
     sub r10,r10,r10
     add r10,r10,r1
-    add r6,r6,r12
+    add r9,r9,r12
 
-multi_byte_copy_8
+multi_byte_copy_7
 
 % -- while (i < valSizeReg)
-    clt r9,r3,r2
-    bz r9,multi_byte_copy_end_8
+    clt r6,r3,r2
+    bz r6,multi_byte_copy_end_7
 
 % -- {
 % --- dst[i] = src[i]
-    lw r4,0(r6)
+    lw r4,0(r9)
     sw 0(r10),r4
 
 % --- i++
-    addi r6,r6,4
+    addi r9,r9,4
     addi r10,r10,4
 
 % -- }
     addi r3,r3,4
-    j multi_byte_copy_8
+    j multi_byte_copy_7
 
-multi_byte_copy_end_8
+multi_byte_copy_end_7
     lw r12,-100(r14)
 
 % Write Op

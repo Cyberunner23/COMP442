@@ -446,7 +446,13 @@ namespace CodeGen.ASTVisitors
             _writer.WriteTag(getintEnd);
 
             // Store value we got
-            _writer.WriteInstruction(Instructions.Sw, $"{valueVarOffset}({FSPReg})", r1);
+            var addrReg = PopRegister();
+
+            _writer.WriteInstruction(Instructions.Lw, addrReg, $"{valueVarOffset}({FSPReg})");
+            _writer.WriteInstruction(Instructions.Sw, $"0({addrReg})", r1);
+
+            PushRegister(addrReg);
+            
 
             PushRegister(r4);
             PushRegister(r3);
@@ -623,7 +629,11 @@ namespace CodeGen.ASTVisitors
 
             if (!n._ReturnRawAddress)
             {
-                WriteMultiByteCopy(srcAddrReg, destAddrReg, valSizeReg);
+                WriteMultiByteCopy(srcAddrReg, destAddrReg, valSizeReg); // Copy value to destination
+            }
+            else
+            {
+                _writer.WriteInstruction(Instructions.Sw, $"0({destAddrReg})", srcAddrReg); // Copy address to destination
             }
 
             _writer.WriteInstruction(Instructions.Lw, Registers.R12, $"{callchainAddrOffset}({FSPReg})");
@@ -908,9 +918,9 @@ namespace CodeGen.ASTVisitors
             var children = n.GetChildren();
             foreach (var child in children)
             {
+                child._ReturnRawAddress = n._ReturnRawAddress;
                 child.Accept(this);
                 n.TemporaryVariableName = child.TemporaryVariableName;
-                child._ReturnRawAddress = n._ReturnRawAddress;
             }
         }
 
@@ -1078,9 +1088,9 @@ namespace CodeGen.ASTVisitors
             var children = n.GetChildren();
             foreach (var child in children)
             {
+                child._ReturnRawAddress = n._ReturnRawAddress;
                 child.Accept(this);
                 n.TemporaryVariableName = child.TemporaryVariableName;
-                child._ReturnRawAddress = n._ReturnRawAddress;
             }
         }
 
