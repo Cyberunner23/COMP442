@@ -2,6 +2,7 @@
 {
     public class TypeConstants
     {
+        public const string VoidType = "void";
         public const string BoolType = "bool";
         public const string IntType = "integer";
         public const string FloatType = "float";

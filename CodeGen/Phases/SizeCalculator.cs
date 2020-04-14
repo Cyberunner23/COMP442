@@ -41,6 +41,8 @@ namespace CodeGen.Phases
 
         private void CalculateClassSize(ClassSymbolTable classTable)
         {
+            var varsInScope = classTable.GetVariablesInScope();
+
             foreach (var variableEntry in classTable.Entries.Where(x => x is ClassSymbolTableEntryVariable).Cast<ClassSymbolTableEntryVariable>())
             {
                 var multiplier = 1;

@@ -60,6 +60,10 @@ namespace CodeGen
             {
                 size = TypeConstants.FloatTypeSize;
             }
+            else if (string.Equals(type.type, TypeConstants.VoidType))
+            {
+                size = 0;
+            }
             else
             {
                 var classTable = globalSymbolTable.GetClassSymbolTableByName(type.type);

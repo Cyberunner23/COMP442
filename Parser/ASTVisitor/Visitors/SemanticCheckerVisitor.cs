@@ -87,7 +87,17 @@ namespace Parser.ASTVisitor.Visitors
         #region Statements
         public void Visit(StatementsNode n)
         {
-            foreach (var node in n.GetChildren())
+            var children = n.GetChildren();
+
+            var table = (FunctionSymbolTableEntry)n.SymTable;
+            var returnType = table.ReturnType?.Lexeme ?? "";
+
+            if (!string.Equals(returnType, TypeConstants.VoidType) && !string.IsNullOrEmpty(returnType) && children.Where(x => x is ReturnNode).Count() == 0)
+            {
+                _errorStream.WriteLine($"Function {table.ToStringSignature()} returns an {returnType}, however no return statement was found.");
+            }
+
+            foreach (var node in children)
             {
                 node.SymTable = n.SymTable;
                 node.Accept(this);
@@ -140,7 +150,7 @@ namespace Parser.ASTVisitor.Visitors
             }
 
             var table = (FunctionSymbolTableEntry)n.SymTable;
-            if (!string.Equals(children.Last().ExprType.Type, table.ReturnType?.Lexeme ?? ""))
+            if (!string.Equals(children.Last().ExprType.Type, table.ReturnType?.Lexeme ?? "") && !(children.Last().ExprType.Type == null && string.Equals(table.ReturnType?.Lexeme ?? "", "void")))
             {
                 _errorStream.WriteLine($"Type of value for return is invalid (line: {n.Token.StartLine}), expected: {table.ReturnType?.Lexeme ?? "void"}, received: {children.Last().ExprType.Type}");
             }
@@ -376,6 +386,7 @@ namespace Parser.ASTVisitor.Visitors
                 }
 
                 node.SymTable = classTable;
+                node.SecondarySymTable = n.SymTable;
                 node.CallerTable = n.SymTable;
                 node.Accept(this);
                 currentScopeSpec = node.ScopeSpec;

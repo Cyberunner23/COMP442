@@ -1,0 +1,32 @@
+class C1 {
+	public add(integer a, integer b) : integer;
+};
+
+C1::add(integer a, integer b) : integer
+  local
+    integer result;
+  do
+    result = a + b;
+    return (result); // 2.3
+  end;
+
+squared(integer a) : integer
+  local
+    integer result;
+  do
+    result = a * a;
+	return (result); // 2.3
+  end;
+
+main
+  local
+    C1 k;
+	integer added;
+	integer square;
+  do
+    added = k.add(3, 5); // 2.1, 2.2, 2.3, 3.1
+	square = squared(9); // 2.1, 2.2, 2.3, 3.1
+	
+	write(added); // 3.4
+	write(square); // 3.4
+  end

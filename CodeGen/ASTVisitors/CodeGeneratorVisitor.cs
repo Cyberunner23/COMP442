@@ -151,6 +151,13 @@ namespace CodeGen.ASTVisitors
             {
                 child.Accept(this);
             }
+
+            if (string.Equals(table.ReturnType.Lexeme, TypeConstants.VoidType))
+            {
+                // Jump to return address
+                _writer.WriteInstruction(Instructions.Lw, r15, $"-4({FSPReg})");
+                _writer.WriteInstruction(Instructions.Jr, r15);
+            }
         }
 
         public void Visit(TypeNode n)
@@ -539,15 +546,6 @@ namespace CodeGen.ASTVisitors
             _writer.WriteInstruction(Instructions.Jr, r15);
         }
 
-        public void Visit(FuncCallNode n)
-        {
-            var children = n.GetChildren();
-            foreach (var child in children)
-            {
-                child.Accept(this);
-            }
-        }
-
         // Goes through the call chain and writes the code for it
         // Sets the initial value for the callchain pointer (r12)
         // Writes the code for the subcalls
@@ -623,6 +621,12 @@ namespace CodeGen.ASTVisitors
 
             PushRegister(valSizeReg);
             PushRegister(destAddrReg);
+        }
+
+        public void Visit(FuncCallNode n)
+        {
+            var children = n.GetChildren();
+            WriteCallchainCode(children, FSPReg);
         }
 
         private void WriteMultiByteCopy(string srcReg, string dstReg, string sizeReg)
@@ -990,7 +994,7 @@ namespace CodeGen.ASTVisitors
 
             _writer.WriteInstruction(Instructions.Lw, op1Reg, $"{operandVarOffsets[0]}({FSPReg})");
             _writer.WriteInstruction(Instructions.Lw, op2Reg, $"{operandVarOffsets[1]}({FSPReg})");
-            _writer.WriteInstruction(instruction, destReg, op1Reg, op2Reg);
+            _writer.WriteInstruction(instruction, destReg, op2Reg, op1Reg);
             _writer.WriteInstruction(Instructions.Sw, $"{resultOffset}({FSPReg})", destReg);
 
             PushRegister(op2Reg);

@@ -1,0 +1,26 @@
+main
+  local
+    integer v1;
+  do
+    
+	v1 = 10;
+
+	while (v1 > 0)
+	do
+	  
+	  if (v1 > 5)
+	  then 
+	  do 
+	    write(1);
+	  end
+	else
+	  do
+	    write(2);
+	  end;
+	  
+	  v1 = v1 - 1;
+	end;
+	
+	write (v1);
+	
+  end

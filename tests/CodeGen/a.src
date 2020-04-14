@@ -33,14 +33,10 @@ squared(integer a) : integer
 
 main
   local
-    integer k;
-	C1 j;
+	integer i[5];
   do
-  
-	write(j.func(6));
-	
-    k = squared(squared(9));
-	write(k);
+ 
+    i[squared(2)] = 900;
 	//k.y[3] = j.func(1).c;
 
   end

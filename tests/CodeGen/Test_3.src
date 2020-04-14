@@ -1,0 +1,26 @@
+class C1 {
+	public func(integer input) : integer;
+};
+
+C1::func(integer input) : integer
+  local
+  do
+    write(input + input);
+    return (input + input);
+  end;
+
+square(integer i) : void
+  local
+  do
+    write(i*i);
+  end;
+
+main
+  local
+    C1 c;
+  do
+    
+	square(2);
+	c.func(5);
+	
+  end
