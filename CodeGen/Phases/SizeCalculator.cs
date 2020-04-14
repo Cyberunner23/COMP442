@@ -43,41 +43,34 @@ namespace CodeGen.Phases
         {
             var varsInScope = classTable.GetVariablesInScope();
 
-            foreach (var variableEntry in classTable.Entries.Where(x => x is ClassSymbolTableEntryVariable).Cast<ClassSymbolTableEntryVariable>())
+            foreach (var varInScope in varsInScope)
             {
+                var type = varInScope.Value;
+
                 var multiplier = 1;
-                foreach (var dim in variableEntry.ArrayDims)
+                foreach (var dim in type.dims)
                 {
                     multiplier *= dim;
                 }
 
-                var type = variableEntry.Type;
-                switch (type.TokenType)
+                if (string.Equals(type.type, TypeConstants.IntType))
                 {
-                    case TokenType.Integer:
-                        variableEntry.MemSize = multiplier * TypeConstants.IntTypeSize;
-                        classTable.MemoryLayout.AddEntry((TypeConstants.IntType, variableEntry.ArrayDims), variableEntry.Name, TypeConstants.IntTypeSize, variableEntry.MemSize);
-                        break;
-                    case TokenType.Float:
-                        variableEntry.MemSize = multiplier * TypeConstants.FloatTypeSize;
-                        classTable.MemoryLayout.AddEntry((TypeConstants.FloatType, variableEntry.ArrayDims), variableEntry.Name, TypeConstants.FloatTypeSize, variableEntry.MemSize);
-                        break;
-                    case TokenType.Identifier:
-                        {
-                            var varClassTable = _globalSymbolTable.GetClassSymbolTableByName(type.Lexeme);
-                            if (varClassTable.MemoryLayout.TotalSize == 0)
-                            {
-                                CalculateClassSize(varClassTable);
-                            }
-
-                            variableEntry.MemSize = multiplier * varClassTable.MemoryLayout.TotalSize;
-                            classTable.MemoryLayout.AddEntry((varClassTable.ClassName, variableEntry.ArrayDims), variableEntry.Name, varClassTable.MemoryLayout.TotalSize, variableEntry.MemSize);
-
-                            break;
-                        }
+                    classTable.MemoryLayout.AddEntry(type, varInScope.Key, TypeConstants.IntTypeSize, TypeConstants.IntTypeSize * multiplier);
                 }
+                else if (string.Equals(type.type, TypeConstants.FloatType))
+                {
+                    classTable.MemoryLayout.AddEntry(type, varInScope.Key, TypeConstants.FloatTypeSize, TypeConstants.FloatTypeSize * multiplier);
+                }
+                else
+                {
+                    var varClassTable = _globalSymbolTable.GetClassSymbolTableByName(type.type);
+                    if (varClassTable.MemoryLayout.TotalSize == 0)
+                    {
+                        CalculateClassSize(varClassTable);
+                    }
 
-                variableEntry.MemOffset = classTable.MemoryLayout.GetOffset(variableEntry.Name);
+                    classTable.MemoryLayout.AddEntry(type, varInScope.Key, varClassTable.MemoryLayout.TotalSize, varClassTable.MemoryLayout.TotalSize * multiplier);
+                }
             }
         }
 

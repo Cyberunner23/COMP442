@@ -22,7 +22,7 @@ namespace Parser.SymbolTable.Class
             MemoryLayout = new ClassMemoryLayout();
         }
 
-        public Dictionary<string, (string, List<int>)> GetVariablesInScope(List<string> visitedClasses = null)
+        public Dictionary<string, (string type, List<int> dims)> GetVariablesInScope(List<string> visitedClasses = null)
         {
             if (visitedClasses == null)
             {
