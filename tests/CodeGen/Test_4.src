@@ -1,0 +1,19 @@
+
+squared(integer input) : integer
+  local
+  do
+    return (input * input);
+  end;
+
+main
+  local
+    integer x;
+  do
+    
+	x = (squared(2) * 2) / (3 - 1) + 10; // 3.1, 5.1
+	write(x); // 3.4
+	
+	x = squared(10); // 3.1
+	write(x); // 3.4
+	
+  end

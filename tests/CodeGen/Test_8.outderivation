@@ -14,21 +14,6 @@ Integer -> integer
 VarDecl -> Identifier ArrayDims SemiColon 
 Identifier -> identifier
 SemiColon -> semiColon
-MemberDecls -> Visibility MemberDecl MemberDecls 
-Visibility -> Public 
-Public -> public
-MemberDecl -> TypeNoID VarDecl 
-TypeNoID -> Integer 
-Integer -> integer
-VarDecl -> Identifier ArrayDims SemiColon 
-Identifier -> identifier
-ArrayDims -> ArraySize ArrayDims 
-ArraySize -> OpenSquareBrace OptionalInt CloseSquareBrace 
-OpenSquareBrace -> openSquareBrace
-OptionalInt -> IntNum 
-IntNum -> intNum
-CloseSquareBrace -> closeSquareBrace
-SemiColon -> semiColon
 CloseCurlyBrace -> closeCurlyBrace
 SemiColon -> semiColon
 FuncDefs -> FuncDef FuncDefs 
@@ -63,12 +48,12 @@ Term -> Factor RightTerm
 Factor -> VarFuncCall 
 VarFuncCall -> Identifier VarOrFuncCall 
 Identifier -> identifier
-RightArithExpr -> AddOp Term RightArithExpr 
-AddOp -> Plus 
-Plus -> plus
-Term -> Factor RightTerm 
-Factor -> IntNum 
-IntNum -> intNum
+RightTerm -> MultOp Factor RightTerm 
+MultOp -> Asterix 
+Asterix -> asterix
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
 CloseBrace -> closeBrace
 SemiColon -> semiColon
 End -> end
@@ -90,7 +75,31 @@ OptionalInt -> IntNum
 IntNum -> intNum
 CloseSquareBrace -> closeSquareBrace
 SemiColon -> semiColon
+VarDecls -> Type VarDecl VarDecls 
+Type -> Identifier 
+Identifier -> identifier
+VarDecl -> Identifier ArrayDims SemiColon 
+Identifier -> identifier
+SemiColon -> semiColon
 Do -> do
+Statements -> Statement Statements 
+Statement -> AssignStatementOrFuncCall 
+AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
+Identifier -> identifier
+VarOrFuncCallExt -> Indices VarExt 
+VarExt -> Period AssignStatementOrFuncCall 
+Period -> period
+AssignStatementOrFuncCall -> Identifier VarOrFuncCallExt 
+Identifier -> identifier
+VarOrFuncCallExt -> Indices VarExt 
+VarExt -> Equal Expression SemiColon 
+Equal -> equal
+Expression -> ArithExpr BoolExprOrNone 
+ArithExpr -> Term RightArithExpr 
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+SemiColon -> semiColon
 Statements -> Statement Statements 
 Statement -> Read OpenBrace Expression CloseBrace SemiColon 
 Read -> read
@@ -119,6 +128,24 @@ Term -> Factor RightTerm
 Factor -> IntNum 
 IntNum -> intNum
 CloseBrace -> closeBrace
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Plus 
+Plus -> plus
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Minus 
+Minus -> minus
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+VarOrFuncCall -> Indices FactorVar 
+FactorVar -> Period VarFuncCall 
+Period -> period
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
 CloseSquareBrace -> closeSquareBrace
 CloseBrace -> closeBrace
 SemiColon -> semiColon
@@ -150,6 +177,24 @@ Term -> Factor RightTerm
 Factor -> IntNum 
 IntNum -> intNum
 CloseBrace -> closeBrace
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Plus 
+Plus -> plus
+Term -> Factor RightTerm 
+Factor -> IntNum 
+IntNum -> intNum
+RightArithExpr -> AddOp Term RightArithExpr 
+AddOp -> Minus 
+Minus -> minus
+Term -> Factor RightTerm 
+Factor -> VarFuncCall 
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
+VarOrFuncCall -> Indices FactorVar 
+FactorVar -> Period VarFuncCall 
+Period -> period
+VarFuncCall -> Identifier VarOrFuncCall 
+Identifier -> identifier
 CloseSquareBrace -> closeSquareBrace
 CloseBrace -> closeBrace
 SemiColon -> semiColon

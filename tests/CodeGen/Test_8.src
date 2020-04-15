@@ -1,0 +1,21 @@
+class C1 {
+	public integer v;
+};
+
+squared(integer input) : integer
+  local
+  do
+    return (input * input);
+  end;
+
+main
+  local
+    integer x[10];
+	C1 c;
+  do
+    
+	c.v = 2;
+	read(x[squared(2) + 1 - c.v]); // 5.3
+	write(x[squared(2) + 1 - c.v]);
+	
+  end

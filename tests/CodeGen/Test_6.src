@@ -1,0 +1,33 @@
+class C1 {
+	public integer a;
+};
+
+class C2 {
+	public integer i[10];
+	public C1 j[10];
+};
+
+main
+  local
+    integer x[10];
+	C1 y[10];
+	C1 z;
+	C2 k;
+  do
+    
+	read(x[2]); // 4.1
+	write(x[2]);
+	
+	read(y[2].a); // 4.2
+	write(y[2].a);
+	
+	read(z.a); // 4.3
+	write(z.a);
+	
+	read(k.i[2]); // 4.4
+	write(k.i[2]);
+	
+	read(k.j[2].a); // 4.4
+	write(k.j[2].a);
+	
+  end

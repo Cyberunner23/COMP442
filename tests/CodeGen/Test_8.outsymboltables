@@ -6,37 +6,22 @@
 |    * Class Table
 |    * Name: C1
 |    * Inherits:
-|    * MemSize = 0
+|    * MemSize = 4
 |    *===========================================================
 |    *
-|    *    Function: Public func(integer input) -> integer
+|    *    Variable: Public integer v
 |    *
 |    *===========================================================
 |    
 |
 |    +===========================================================
 |    + Function Table
-|    +    C1::func(integer input) -> integer
+|    +    squared(integer input) -> integer
 |    +
 |    +    Parameter: integer input
 |    +        MemSize: 4, MemOffset:  0
 |    +
-|    +    FrameSize: 40
-|    +
-|    +===========================================================
-|    + Local Table
-|    +
-|    +===========================================================
-|    
-|
-|    +===========================================================
-|    + Function Table
-|    +    square(integer i) -> void
-|    +
-|    +    Parameter: integer i
-|    +        MemSize: 4, MemOffset:  0
-|    +
-|    +    FrameSize: 24
+|    +    FrameSize: 36
 |    +
 |    +===========================================================
 |    + Local Table
@@ -49,12 +34,14 @@
 |    +    main()
 |    +
 |    +
-|    +    FrameSize: 20
+|    +    FrameSize: 152
 |    +
 |    +===========================================================
 |    + Local Table
+|    +    Local: integer x[10]
+|    +        MemSize: 40, MemOffset: 0
 |    +    Local: C1 c
-|    +        MemSize: 0, MemOffset: 0
+|    +        MemSize: 4, MemOffset: 0
 |    +
 |    +===========================================================
 |    
@@ -64,15 +51,16 @@
 
 MEMORY LAYOUTS
 C1
-Total: 0 bytes
+Total: 4 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | VariableName | Type
+       0 |        4 |         4 |            v | integer
 -------------------------------------
 
 
 
-C1::func(integer input) -> integer
-Total: 40 bytes
+squared(integer input) -> integer
+Total: 36 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
       -4 |        4 |         4 | Return            | __returnaddr__ |
@@ -84,34 +72,42 @@ Total: 40 bytes
      -28 |        4 |         4 | TemporaryVariable | __temp_2__     |
      -32 |        4 |         4 | TemporaryVariable | __temp_3__     |
      -36 |        4 |         4 | TemporaryVariable | __temp_4__     |
-     -40 |        4 |         4 | TemporaryVariable | __temp_5__     |
--------------------------------------
-
-square(integer i) -> void
-Total: 24 bytes
--------------------------------------
-  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
-      -4 |        4 |         4 | Return            | __returnaddr__ |
-      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
-      -8 |        0 |         0 | ReturnVal         | __returnval__  | 
-     -12 |        4 |         4 | Argument          | i              | integer
-     -16 |        4 |         4 | TemporaryVariable | __temp_0__     |
-     -20 |        4 |         4 | TemporaryVariable | __temp_1__     |
-     -24 |        4 |         4 | TemporaryVariable | __temp_2__     |
 -------------------------------------
 
 main()
-Total: 20 bytes
+Total: 152 bytes
 -------------------------------------
   Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
       -4 |        4 |         4 | Return            | __returnaddr__ |
       -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
       -8 |        0 |         0 | ReturnVal         | __returnval__  | 
-      -8 |        0 |         0 | Variable          | c              | C1
-     -12 |        4 |         4 | TemporaryVariable | __temp_0__     |
-     -12 |        0 |         0 | TemporaryVariable | __temp_1__     |
-     -16 |        4 |         4 | TemporaryVariable | __temp_2__     |
-     -20 |        4 |         4 | TemporaryVariable | __temp_3__     |
+     -48 |        4 |        40 | Variable          | x              | integer[10]
+     -52 |        4 |         4 | Variable          | c              | C1
+     -56 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -60 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -64 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -68 |        4 |         4 | TemporaryVariable | __temp_3__     |
+     -72 |        4 |         4 | TemporaryVariable | __temp_4__     |
+     -76 |        4 |         4 | TemporaryVariable | __temp_5__     |
+     -80 |        4 |         4 | TemporaryVariable | __temp_6__     |
+     -84 |        4 |         4 | TemporaryVariable | __temp_7__     |
+     -88 |        4 |         4 | TemporaryVariable | __temp_8__     |
+     -92 |        4 |         4 | TemporaryVariable | __temp_9__     |
+     -96 |        4 |         4 | TemporaryVariable | __temp_10__    |
+    -100 |        4 |         4 | TemporaryVariable | __temp_11__    |
+    -104 |        4 |         4 | TemporaryVariable | __temp_12__    |
+    -108 |        4 |         4 | TemporaryVariable | __temp_13__    |
+    -112 |        4 |         4 | TemporaryVariable | __temp_14__    |
+    -116 |        4 |         4 | TemporaryVariable | __temp_15__    |
+    -120 |        4 |         4 | TemporaryVariable | __temp_16__    |
+    -124 |        4 |         4 | TemporaryVariable | __temp_17__    |
+    -128 |        4 |         4 | TemporaryVariable | __temp_18__    |
+    -132 |        4 |         4 | TemporaryVariable | __temp_19__    |
+    -136 |        4 |         4 | TemporaryVariable | __temp_20__    |
+    -140 |        4 |         4 | TemporaryVariable | __temp_21__    |
+    -144 |        4 |         4 | TemporaryVariable | __temp_22__    |
+    -148 |        4 |         4 | TemporaryVariable | __temp_23__    |
+    -152 |        4 |         4 | TemporaryVariable | __temp_24__    |
 -------------------------------------
 
 

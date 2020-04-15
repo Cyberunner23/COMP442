@@ -879,6 +879,7 @@ namespace CodeGen.ASTVisitors
                     _writer.WriteInstruction(Instructions.Add, absoluteAddressReg, absoluteAddressReg, indexingElementOffsetReg);
                 }
 
+                PushRegister(indexingElementOffsetReg);
                 PushRegister(indexValueReg);
                 PushRegister(runningMultiplierReg);
                 PushRegister(typeSizeReg);

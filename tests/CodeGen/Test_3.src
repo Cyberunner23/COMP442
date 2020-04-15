@@ -2,14 +2,14 @@ class C1 {
 	public func(integer input) : integer;
 };
 
-C1::func(integer input) : integer
+C1::func(integer input) : integer // 2.2
   local
   do
     write(input + input);
-    return (input + input);
+    return (input + input); // 2.3
   end;
 
-square(integer i) : void
+square(integer i) : void // 2.2
   local
   do
     write(i*i);
@@ -20,7 +20,7 @@ main
     C1 c;
   do
     
-	square(2);
-	c.func(5);
+	square(2); // 2.1 2.2
+	c.func(5); // 2.1 2.2
 	
   end

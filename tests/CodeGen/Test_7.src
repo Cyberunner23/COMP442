@@ -1,0 +1,15 @@
+squared(integer input) : integer
+  local
+  do
+    return (input * input);
+  end;
+
+main
+  local
+    integer x[10];
+  do
+    
+	read(x[squared(2) + 1]); // 5.2
+	write(x[squared(2) + 1]);
+	
+  end
