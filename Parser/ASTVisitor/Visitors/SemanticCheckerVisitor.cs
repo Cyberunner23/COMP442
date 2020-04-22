@@ -194,6 +194,15 @@ namespace Parser.ASTVisitor.Visitors
                 node.Accept(this);
             }
 
+            if (!string.Equals(children[0].ExprType.Type, TypeConstants.IntType)
+                && !string.Equals(children[1].ExprType.Type, TypeConstants.IntType)
+                && !string.Equals(children[0].ExprType.Type, TypeConstants.FloatType)
+                && !string.Equals(children[1].ExprType.Type, TypeConstants.FloatType))
+            {
+                _errorStream.WriteLine($"Operation must be done with numerical operands! ({n.Token.StartLine}:{n.Token.StartColumn})");
+                Console.WriteLine($"Error: Operation must be done with numerical operands! ({n.Token.StartLine}:{n.Token.StartColumn})");
+            }
+
             if (children[0].ExprType.Dims.Count > 0 || children[1].ExprType.Dims.Count > 0)
             {
                 _errorStream.WriteLine($"Cannot multiply/divide arrays! ({n.Token.StartLine}:{n.Token.StartColumn})");

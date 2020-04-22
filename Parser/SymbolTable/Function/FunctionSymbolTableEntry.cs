@@ -95,11 +95,8 @@ namespace Parser.SymbolTable.Function
             foreach (var param in Params)
             {
                 builder.AppendLine($"+    Parameter: {param.Type.type} {param.Name}");
-                builder.AppendLine($"+        MemSize: {param.MemSize}, MemOffset:  {param.MemOffset}");
             }
 
-            builder.AppendLine("+");
-            builder.AppendLine($"+    FrameSize: {MemoryLayout.TotalSize}");
             builder.AppendLine("+");
             builder.AppendLine("+===========================================================");
             builder.AppendLine("+ Local Table");
@@ -107,7 +104,6 @@ namespace Parser.SymbolTable.Function
             foreach (var local in LocalScope)
             {
                 builder.AppendLine($"+    Local: {local.ToString()}");
-                builder.AppendLine($"+        MemSize: {local.MemSize}, MemOffset: {local.MemOffset}");
             }
 
             builder.AppendLine("+");

@@ -1,0 +1,28 @@
+Use of undeclared class, "C3"(77:2)
+No definition for declared member function: *    Function: Public func3(integer input) -> integer in class C1
+function definition provided for undeclared member function: "C1::func4(integer input) -> integer"
+function definition provided for undeclared member function: "C1::func1(float input) -> float"
+function definition provided for undeclared class: "C3" | C3::func1(float input) -> float
+Multiple declaration of local variable: "C2 j" in function definition "main()"
+WARNING: Function: "C1::func1(integer input) -> integer" has an overload.
+WARNING: Function: "C1::func1(float input) -> float" has an overload.
+Dependency loop detected:
+    C1
+    C2
+    C1
+Assignment type missmatch! integer <-> float (line: 27)
+Operand types don't match! C2 <-> integer (28:13)
+Type of value for return is invalid (line: 31), expected: integer, received: float
+Use of undeclared variable "j" (37:13)
+Type of value for return is invalid (line: 37), expected: integer, received: 
+Operation must be done with numerical operands! (57:18)
+Function squared(integer a) -> integer returns an integer, however no return statement was found.
+Use of function: "squared" (81:2) with invalid parameters (no matching overload was found)
+Use of function: "func1" (82:4) with invalid parameters (no matching overload was found)
+Expression used in array index must be of int type!
+ScopeSpec "integer" refers to a non existing class.
+Assignment type missmatch! integer <->  (line: 85)
+Use of undefined function: "func2" (86:4)
+Use of function: "func2" (86:4) with invalid parameters (no matching overload was found)
+Use of undeclared variable "unknown" (88:8)
+Assignment type missmatch! integer <->  (line: 88)

@@ -123,7 +123,6 @@ namespace Parser.SymbolTable.Class
                 builder.AppendLine($"*    {inherit}");
             }
 
-            builder.AppendLine($"* MemSize = {MemoryLayout.TotalSize}");
             builder.AppendLine("*===========================================================");
             builder.AppendLine("*");
 

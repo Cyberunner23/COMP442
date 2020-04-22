@@ -1,0 +1,90 @@
+class C1 {
+	public C2 circle; // 4.2.6
+
+	public float a; 
+	public integer b[5]; 
+	public integer c;
+	
+	public func1(integer input) : integer;
+	public func3(integer input) : integer; // 4.2.10
+};
+
+class C2 inherits C1 {
+	public integer x; 
+	public integer y[5];
+	public C1 d[5];
+	
+	public func2(integer in2) : C1;
+};
+
+
+
+C1::func1(integer input) : integer
+  local
+    integer result; 
+	C2 y;
+  do
+    result = 3.5; // 4.2.1
+	result = y + result; // 4.2.1
+    result = input + 10; // OK
+	result = squared(2); // 4.2.8
+    return (4.3); // 4.2.1
+  end;
+  
+C1::func4(integer input) : integer // 4.2.9
+  local
+  do
+    return (j); // 4.2.16, 4.2.17
+  end;
+
+C1::func1(float input) : float // 4.2.13
+  local
+  do
+    return (4.3);
+  end;
+  
+C3::func1(float input) : float // 4.2.15
+  local
+  do
+    return (4.3); 
+  end;
+
+C2::func2(integer in2) : C1
+  local
+    C1 result;
+  do
+    result.c = in2;
+	result = result + result; // 4.2.2
+	return (result);
+  end;
+
+squared(integer a) : integer
+  local
+  do
+	//return (a * a); // 4.2.12
+  end;
+
+main
+  local
+    integer h;
+	integer i[5][5]; 
+	integer z[5];
+	C1 k; 
+	C2 j; 
+	C2 j; // 4.2.18
+	C1 f[5]; 
+	integer v1;
+	C3 asdf;
+  do
+  
+	squared(5);
+	squared(4.5, 5); // 4.2.3
+	k.func1(5, 5); // 4.2.3
+    z = i[2]; // 4.2.4, NOTE: not following exactly, my interpretation allows this assignment to work.
+	k = f[1.1]; // 4.2.5
+	z = z.unknown; // 4.2.7
+	k.func2(5); // 4.2.9
+	
+	h = k.unknown;
+  
+  end

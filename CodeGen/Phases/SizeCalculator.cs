@@ -115,7 +115,7 @@ namespace CodeGen.Phases
                 }
             }
 
-            functionTable.MemoryLayout.AddReturnValueEntry((varType, new List<int>()), size, size);
+            //functionTable.MemoryLayout.AddReturnValueEntry((varType, new List<int>()), size, size);
 
             foreach (var parameter in functionTable.Params)
             {

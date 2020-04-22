@@ -115,6 +115,7 @@ namespace Parser.SymbolTable
                 foreach(var shadowedFunction in shadowedFunctions)
                 {
                     _errorStream.WriteLine($"Class {classTable.ClassName} is shadowing function: {shadowedFunction.Key}");
+                    Console.WriteLine($"Warning: Class {classTable.ClassName} is shadowing function: {shadowedFunction.Key}");
                 }
             }
         }
@@ -131,6 +132,7 @@ namespace Parser.SymbolTable
                     if (!FunctionDefnFound(functionDecl))
                     {
                         _errorStream.WriteLine($"No definition for declared member function: {functionDecl} in class {classTable.ClassName}");
+                        Console.WriteLine($"ERROR: No definition for declared member function: {functionDecl} in class {classTable.ClassName}");
                     }
                 }
             }
@@ -144,6 +146,7 @@ namespace Parser.SymbolTable
                     if (classTable == null)
                     {
                         _errorStream.WriteLine($"function definition provided for undeclared class: \"{entry.ScopeSpec}\" | {entry.ToStringSignature()}");
+                        Console.WriteLine($"Error: function definition provided for undeclared class: \"{entry.ScopeSpec}\" | {entry.ToStringSignature()}");
                         continue;
                     }
 
@@ -152,6 +155,7 @@ namespace Parser.SymbolTable
                     if (!declExists)
                     {
                         _errorStream.WriteLine($"function definition provided for undeclared member function: \"{entry.ToStringSignature()}\"");
+                        Console.WriteLine($"Error: function definition provided for undeclared member function: \"{entry.ToStringSignature()}\"");
                         continue;
                     }
                 }
@@ -166,6 +170,7 @@ namespace Parser.SymbolTable
                              .ForEach(x => 
                              {
                                  _errorStream.WriteLine($"Multiple declaration of class: \"{x.ClassName}\"");
+                                 Console.WriteLine($"Error: Multiple declaration of class: \"{x.ClassName}\"");
                              });
 
             // Data Member
@@ -176,6 +181,7 @@ namespace Parser.SymbolTable
                         .ForEach(x =>
                         {
                             _errorStream.WriteLine($"Multiple declaration of variable: \"{x.Name}\" in class \"{classTable.ClassName}\"");
+                            Console.WriteLine($"Error: Multiple declaration of variable: \"{x.Name}\" in class \"{classTable.ClassName}\"");
                         });
 
                 var funcDefs = classTable.Entries.Where(x => x is ClassSymbolTableEntryFunction).Cast<ClassSymbolTableEntryFunction>().ToList();
@@ -183,6 +189,7 @@ namespace Parser.SymbolTable
                      .ForEach(x =>
                      {
                          _errorStream.WriteLine($"Multiple function declaration for function {x.ToStringSignatureNoReturn()}");
+                         Console.WriteLine($"Error: Multiple function declaration for function {x.ToStringSignatureNoReturn()}");
                      });
             }
 
@@ -192,6 +199,7 @@ namespace Parser.SymbolTable
                      .ForEach(x =>
                      {
                          _errorStream.WriteLine($"Multiple function definitions for function {x.ToStringSignatureNoReturn()}");
+                         Console.WriteLine($"Error: Multiple function definitions for function {x.ToStringSignatureNoReturn()}");
                      });
 
 
@@ -203,6 +211,7 @@ namespace Parser.SymbolTable
                       .ForEach(x =>
                       {
                           _errorStream.WriteLine($"Multiple declaration of local variable: \"{x}\" in function definition \"{funcDefn.ToStringSignature()}\"");
+                          Console.WriteLine($"Error: Multiple declaration of local variable: \"{x}\" in function definition \"{funcDefn.ToStringSignature()}\"");
                       });
             }
 
@@ -229,6 +238,7 @@ namespace Parser.SymbolTable
                                            .ForEach(x =>
                                            {
                                                _errorStream.WriteLine($"WARNING: Function: \"{x.First().ToStringSignature()}\" has an overload." );
+                                               Console.WriteLine($"WARNING: Function: \"{x.First().ToStringSignature()}\" has an overload.");
                                            });
                 }
             }
@@ -243,9 +253,11 @@ namespace Parser.SymbolTable
             foreach (var cycle in cycles)
             {
                 _errorStream.WriteLine("Dependency loop detected:");
+                Console.WriteLine("Error: Dependency loop detected:");
                 foreach (var className in cycle)
                 {
                     _errorStream.WriteLine($"    {className}");
+                    Console.WriteLine($"Error:    {className}");
                 }
             }
         }
