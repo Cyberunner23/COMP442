@@ -1,0 +1,117 @@
+[Identifier : (4,1) : "funky"]
+[OpenBrace : (4,6) : "("]
+[Integer : (4,7) : "integer"]
+[Identifier : (4,15) : "a"]
+[CloseBrace : (4,16) : ")"]
+[Colon : (4,18) : ":"]
+[Integer : (4,20) : "integer"]
+[Local : (5,3) : "local"]
+[Do : (6,3) : "do"]
+[Write : (8,2) : "write"]
+[OpenBrace : (8,7) : "("]
+[Identifier : (8,8) : "a"]
+[CloseBrace : (8,9) : ")"]
+[SemiColon : (8,10) : ";"]
+[If : (10,2) : "if"]
+[OpenBrace : (10,5) : "("]
+[Identifier : (10,6) : "a"]
+[EqualEqual : (10,8) : "=="]
+[IntNum : (10,11) : "0"]
+[CloseBrace : (10,12) : ")"]
+[Comment : (10,14) : "// 3.2"]
+[Then : (11,4) : "then"]
+[Do : (12,4) : "do"]
+[Return : (13,6) : "return"]
+[OpenBrace : (13,13) : "("]
+[Identifier : (13,14) : "a"]
+[CloseBrace : (13,15) : ")"]
+[SemiColon : (13,16) : ";"]
+[End : (14,4) : "end"]
+[Else : (15,2) : "else"]
+[Do : (16,4) : "do"]
+[Return : (17,6) : "return"]
+[OpenBrace : (17,13) : "("]
+[Identifier : (17,14) : "funky"]
+[OpenBrace : (17,19) : "("]
+[Identifier : (17,20) : "a"]
+[Minus : (17,22) : "-"]
+[IntNum : (17,24) : "1"]
+[CloseBrace : (17,25) : ")"]
+[CloseBrace : (17,26) : ")"]
+[SemiColon : (17,27) : ";"]
+[End : (18,4) : "end"]
+[SemiColon : (18,7) : ";"]
+[Return : (20,4) : "return"]
+[OpenBrace : (20,11) : "("]
+[IntNum : (20,12) : "5"]
+[CloseBrace : (20,13) : ")"]
+[SemiColon : (20,14) : ";"]
+[End : (22,3) : "end"]
+[SemiColon : (22,6) : ";"]
+[Main : (25,1) : "main"]
+[Local : (26,3) : "local"]
+[Do : (27,3) : "do"]
+[Identifier : (28,2) : "funky"]
+[OpenBrace : (28,7) : "("]
+[IntNum : (28,8) : "10"]
+[CloseBrace : (28,10) : ")"]
+[SemiColon : (28,11) : ";"]
+[End : (29,3) : "end"]
+[BlockComment : (33,1) : "/*
+
+
+class C2 {
+	public integer x;
+	public integer y[5];
+	
+	//public hello(integer c) : integer;
+	public func(integer a) : C1;
+};
+
+
+C2::func(integer a) : void
+  local
+  do
+    y[2] = a + 2;
+  end;
+
+main
+  local
+	C2 j;
+  do
+    j.func(9);
+	write(j.y[2]);
+  end
+  
+  
+*/"]
+[BlockComment : (62,1) : "/*C2::hello(integer c) : integer
+  local
+    C1 c1;
+    integer hey;
+  do
+    //hey = ((30 * -2) / not 2) / (5 + (5*5));
+  end;
+*/"]
+[BlockComment : (70,1) : "/*squared(integer a) : integer
+  local
+    integer result;
+  do
+    result = a * a;
+	//return (result);
+  end;*/"]
+[Comment : (87,4) : "//write(1+1);"]
+[BlockComment : (88,2) : "/*squared(1);
+	k.func(1);*/"]
+[Comment : (90,5) : "//val[1 + 0][0] = 5;"]
+[BlockComment : (91,2) : "/*while (0 > 1)
+	  do
+	  end;*/"]
+[Comment : (94,5) : "//k.x.b[1] = k.x.func(1).c;"]
+[Comment : (95,2) : "//"]
+[Comment : (97,5) : "//val = 5 - 3;"]
+[Comment : (98,2) : "//val = 7 / 8 * 9;"]
+[Comment : (99,2) : "//val = val * val;"]
+[Comment : (100,2) : "//result = squared(val);"]
+[Comment : (101,2) : "//write (result);"]
+[EOF : (101,20) : ""]

@@ -16,3 +16,4 @@ TO RUN:
          To run all including code generation (Assignment 1, 2, 3, 4)
   3. Alternatively: Open the project in Visual Studio and run it from there.
 
+NOTE: The test files used for the final sumbission are in the FinalTestFiles directory

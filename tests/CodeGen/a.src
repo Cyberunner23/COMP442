@@ -1,26 +1,31 @@
 
-class C2 {
-	public integer x;
-	public integer y[5];
-	
-	//public hello(integer c) : integer;
-};
   
   
 funky(integer a) : integer
   local
   do
-    return (a + 1);
+	
+	write(a);
+  
+	if (a == 0) // 3.2
+	  then 
+	  do 
+	    return (a);
+	  end
+	else
+	  do
+	    return (funky(a - 1));
+	  end;
+	  
+	  return (5);
+	  
   end;
   
   
 main
   local
-	integer arr[10];
   do	
-	read(arr[funky(4)]);
-	write(arr[funky(4)]);
-	
+	funky(10);
   end
   
   

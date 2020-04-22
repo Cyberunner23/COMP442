@@ -1,0 +1,236 @@
+|===========================================================
+| Global Table
+|===========================================================
+|
+|    *===========================================================
+|    * Class Table
+|    * Name: C1
+|    * Inherits:
+|    * MemSize = 28
+|    *===========================================================
+|    *
+|    *    Variable: Public float a
+|    *    Variable: Public integer b[5]
+|    *    Variable: Public integer c
+|    *    Function: Public func1(integer input) -> integer
+|    *
+|    *===========================================================
+|    
+|
+|    *===========================================================
+|    * Class Table
+|    * Name: C2
+|    * Inherits:
+|    *    C1
+|    * MemSize = 192
+|    *===========================================================
+|    *
+|    *    Variable: Public integer x
+|    *    Variable: Public integer y[5]
+|    *    Variable: Public C1 d[5]
+|    *    Function: Public func2(integer in2) -> C1
+|    *
+|    *===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    C1::func1(integer input) -> integer
+|    +
+|    +    Parameter: integer input
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 48
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: integer result
+|    +        MemSize: 4, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    C2::func2(integer in2) -> C1
+|    +
+|    +    Parameter: integer in2
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 112
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: C1 result
+|    +        MemSize: 28, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    squared(integer a) -> integer
+|    +
+|    +    Parameter: integer a
+|    +        MemSize: 4, MemOffset:  0
+|    +
+|    +    FrameSize: 36
+|    +
+|    +===========================================================
+|    + Local Table
+|    +
+|    +===========================================================
+|    
+|
+|    +===========================================================
+|    + Function Table
+|    +    main()
+|    +
+|    +
+|    +    FrameSize: 616
+|    +
+|    +===========================================================
+|    + Local Table
+|    +    Local: integer h
+|    +        MemSize: 4, MemOffset: 0
+|    +    Local: integer i[5][5]
+|    +        MemSize: 100, MemOffset: 0
+|    +    Local: C1 k
+|    +        MemSize: 28, MemOffset: 0
+|    +    Local: C2 j
+|    +        MemSize: 192, MemOffset: 0
+|    +    Local: C1 f[5]
+|    +        MemSize: 140, MemOffset: 0
+|    +    Local: integer v1
+|    +        MemSize: 4, MemOffset: 0
+|    +
+|    +===========================================================
+|    
+|
+|===========================================================
+
+
+MEMORY LAYOUTS
+C1
+Total: 28 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | VariableName | Type
+      24 |        4 |         4 |            c | integer
+       4 |        4 |        20 |            b | integer[5]
+       0 |        4 |         4 |            a | float
+-------------------------------------
+
+C2
+Total: 192 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | VariableName | Type
+     188 |        4 |         4 |            c | integer
+     168 |        4 |        20 |            b | integer[5]
+     164 |        4 |         4 |            a | float
+      24 |       28 |       140 |            d | C1[5]
+       4 |        4 |        20 |            y | integer[5]
+       0 |        4 |         4 |            x | integer
+-------------------------------------
+
+
+
+C1::func1(integer input) -> integer
+Total: 48 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -12 |        4 |         4 | ReturnVal         | __returnval__  | integer
+     -16 |        4 |         4 | Argument          | input          | integer
+     -20 |        4 |         4 | Variable          | result         | integer
+     -24 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -28 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -32 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -36 |        4 |         4 | TemporaryVariable | __temp_3__     |
+     -40 |        4 |         4 | TemporaryVariable | __temp_4__     |
+     -44 |        4 |         4 | TemporaryVariable | __temp_5__     |
+     -48 |        4 |         4 | TemporaryVariable | __temp_6__     |
+-------------------------------------
+
+C2::func2(integer in2) -> C1
+Total: 112 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -36 |       28 |        28 | ReturnVal         | __returnval__  | C1
+     -40 |        4 |         4 | Argument          | in2            | integer
+     -68 |       28 |        28 | Variable          | result         | C1
+     -72 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -76 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -80 |        4 |         4 | TemporaryVariable | __temp_2__     |
+    -108 |       28 |        28 | TemporaryVariable | __temp_3__     |
+    -112 |        4 |         4 | TemporaryVariable | __temp_4__     |
+-------------------------------------
+
+squared(integer a) -> integer
+Total: 36 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+     -12 |        4 |         4 | ReturnVal         | __returnval__  | integer
+     -16 |        4 |         4 | Argument          | a              | integer
+     -20 |        4 |         4 | TemporaryVariable | __temp_0__     |
+     -24 |        4 |         4 | TemporaryVariable | __temp_1__     |
+     -28 |        4 |         4 | TemporaryVariable | __temp_2__     |
+     -32 |        4 |         4 | TemporaryVariable | __temp_3__     |
+     -36 |        4 |         4 | TemporaryVariable | __temp_4__     |
+-------------------------------------
+
+main()
+Total: 616 bytes
+-------------------------------------
+  Offset | TypeSize | TotalSize | EntryType         | VariableName   | Type
+      -4 |        4 |         4 | Return            | __returnaddr__ |
+      -8 |        4 |         4 | SelfAddr          | __selfaddr__   |
+      -8 |        0 |         0 | ReturnVal         | __returnval__  | 
+     -12 |        4 |         4 | Variable          | h              | integer
+    -112 |        4 |       100 | Variable          | i              | integer[5][5]
+    -140 |       28 |        28 | Variable          | k              | C1
+    -332 |      192 |       192 | Variable          | j              | C2
+    -472 |       28 |       140 | Variable          | f              | C1[5]
+    -476 |        4 |         4 | Variable          | v1             | integer
+    -480 |        4 |         4 | TemporaryVariable | __temp_0__     |
+    -484 |        4 |         4 | TemporaryVariable | __temp_1__     |
+    -488 |        4 |         4 | TemporaryVariable | __temp_2__     |
+    -492 |        4 |         4 | TemporaryVariable | __temp_3__     |
+    -496 |        4 |         4 | TemporaryVariable | __temp_4__     |
+    -500 |        4 |         4 | TemporaryVariable | __temp_5__     |
+    -504 |        4 |         4 | TemporaryVariable | __temp_6__     |
+    -508 |        4 |         4 | TemporaryVariable | __temp_7__     |
+    -512 |        4 |         4 | TemporaryVariable | __temp_8__     |
+    -516 |        4 |         4 | TemporaryVariable | __temp_9__     |
+    -520 |        4 |         4 | TemporaryVariable | __temp_10__    |
+    -524 |        4 |         4 | TemporaryVariable | __temp_11__    |
+    -528 |        4 |         4 | TemporaryVariable | __temp_12__    |
+    -532 |        4 |         4 | TemporaryVariable | __temp_13__    |
+    -536 |        4 |         4 | TemporaryVariable | __temp_14__    |
+    -540 |        4 |         4 | TemporaryVariable | __temp_15__    |
+    -544 |        4 |         4 | TemporaryVariable | __temp_16__    |
+    -548 |        4 |         4 | TemporaryVariable | __temp_17__    |
+    -552 |        4 |         4 | TemporaryVariable | __temp_18__    |
+    -556 |        4 |         4 | TemporaryVariable | __temp_19__    |
+    -560 |        4 |         4 | TemporaryVariable | __temp_20__    |
+    -564 |        4 |         4 | TemporaryVariable | __temp_21__    |
+    -568 |        4 |         4 | TemporaryVariable | __temp_22__    |
+    -572 |        4 |         4 | TemporaryVariable | __temp_23__    |
+    -576 |        4 |         4 | TemporaryVariable | __temp_24__    |
+    -580 |        4 |         4 | TemporaryVariable | __temp_25__    |
+    -584 |        4 |         4 | TemporaryVariable | __temp_26__    |
+    -588 |        4 |         4 | TemporaryVariable | __temp_27__    |
+    -592 |        4 |         4 | TemporaryVariable | __temp_28__    |
+    -596 |        4 |         4 | TemporaryVariable | __temp_29__    |
+    -600 |        4 |         4 | TemporaryVariable | __temp_30__    |
+    -604 |        4 |         4 | TemporaryVariable | __temp_31__    |
+    -608 |        4 |         4 | TemporaryVariable | __temp_32__    |
+    -612 |        4 |         4 | TemporaryVariable | __temp_33__    |
+    -616 |        4 |         4 | TemporaryVariable | __temp_34__    |
+-------------------------------------
+
+

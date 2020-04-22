@@ -117,6 +117,7 @@ namespace Parser
                 else
                 {
                     _syntaxErrorStream.WriteLine("Unhandled production type");
+                    Console.WriteLine("ERROR: Unhandled production type");
                     Environment.Exit(-1);
                 }
             }
@@ -154,6 +155,7 @@ namespace Parser
             else
             {
                 _syntaxErrorStream.WriteLine($"[{_lookahead.StartLine}:{_lookahead.StartColumn}] Expected token: {tokenType}, saw: {_lookahead.TokenType}");
+                Console.WriteLine($"ERROR: [{_lookahead.StartLine}:{_lookahead.StartColumn}] Expected token: {tokenType}, saw: {_lookahead.TokenType}");
             }
 
             return matches;
@@ -188,6 +190,7 @@ namespace Parser
             {
                 // Write error
                 _syntaxErrorStream.WriteLine($"Syntax error: [{_lookahead.StartLine}:{_lookahead.StartColumn}]");
+                Console.WriteLine($"Error: Syntax error: [{_lookahead.StartLine}:{_lookahead.StartColumn}]");
                 var firstAndFollow = entry.FirstSet.Concat(entry.FollowSet ?? new List<TokenType>()).ToList();
                 while (!firstAndFollow.Contains(_lookahead.TokenType))
                 {

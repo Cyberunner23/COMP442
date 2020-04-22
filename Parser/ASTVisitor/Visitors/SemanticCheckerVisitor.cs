@@ -95,6 +95,7 @@ namespace Parser.ASTVisitor.Visitors
             if (!string.Equals(returnType, TypeConstants.VoidType) && !string.IsNullOrEmpty(returnType) && children.Where(x => x is ReturnNode).Count() == 0)
             {
                 _errorStream.WriteLine($"Function {table.ToStringSignature()} returns an {returnType}, however no return statement was found.");
+                Console.WriteLine($"Error: Function {table.ToStringSignature()} returns an {returnType}, however no return statement was found.");
             }
 
             foreach (var node in children)
@@ -153,6 +154,7 @@ namespace Parser.ASTVisitor.Visitors
             if (!string.Equals(children.Last().ExprType.Type, table.ReturnType?.Lexeme ?? "") && !(children.Last().ExprType.Type == null && string.Equals(table.ReturnType?.Lexeme ?? "", "void")))
             {
                 _errorStream.WriteLine($"Type of value for return is invalid (line: {n.Token.StartLine}), expected: {table.ReturnType?.Lexeme ?? "void"}, received: {children.Last().ExprType.Type}");
+                Console.WriteLine($"Error: Type of value for return is invalid (line: {n.Token.StartLine}), expected: {table.ReturnType?.Lexeme ?? "void"}, received: {children.Last().ExprType.Type}");
             }
         }
         #endregion
@@ -195,10 +197,12 @@ namespace Parser.ASTVisitor.Visitors
             if (children[0].ExprType.Dims.Count > 0 || children[1].ExprType.Dims.Count > 0)
             {
                 _errorStream.WriteLine($"Cannot multiply/divide arrays! ({n.Token.StartLine}:{n.Token.StartColumn})");
+                Console.WriteLine($"Error: Cannot multiply/divide arrays! ({n.Token.StartLine}:{n.Token.StartColumn})");
             }
             else if (!string.Equals(children[0].ExprType.Type, children[1].ExprType.Type))
             {
                 _errorStream.WriteLine($"Operand types don't match! {children[1].ExprType.Type} <-> {children[0].ExprType.Type} ({n.Token.StartLine}:{n.Token.StartColumn})");
+                Console.WriteLine($"Error: Operand types don't match! {children[1].ExprType.Type} <-> {children[0].ExprType.Type} ({n.Token.StartLine}:{n.Token.StartColumn})");
             }
 
             n.ExprType = children[0].ExprType;
@@ -221,15 +225,18 @@ namespace Parser.ASTVisitor.Visitors
                 && !string.Equals(children[1].ExprType.Type, TypeConstants.FloatType))
             {
                 _errorStream.WriteLine($"Operation must be done with numerical operands! ({n.Token.StartLine}:{n.Token.StartColumn})");
+                Console.WriteLine($"Error: Operation must be done with numerical operands! ({n.Token.StartLine}:{n.Token.StartColumn})");
             }
 
             if (children[0].ExprType.Dims.Count > 0 || children[1].ExprType.Dims.Count > 0)
             {
                 _errorStream.WriteLine($"Cannot multiply/divide arrays! ({n.Token.StartLine}:{n.Token.StartColumn})");
+                Console.WriteLine($"Error: Cannot multiply/divide arrays! ({n.Token.StartLine}:{n.Token.StartColumn})");
             }
             else if (!string.Equals(children[0].ExprType.Type, children[1].ExprType.Type))
             {
                 _errorStream.WriteLine($"Operand types don't match! {children[1].ExprType.Type} <-> {children[0].ExprType.Type} ({n.Token.StartLine}:{n.Token.StartColumn})");
+                Console.WriteLine($"Error: Operand types don't match! {children[1].ExprType.Type} <-> {children[0].ExprType.Type} ({n.Token.StartLine}:{n.Token.StartColumn})");
             }
 
             n.ExprType = children[0].ExprType;
@@ -375,6 +382,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (string.IsNullOrEmpty(currentScopeSpec))
                 {
                     _errorStream.WriteLine($"ASSERT: Use of variable with no scopespec.");
+                    Console.WriteLine($"ASSERT: Use of variable with no scopespec.");
                     break;
                 }
 
@@ -382,6 +390,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (classTable == null)
                 {
                     _errorStream.WriteLine($"ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
+                    Console.WriteLine($"Error: ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
                     break;
                 }
 
@@ -412,6 +421,7 @@ namespace Parser.ASTVisitor.Visitors
                     if (classTable == null)
                     {
                         _errorStream.WriteLine($"ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
+                        Console.WriteLine($"Error: ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
                         break;
                     }
 
@@ -467,6 +477,7 @@ namespace Parser.ASTVisitor.Visitors
                             else
                             {
                                 _errorStream.WriteLine($"Variable '{v.Key}' used in {f.ToStringSignature()} is already defined in the class");
+                                Console.WriteLine($"Error: Variable '{v.Key}' used in {f.ToStringSignature()} is already defined in the class");
                             }
                         }
                     }
@@ -484,6 +495,7 @@ namespace Parser.ASTVisitor.Visitors
             if (!varsInScope.TryGetValue(n.VarName, out typeDims))
             {
                 _errorStream.WriteLine($"Use of undeclared variable \"{n.VarName}\" ({varNameToken.StartLine}:{varNameToken.StartColumn})");
+                Console.WriteLine($"Error: Use of undeclared variable \"{n.VarName}\" ({varNameToken.StartLine}:{varNameToken.StartColumn})");
             }
             else
             {
@@ -493,6 +505,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (n.NumDims > typeDims.Dims.Count)
                 {
                     _errorStream.WriteLine($"Data member \"{n.VarName}\" used with more dims than defined! max: {typeDims.Dims.Count}, had: {n.NumDims}");
+                    Console.WriteLine($"Error: Data member \"{n.VarName}\" used with more dims than defined! max: {typeDims.Dims.Count}, had: {n.NumDims}");
                 }
 
                 // Say var defined as float a[5][5][5]
@@ -544,6 +557,7 @@ namespace Parser.ASTVisitor.Visitors
             if (candidateFuncsInScope.Count == 0)
             {
                 _errorStream.WriteLine($"Use of undefined function: \"{n.FuncName}\" ({token.StartLine}:{token.StartColumn})");
+                Console.WriteLine($"Error: Use of undefined function: \"{n.FuncName}\" ({token.StartLine}:{token.StartColumn})");
             }
 
             // Visit FuncCallParamsNode to get parameter types used
@@ -594,6 +608,7 @@ namespace Parser.ASTVisitor.Visitors
             if (matchingFunc == null)
             {
                 _errorStream.WriteLine($"Use of function: \"{n.FuncName}\" ({token.StartLine}:{token.StartColumn}) with invalid parameters (no matching overload was found)");
+                Console.WriteLine($"Error: Use of function: \"{n.FuncName}\" ({token.StartLine}:{token.StartColumn}) with invalid parameters (no matching overload was found)");
             }
             else
             {
@@ -631,6 +646,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (string.IsNullOrEmpty(currentScopeSpec))
                 {
                     _errorStream.WriteLine($"Use of variable with no scopespec.");
+                    Console.WriteLine($"Error: Use of variable with no scopespec.");
                     break;
                 }
 
@@ -638,6 +654,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (classTable == null)
                 {
                     _errorStream.WriteLine($"ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
+                    Console.WriteLine($"Error: ScopeSpec \"{currentScopeSpec}\" refers to a non existing class.");
                     break;
                 }
 
@@ -652,6 +669,7 @@ namespace Parser.ASTVisitor.Visitors
             if (!string.Equals(lhsType.Type, rhsType.Type) || !rhsType.Dims.SequenceEqual(lhsType.Dims))
             {
                 _errorStream.WriteLine($"Assignment type missmatch! {lhsType.Type} <-> {rhsType.Type} (line: {line})");
+                Console.WriteLine($"Error: Assignment type missmatch! {lhsType.Type} <-> {rhsType.Type} (line: {line})");
             }
         }
 
@@ -726,6 +744,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (!string.Equals(node.ExprType.Type, TypeConstants.IntType) || node.ExprType.Dims.Count != 0)
                 {
                     _errorStream.WriteLine("Expression used in array index must be of int type!");
+                    Console.WriteLine("Error: Expression used in array index must be of int type!");
                 }
             }
         }
@@ -765,6 +784,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (node.SymTable == null)
                 {
                     _errorStream.WriteLine("No FunctionSymbolTableEntry for \"main()\" found!!!");
+                    Console.WriteLine("Error: No FunctionSymbolTableEntry for \"main()\" found!!!");
                 }
 
                 node.Accept(this);

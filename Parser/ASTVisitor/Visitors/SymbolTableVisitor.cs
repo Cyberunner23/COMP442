@@ -203,6 +203,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (!CheckTypeExists(paramType.Lexeme))
                 {
                     _errorStream.WriteLine($"Use of undeclared class, \"{paramType.Lexeme}\"({paramType.StartLine}:{paramType.StartColumn})");
+                    Console.WriteLine($"Error: Use of undeclared class, \"{paramType.Lexeme}\"({paramType.StartLine}:{paramType.StartColumn})");
                 }
 
                 var entry = new FunctionSymbolTableEntryLocalScope()
@@ -242,6 +243,7 @@ namespace Parser.ASTVisitor.Visitors
                 if (!CheckTypeExists(paramType.Lexeme))
                 {
                     _errorStream.WriteLine($"Use of undeclared class, \"{paramType.Lexeme}\"({paramType.StartLine}:{paramType.StartColumn})");
+                    Console.WriteLine($"Error: Use of undeclared class, \"{paramType.Lexeme}\"({paramType.StartLine}:{paramType.StartColumn})");
                 }
 
                 var entry = new FunctionSymbolTableEntryLocalScope()

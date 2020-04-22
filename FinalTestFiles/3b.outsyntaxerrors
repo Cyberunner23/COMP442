@@ -1,0 +1,9 @@
+[17:1] Expected token: SemiColon, saw: Identifier
+Syntax error: [25:3]
+[36:15] Expected token: CloseBrace, saw: SemiColon
+[42:16] Expected token: CloseSquareBrace, saw: SemiColon
+Syntax error: [45:2]
+[64:4] Expected token: Then, saw: Do
+Syntax error: [68:4]
+[70:4] Expected token: SemiColon, saw: End
+[73:5] Expected token: EOF, saw: SemiColon

@@ -33,11 +33,12 @@ namespace CodeGenDriver
                 do
                 {
                     t = lex.GetNextToken();
-                    Console.WriteLine(t.ToString());
+                    //Console.WriteLine(t.ToString());
 
                     if (lex.IsErrorToken(t.TokenType))
                     {
                         tokenErrorFile.WriteLine(t.ToString());
+                        Console.WriteLine($"LexError: {t.ToString()}");
                     }
                     else
                     {
@@ -48,6 +49,7 @@ namespace CodeGenDriver
                 while (t.TokenType != TokenType.EOF);
 
                 tokensToParse.RemoveAll(x => lex.IsCommentToken(x.TokenType));
+                Console.WriteLine("INFO: Lexing completed.");
             }
 
             using (StreamWriter astStream = new StreamWriter($@"{fileDirectory}\{fileName}.outast"))
@@ -59,25 +61,29 @@ namespace CodeGenDriver
             {
                 // Do parsing
                 Parser.Parser parser = new Parser.Parser(tokensToParse, syntaxErrorStream, derivationsStream, astStream);
-                Console.WriteLine(parser.Parse());
+                Console.WriteLine(parser.Parse() ? "Parsing passed" : "Error: Parsing Failed");
                 var tree = parser.GetASTTree();
 
                 var printVisitor = new DOTPrinterVisitor(astStream);
                 tree.Accept(printVisitor);
                 astStream.Flush();
+                Console.WriteLine("INFO: AST Tree dumped to outast");
 
                 var symbolTableVisitor = new SymbolTableVisitor(semanticErrorStream);
                 tree.Accept(symbolTableVisitor);
+                Console.WriteLine("INFO: SymbolTable Generated");
 
                 var semanticCheckerVisitor = new SemanticCheckerVisitor(semanticErrorStream, symbolTableVisitor.GlobalSymbolTable);
                 tree.Accept(semanticCheckerVisitor);
+                Console.WriteLine("INFO: Semantic Checking Complete");
 
                 syntaxErrorStream.Flush();
                 semanticErrorStream.Flush();
                 bool hasErrors = semanticErrorStream.BaseStream.Length != 0 || syntaxErrorStream.BaseStream.Length != 0;
                 if (hasErrors)
                 {
-                    Console.WriteLine("Errors generated during parsing, skipping codegen.");
+                    Console.WriteLine("Errors generated during parsing/semantic checking, terminating...");
+                    Console.ReadKey();
                     Environment.Exit(-10);
                 }
 
@@ -88,7 +94,9 @@ namespace CodeGenDriver
                 codeGen.GenerateCode();
 
                 symbolTablesStream.WriteLine(symbolTableVisitor.GlobalSymbolTable);
-                Console.WriteLine(symbolTableVisitor.GlobalSymbolTable);
+                Console.WriteLine("INFO: Code Generated");
+
+                Console.ReadKey();
             }
         }
     }

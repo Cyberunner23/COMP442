@@ -1,0 +1,75 @@
+class C1 {
+	public float a; 
+	public integer b[5]; 
+	public integer c;
+	
+	public func1(integer input) : integer;
+};
+
+class C2 inherits C1 {
+	public integer x; 
+	public integer y[5];
+	public C1 d[5]; 
+	
+	public func2(integer in2) : C1;
+};
+
+C1::func1(integer input) : integer
+  local
+    integer result; 
+  do
+    result = input + 10;	
+    return (result);
+  end;
+
+C2::func2(integer in2) : C1
+  local
+    C1 result;
+  do
+    result.c = in2;
+	return (result);
+  end;
+
+squared(integer a) : integer
+  local
+  do
+	return (a * a);
+  end;
+
+main
+  local
+    integer h;
+	integer i[5][5]; 
+	C1 k; 
+	C2 j; 
+	C1 f[5]; 
+	integer v1;
+  do
+  
+	j.y[2] = 1;
+	j.d[2].c = 5;
+  
+	read(h);
+	write(h);
+	write(10 + 10);
+  
+    i[0][4] = 9;
+    h = (5 / 5 + squared(2) - 1) * squared(3) + 7 + i[0][2 + 2];
+	
+	while (v1 > 0)
+	do
+	  
+	  if (v1 > 5) 
+	  then 
+	  do 
+	    write(1); 
+	  end
+	else
+	  do
+	    write(2);
+	  end;
+	  
+	  v1 = v1 - 1;
+	end;
+  
+  end
