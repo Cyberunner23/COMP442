@@ -1,0 +1,73 @@
+digraph G {
+80[label="80:ProgramNode"]
+45[label="45:ClassDeclsNode"]
+80 -> 45
+46[label="46:FuncDefsNode"]
+80 -> 46
+79[label="79:MainFuncNode"]
+80 -> 79
+51[label="51:LocalScopeNode"]
+79 -> 51
+50[label="50:VarDeclNode"]
+51 -> 50
+47[label="47:TypeNode\nFloat"]
+50 -> 47
+48[label="48:IdentifierNode\nv1"]
+50 -> 48
+49[label="49:ArrayDimListNode"]
+50 -> 49
+78[label="78:StatementsNode"]
+79 -> 78
+58[label="58:AssignmentNode"]
+78 -> 58
+54[label="54:SubVarCallNode"]
+58 -> 54
+52[label="52:IdentifierNode\nv1"]
+54 -> 52
+53[label="53:IndicesNode"]
+54 -> 53
+57[label="57:ExpressionNode"]
+58 -> 57
+56[label="56:ArithExprNode"]
+57 -> 56
+55[label="55:FloatNumNode\n10.1"]
+56 -> 55
+65[label="65:AssignmentNode"]
+78 -> 65
+61[label="61:SubVarCallNode"]
+65 -> 61
+59[label="59:IdentifierNode\nv1"]
+61 -> 59
+60[label="60:IndicesNode"]
+61 -> 60
+64[label="64:ExpressionNode"]
+65 -> 64
+63[label="63:ArithExprNode"]
+64 -> 63
+62[label="62:IntNumNode\n1"]
+63 -> 62
+72[label="72:AssignmentNode"]
+78 -> 72
+68[label="68:SubVarCallNode"]
+72 -> 68
+66[label="66:IdentifierNode\nv1"]
+68 -> 66
+67[label="67:IndicesNode"]
+68 -> 67
+71[label="71:ExpressionNode"]
+72 -> 71
+70[label="70:ArithExprNode"]
+71 -> 70
+69[label="69:FloatNumNode\n1"]
+70 -> 69
+77[label="77:AssignmentNode"]
+78 -> 77
+75[label="75:SubVarCallNode"]
+77 -> 75
+73[label="73:IdentifierNode\nv1"]
+75 -> 73
+74[label="74:IndicesNode"]
+75 -> 74
+76[label="76:ExpressionNode"]
+77 -> 76
+}

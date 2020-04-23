@@ -1,0 +1,5 @@
+[InvalidFloatNum : (7,10) : "1.01e++"]
+[InvalidFloatNum : (9,10) : "1.;"]
+[InvalidCharacter : (9,12) : "%"]
+[InvalidComment : (12,1) : "/* error
+"]

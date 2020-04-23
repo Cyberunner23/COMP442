@@ -1,0 +1,12 @@
+main
+  local
+	float v1;
+  do
+  
+    v1 = 1.01e+1; // OK
+    v1 = 1.01e++1; // Error
+    v1 = 1.0ee; // Recovers
+    v1 = 1.;% // Error
+  
+  end
+/* error

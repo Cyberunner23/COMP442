@@ -1,0 +1,5 @@
+Syntax error: [8:13]
+Syntax error: [11:3]
+[13:2] Expected token: SemiColon, saw: EOF
+Syntax error: [13:2]
+[13:2] Expected token: End, saw: EOF
